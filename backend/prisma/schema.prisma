@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+enum Currency {
+  Euro
+  United_States_Dollar
+  Canadian_Dollar
+  Polish_zloty
+  Norwegian_Krone
+
+}
+
+enum Industry {
+  Wedding_Videography
+  Wedding_Photography
+  Portrait_Photography
+  Commerical_Photography
+  Commerical_Video
+  Digital_Artist
+  Other
+}
+
+enum TaskStatus {
+  Completed
+  Incomplete
+}
+
+//delete username
+model User {
+  id String @unique
+  email String @unique
+  first_name String
+  last_name String
+  profile_color String?
+  projects Project[]
+  companyDetails CompanyDetails[]
+  clients Client[]
+  contracts Contract[]
+  tasks Task[]
+}
+
+model CompanyDetails {
+  id Int @id @default(autoincrement())
+  owner User @relation(fields: [owner_id], references: [id])
+  owner_id String
+  company_name String
+  company_email String
+  industry Industry
+}
+
+enum ProjectStatus {
+  Inquiry
+  Proposal
+  Proposal_Status
+  Deposit
+  Completed
+
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+  title String
+  owner User @relation(fields: [owner_id], references: [id])
+  owner_id String
+  is_private Boolean @default(false)
+  header_img String?
+  created_at DateTime @default(now())
+  project_date DateTime?
+  galleries Gallery[]
+  tags String[]
+  client_name String
+  client_email String
+  project_status ProjectStatus @default(Inquiry)
+  expected_revenue Int?
+  amount_paid Int?
+  amount_due Int?
+  goals String?
+  tasks Task[]
+  job_type String @default("")
+}
+
+model Contact {
+  id Int @id @default(autoincrement())
+  name String
+  email String
+  phone_number String?
+  address String?
+  postal_code String?
+  city String?
+  State String?
+  company_name String?
+
+}
+
+
+model Gallery {
+  id Int @id @default(autoincrement()) 
+  title String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quote String
+  associatedProject Project @relation(fields: [associatedProjectId], references:[id])
+  associatedProjectId Int
+}
+
+model Client {
+  id Int @id @default(autoincrement())
+  client_name String
+  client_email String
+  phone_number String
+  address String?
+  city String?
+  state String?
+  notes String?
+  owner User @relation(fields: [created_by], references: [id])
+  created_by String
+  zip_code String?
+  createdAt DateTime @default(now())
+}
+
+model Contract {
+  id Int @id @default(autoincrement())
+  contract_name String
+  attachment_file String?
+  custom_contract Boolean @default(false)
+  text_field_response String?
+  cloudinary_public_id String?
+  cloudinary_asset_id String?
+  cloudinary_secure_link String?
+  cloduinary_file_url String?
+  owner User @relation(fields: [created_by], references: [id])
+  created_by String
+  created_at DateTime @default(now())
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  description String @db.VarChar(150)
+  due_date DateTime? 
+  created_by String
+  created_at DateTime @default(now())
+  owner User @relation(fields: [created_by], references: [id])
+  project Project? @relation(fields: [project_associated], references: [id])
+  project_associated Int?
+  status TaskStatus @default(Incomplete)
+}
