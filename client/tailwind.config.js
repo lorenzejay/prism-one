@@ -40,6 +40,11 @@ module.exports = {
         "1/2": "50vh",
         "4/5": "80vh",
       }),
+      transitionProperty: {
+        height: "height",
+        width: "width",
+        spacing: "margin, padding",
+      },
     },
   },
   variants: {
