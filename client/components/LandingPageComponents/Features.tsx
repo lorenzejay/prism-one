@@ -1,13 +1,21 @@
 import React from "react";
+import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { config, dom } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 import Link from "next/link";
+
 const Features = () => {
   return (
     <div
-      className="pt-36 lg:pt-72 xl:pt-80 2xl:pt-64 lg:pb-36 px-10  pb-10 flex flex-col items-center lg:grid lg:grid-cols-3  lg:gap-10 w-full mx-auto"
+      className="pt-36 lg:pt-72 xl:pt-96 2xl:pt-64 lg:pb-36 px-10  pb-10 flex flex-col items-center lg:grid lg:grid-cols-3  lg:gap-10 w-full mx-auto"
       style={{ background: "#F7FAFC" }}
     >
+      <Head>
+        <style>{dom.css()}</style>
+      </Head>
+
       <div className="text-center mb-10 lg:mb-0 lg:text-base flex flex-col justify-middle  lg:pl-24">
         <h2 className="text-4xl font-medium ">
           All the features you need{" "}

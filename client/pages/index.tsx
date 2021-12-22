@@ -4,9 +4,8 @@ import Layout from "../components/LandingPageComponents/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Features from "../components/LandingPageComponents/Features";
-import GoogleLogin from "react-google-login";
 const Home: NextPage = () => {
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
+  // const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
   return (
     <Layout>
       <>
@@ -33,16 +32,6 @@ const Home: NextPage = () => {
 
           <img src="/featureset_1.png" className="lg:w-1/2" />
         </section>
-        {clientId && (
-          <GoogleLogin
-            clientId={clientId}
-            buttonText="Sign In with your gmail"
-            onSuccess={(res) => console.log(res)}
-            onFailure={(err) => console.log(err)}
-            cookiePolicy={"single_host_origin"}
-            // isSignedIn={true}
-          />
-        )}
       </>
     </Layout>
   );
