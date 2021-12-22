@@ -98,7 +98,7 @@ const Email = () => {
             <th>Etc</th>
           </thead>
           {emails &&
-            emails.map((e) => {
+            emails.map((e, i) => {
               const date = new Date(parseInt(e.internalDate) * 1000);
               const month = date.getMonth();
 
@@ -108,7 +108,7 @@ const Email = () => {
                 e.payload.headers.find((e: any) => e.name === "From");
 
               return (
-                <tbody className="">
+                <tbody className="" key={i}>
                   <>
                     {e.payload.headers && (
                       <td>
