@@ -4,6 +4,7 @@ import Layout from "../components/LandingPageComponents/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Features from "../components/LandingPageComponents/Features";
+import { Footer } from "../components/LandingPageComponents/Footer";
 const Home: NextPage = () => {
   // const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
   return (
@@ -32,6 +33,7 @@ const Home: NextPage = () => {
 
           <img src="/featureset_1.png" className="lg:w-1/2" />
         </section>
+        <Footer />
       </>
     </Layout>
   );
