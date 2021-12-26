@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import AppLayout from "../../components/app/Layout";
-import { useAuth } from "../../hooks/useAuth";
+import useFirebaseAuth from "../../hooks/useAuth3";
 
 const Create = () => {
-  const { userId, userToken } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const queryClient = useQueryClient();
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -17,25 +17,23 @@ const Create = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const getTodaysDate = () => {
-    const date = new Date();
-    console.log("date", date);
-    return date.toDateString();
-    let day: any = date.getDate();
-    let month: any = date.getMonth() + 1;
-    const year = date.getFullYear();
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (day < 10) {
-      day = "0" + day;
-    }
-    let today = year + "-" + month + "-" + day;
-    return today;
+    var d = new Date(),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear(),
+      time = d.toLocaleTimeString();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-") + `T${time.slice(0, 8)}`;
   };
 
   useEffect(() => {
-    if (!userId) router.push("/sign-in");
-  }, [userId]);
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
 
   const addTags = (newTag: string) => {
     setTags([...tags, newTag]);
@@ -51,11 +49,12 @@ const Create = () => {
 
   const createProject = async (e: FormEvent) => {
     try {
+      if (!authUser?.token) return;
       e.preventDefault();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser.token,
         },
       };
       const { data } = await axios.post(
@@ -77,7 +76,8 @@ const Create = () => {
     }
   };
   const { mutateAsync: handleCreateProject } = useMutation(createProject, {
-    onSuccess: () => queryClient.invalidateQueries(`users_clients-${userId}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
 
   return (

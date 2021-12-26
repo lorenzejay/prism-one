@@ -3,24 +3,26 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 import Link from "next/link";
-import { useAuth } from "../../hooks/useAuth";
 import { ProjectDetails } from "../../types/projectTypes";
 import AppLayout from "../../components/app/Layout";
 import { useRouter } from "next/router";
+import useFirebaseAuth from "../../hooks/useAuth3";
 const Projects = () => {
-  const { userId, userToken } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
   const [projectSearched, setProjectSearched] = useState("");
 
   useEffect(() => {
-    if (userId === null) router.push("/sign-in");
-  }, [userId]);
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
 
   const getProjects = async () => {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser?.token !== null && authUser?.token,
       },
     };
     const { data } = await axios.get("/api/projects/list-projects", config);
@@ -28,7 +30,7 @@ const Projects = () => {
   };
   //query projects
   const { data: projects } = useQuery<ProjectDetails[]>(
-    `projects-${userId}`,
+    `projects-${authUser?.uid}`,
     getProjects
   );
   console.log("prohect", projects);

@@ -1,22 +1,16 @@
-import React, {
-  ChangeEventHandler,
-  InputHTMLAttributes,
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import FormBuilder from "../components/app/FormBuilder";
 import AppLayout from "../components/app/Layout";
 import { Cloudinary } from "cloudinary-core";
 import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
 import { useRouter } from "next/router";
-import { preview } from "@cloudinary/url-gen/actions/videoEdit";
 import { Document } from "react-pdf";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import useFirebaseAuth from "../hooks/useAuth3";
 const Contracts = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { userToken, userId } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const [contract_name, setContractName] = useState("");
   const [attached_file, setAttachedFile] = useState<any | null>();
   const [custom_contract, setCustomContract] = useState(false);
@@ -27,10 +21,10 @@ const Contracts = () => {
   >();
 
   useEffect(() => {
-    if (!userId) {
+    if (!loading && !authUser) {
       router.push("/sign-in");
     }
-  }, [userId]);
+  }, [loading, authUser]);
 
   //add react-query
   //security checker for if file type is even a pdf
@@ -53,10 +47,11 @@ const Contracts = () => {
 
   const listContracts = async () => {
     try {
+      if (!authUser?.token) return;
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser.token,
         },
       };
       const { data } = await axios.get("/api/contracts/list-contracts", config);
@@ -74,10 +69,11 @@ const Contracts = () => {
 
   const createContract = async () => {
     try {
+      if (!authUser?.token) return;
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser.token,
         },
       };
 
@@ -93,11 +89,12 @@ const Contracts = () => {
   };
 
   const { mutateAsync: handleAddNewContract } = useMutation(createContract, {
-    onSuccess: () => queryClient.invalidateQueries(`projectDeets-${userId}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries(`projectDeets-${authUser?.uid}`),
   });
-  console.log(contracts);
+  // console.log(contracts);
 
-  console.log(previewSource);
+  // console.log(previewSource);
   //   const client = filestack.init(apiKey);
   //   const handleOpenClientFilePicker = () => {
   //     client.picker().open();

@@ -1,29 +1,30 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import ClientForm from "../../components/app/ClientForm";
 import Layout from "../../components/LandingPageComponents/Layout";
-import { useAuth } from "../../hooks/useAuth";
 import { ClientDetails, FormType } from "../../types/userTypes";
 import Link from "next/link";
+import useFirebaseAuth from "../../hooks/useAuth3";
 const ClientPage = () => {
-  const { userToken, userId } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
+
   const router = useRouter();
   const { clientId } = router.query;
-  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!userId) {
+    if (!loading && !authUser) {
       router.push("/sign-in");
     }
-  }, [userId]);
+  }, [loading, authUser]);
 
   const fetchClientDetails = async () => {
+    if (!authUser?.token) return;
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser.token,
       },
     };
     const { data } = await axios.get(
@@ -36,8 +37,8 @@ const ClientPage = () => {
     success: boolean;
     message: string | undefined;
     data: ClientDetails;
-  }>(`client-details-${clientId}`, fetchClientDetails);
-
+  }>(`client-details-${clientId}-${authUser?.uid}`, fetchClientDetails);
+  console.log("details:", details);
   return (
     <Layout>
       <main className="flex flex-col justify-start p-5 lg:">

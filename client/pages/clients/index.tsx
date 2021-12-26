@@ -1,50 +1,63 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import Head from "next/head";
-import Layout from "../../components/LandingPageComponents/Layout";
-import { useAuth } from "../../hooks/useAuth";
 import Link from "next/link";
 import { ClientDetails } from "../../types/userTypes";
 import Loader from "../../components/app/Loader";
 import { useRouter } from "next/router";
+import AppLayout from "../../components/app/Layout";
+import useFirebaseAuth from "../../hooks/useAuth3";
 const Clients = () => {
+  const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [clientSearched, setClientSearched] = useState("");
-  const [listedClients, setListedClients] = useState<ClientDetails[] | null>();
-  const { userToken, userId } = useAuth();
+  const [clientSearched, setClientSearched] = useState<string>("");
 
   useEffect(() => {
-    if (!userId) router.push("/sign-in");
-  }, [userId]);
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
 
   //list all clients out here
 
   const handleGetUserClients = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: userToken,
-      },
-    };
-    const { data } = await axios.get("/api/clients/list-clients", config);
-    return data;
+    try {
+      if (!authUser?.token) return;
+      console.log("authtoken,", authUser.token);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser?.token,
+        },
+      };
+      const { data } = await axios.get("/api/clients/list-clients", config);
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   };
 
   const handleSearchClient = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: userToken,
-      },
-    };
-    if (clientSearched !== null || clientSearched !== "") {
-      const { data } = await axios.get(
-        `/api/clients/client-filter-by-name/${clientSearched}`,
-        config
-      );
-      return data;
+    try {
+      if (clientSearched === "") return null;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser?.token !== null && authUser?.token,
+        },
+      };
+      if (clientSearched !== null || clientSearched !== "") {
+        const { data } = await axios.get(
+          `/api/clients/client-filter-by-name/${clientSearched}`,
+          config
+        );
+        return data.data;
+      }
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   };
 
@@ -52,25 +65,25 @@ const Clients = () => {
     data: clients,
     isLoading,
     error,
-  } = useQuery<{
-    success: boolean;
-    message: string | undefined;
-    data: ClientDetails[];
-  }>(["users_clients"], handleGetUserClients);
+  } = useQuery<ClientDetails[]>(
+    `users_clients-${authUser?.uid}`,
+    handleGetUserClients
+  );
   const {
     data: searchedClients,
     isLoading: loadingSearchedClient,
     error: searchingError,
-  } = useQuery<{
-    success: boolean;
-    message: string | undefined;
-    data: ClientDetails[];
-  }>(["users_clients", clientSearched], handleSearchClient);
+  } = useQuery<ClientDetails[] | null>(
+    `searched-users_clients-${authUser?.uid}-${clientSearched}`,
+    handleSearchClient
+  );
 
   //create a handle search and use that on the onchange
-
+  console.log("clients", clients);
+  console.log("searched", searchedClients);
+  console.log("clientSearched", clientSearched);
   return (
-    <Layout>
+    <AppLayout>
       <>
         <Head>
           <link
@@ -112,35 +125,41 @@ const Clients = () => {
           )}
 
           <table className="w-full table-fixed  text-black">
-            <tr className="p-2 text-left  ">
-              <th className="w-1/3 font-normal">Name</th>
-              <th className="w-1/3 font-normal">Email</th>
-              <th className="w-1/3 font-normal">Phone Number</th>
-            </tr>
-            {clientSearched === "" &&
-              clients?.data.map((client, i) => (
-                <Link href={`/clients/${client.id}`} key={i}>
-                  <tr className="cursor-pointer bg-white border rounded-md mt-3">
-                    <td className="p-3">{client.client_name}</td>
-                    <td className="p-3">{client.client_email}</td>
-                    <td className="p-3">{client.phone_number}</td>
-                  </tr>
-                </Link>
-              ))}
-            {clientSearched !== "" &&
-              searchedClients?.data.map((client: ClientDetails, i: number) => (
-                <Link href={`/clients/${client.id}`} key={i}>
-                  <tr className="cursor-pointer bg-white border rounded-md mt-3">
-                    <td className="p-3">{client.client_name}</td>
-                    <td className="p-3">{client.client_email}</td>
-                    <td className="p-3">{client.phone_number}</td>
-                  </tr>
-                </Link>
-              ))}
+            <thead>
+              <tr className="p-2 text-left  ">
+                <th className="w-1/3 font-normal">Name</th>
+                <th className="w-1/3 font-normal">Email</th>
+                <th className="w-1/3 font-normal">Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clientSearched === "" &&
+                clients &&
+                clients.map((client, i) => (
+                  <Link href={`/clients/${client.id}`} key={i}>
+                    <tr className="cursor-pointer bg-white border rounded-md mt-3">
+                      <td className="p-3">{client.client_name}</td>
+                      <td className="p-3">{client.client_email}</td>
+                      <td className="p-3">{client.phone_number}</td>
+                    </tr>
+                  </Link>
+                ))}
+              {clientSearched !== "" &&
+                clientSearched &&
+                searchedClients?.map((client: ClientDetails, i: number) => (
+                  <Link href={`/clients/${client.id}`} key={i}>
+                    <tr className="cursor-pointer bg-white border rounded-md mt-3">
+                      <td className="p-3">{client.client_name}</td>
+                      <td className="p-3">{client.client_email}</td>
+                      <td className="p-3">{client.phone_number}</td>
+                    </tr>
+                  </Link>
+                ))}
+            </tbody>
           </table>
         </div>
       </>
-    </Layout>
+    </AppLayout>
   );
 };
 

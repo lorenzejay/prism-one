@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import Head from "next/head";
 import type { AppProps } from "next/app";
-import { AuthProvider2 } from "../hooks/useAuth2";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "../utils/queryClient";
 import "react-form-builder2/dist/app.css";

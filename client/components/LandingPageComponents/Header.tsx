@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../hooks/useAuth";
+import useFirebaseAuth from "../../hooks/useAuth3";
 //old colors:
 //#F4F3F1
 const Header = ({ toggle }: { toggle: () => void }) => {
-  const auth = useAuth();
-  const { userId, logout } = auth;
+  const { authUser, signOut } = useFirebaseAuth();
   const [scrollPosition, setScrollPosition] = useState(0);
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -39,7 +38,7 @@ const Header = ({ toggle }: { toggle: () => void }) => {
         <ul className="justify-between absolute right-5 lg:right-12 xl:right-32 text-white text-lg lg:text-2xl p-3">
           In Development
         </ul>
-      ) : !userId ? (
+      ) : !authUser?.uid ? (
         <ul className="flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
           <li style={{ background: "#F7FAFC" }} className="p-3 mr-1 rounded-md">
             <Link href="/sign-in">Sign In</Link>
@@ -51,7 +50,7 @@ const Header = ({ toggle }: { toggle: () => void }) => {
       ) : (
         <ul className="flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
           <li style={{ background: "#F7FAFC" }} className="p-2 mr-1 rounded-md">
-            <button onClick={logout}>Logout</button>
+            <button onClick={signOut}>Logout</button>
           </li>
         </ul>
       )}

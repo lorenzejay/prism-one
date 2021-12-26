@@ -11,6 +11,7 @@ const authUserContext = createContext({
   signInWithEmailAndPassword: async ({}: UserSigningInDetails) => {},
   createUserWithEmailAndPassword: async ({}: UserSigningInDetails) => {},
   signOut: async () => {},
+  username: String,
 });
 
 export function AuthUserProvider({ children }: { children: ReactChild }) {

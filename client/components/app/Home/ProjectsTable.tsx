@@ -1,21 +1,19 @@
 import axios from "axios";
-import { useRouter } from "next/router";
 import React from "react";
-import { useQuery, useQueryClient } from "react-query";
-import { useAuth } from "../../../hooks/useAuth";
+import { useQuery } from "react-query";
 import Link from "next/link";
 import { ProjectDetails } from "../../../types/projectTypes";
 import Loader from "../Loader";
+import useFirebaseAuth from "../../../hooks/useAuth3";
 
 const ProjectsTable = () => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  const { userId, userToken } = useAuth();
+  const { authUser } = useFirebaseAuth();
   const fetchProjects = async () => {
+    if (!authUser?.token) return;
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser.token,
       },
     };
     const { data } = await axios.get("/api/projects/list-projects", config);
@@ -25,7 +23,7 @@ const ProjectsTable = () => {
     data: projects,
     isLoading: loadingProjects,
     error: fetchingProjectError,
-  } = useQuery<ProjectDetails[]>(`projects-${userId}`, fetchProjects);
+  } = useQuery<ProjectDetails[]>(`projects-${authUser?.uid}`, fetchProjects);
   return (
     <table
       className=" h-1/2 mb-5 rounded-md  p-5  flex-grow "

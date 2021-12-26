@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useRouter } from "next/router";
 import AppLayout from "../components/app/Layout";
 import ProjectsTable from "../components/app/Home/ProjectsTable";
 import TaskTable from "../components/app/Home/TaskTable";
 import ProjectStatusCharts from "../components/app/Home/ProjectStatusCharts";
+import useFirebaseAuth from "../hooks/useAuth3";
 
 const Home = () => {
   const router = useRouter();
-  const { userId } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   useEffect(() => {
-    if (!userId) {
+    if (!loading && !authUser) {
       router.push("/sign-in");
     }
-  }, [userId]);
+  }, [loading, authUser]);
 
   return (
     <AppLayout>

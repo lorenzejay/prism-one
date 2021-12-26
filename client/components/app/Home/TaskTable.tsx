@@ -1,20 +1,21 @@
 import axios from "axios";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useAuth } from "../../../hooks/useAuth";
+import useFirebaseAuth from "../../../hooks/useAuth3";
 import { FormType, TaskDetails } from "../../../types/tasksTypes";
 import Loader from "../Loader";
 
 const TaskTable = () => {
   const queryClient = useQueryClient();
   //   const router = useRouter();
-  const { userId, userToken } = useAuth();
+  const { authUser } = useFirebaseAuth();
   //fetch the tasks
   const fetchTasks = async () => {
+    if (!authUser?.token) return;
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser.token,
       },
     };
     const { data } = await axios.get("/api/tasks/list-tasks", config);
@@ -24,7 +25,7 @@ const TaskTable = () => {
     data: tasks,
     isLoading: loadingTasks,
     error: fetchingTaskError,
-  } = useQuery<TaskDetails[]>(`tasks-${userId}`, fetchTasks);
+  } = useQuery<TaskDetails[]>(`tasks-${authUser?.uid}`, fetchTasks);
   const updateTaskStatus = async ({
     taskId,
     currentStatus,
@@ -36,7 +37,7 @@ const TaskTable = () => {
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser?.token,
         },
       };
       const newStatus =

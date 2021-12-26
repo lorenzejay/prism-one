@@ -1,5 +1,4 @@
 import { Response, NextFunction } from "express";
-import jwt, { Secret } from "jsonwebtoken";
 import * as admin from "firebase-admin";
 require("dotenv").config();
 // //checks if the token is valid

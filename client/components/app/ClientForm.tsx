@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useAuth } from "../../hooks/useAuth";
+import useFirebaseAuth from "../../hooks/useAuth3";
 import { ClientDetails, FormType, ApiCallReturn } from "../../types/userTypes";
 
 interface ClientFormTypes {
@@ -13,7 +13,7 @@ interface ClientFormTypes {
 const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { userId, userToken } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const [notes, setNotes] = useState<string>("");
   const [clientName, setClientName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -36,17 +36,18 @@ const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
   }, [clientDetails]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!loading && !authUser) {
       router.push("/sign-in");
     }
-  }, [userId]);
+  }, [loading, authUser]);
 
   const createClient = async (e: FormEvent) => {
+    if (!authUser?.token) return;
     e.preventDefault();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser.token,
       },
     };
     const { data } = await axios.post<{
@@ -73,15 +74,17 @@ const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
     window.alert("Something went wrong");
   };
   const { mutateAsync: handleAddNewClient } = useMutation(createClient, {
-    onSuccess: () => queryClient.invalidateQueries(`users_clients-${userId}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
 
   const updateClientDetails = async (e: FormEvent) => {
     e.preventDefault();
+    if (!authUser?.token) return;
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser?.token,
       },
     };
     await axios.post(
@@ -99,18 +102,20 @@ const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
       config
     );
   };
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      token: userToken,
-    },
-  };
+
   const deleteContact = async () => {
+    if (!authUser?.token) return;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: authUser.token,
+      },
+    };
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this contact?"
     );
     if (!confirmDelete) return;
-    if (!clientId || !userToken) return;
+    if (!clientId || !authUser.token) return;
 
     const { data } = await axios.delete<ApiCallReturn>(
       `/api/clients/delete-client/${clientId}`,
@@ -123,11 +128,15 @@ const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
   const { mutateAsync: handleUpdateClients, isLoading } = useMutation(
     updateClientDetails,
     {
-      onSuccess: () => queryClient.invalidateQueries(`users_clients-${userId}`),
+      onSuccess: () =>
+        queryClient.invalidateQueries(
+          `client-details-${clientId}-${authUser?.uid}`
+        ),
     }
   );
   const { mutateAsync: handleDeleteClient } = useMutation(deleteContact, {
-    onSuccess: () => queryClient.invalidateQueries(`users_clients-${userId}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
   return (
     <form

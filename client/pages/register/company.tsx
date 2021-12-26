@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import AppLayout from "../../components/app/Layout";
 import Layout from "../../components/LandingPageComponents/Layout";
-import { useAuth } from "../../hooks/useAuth";
+import useFirebaseAuth from "../../hooks/useAuth3";
 import { Industry } from "../../types/userTypes";
 
 const Company = () => {
   const router = useRouter();
-  const { userToken, userId } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const [industry, setIndustry] = useState<Industry>(
     Industry.Wedding_Videography
   );
@@ -16,19 +16,20 @@ const Company = () => {
   const [company_email, setCompanyEmail] = useState("");
 
   useEffect(() => {
-    if (!userToken || !userId) {
+    if (!loading && !authUser) {
       router.push("/sign-in");
     }
-  }, [userToken, userId]);
+  }, [loading, authUser]);
 
   console.log(industry);
   const handleFinishCreatingProfile = async (e: React.FormEvent) => {
     try {
+      if (!authUser?.token) return;
       e.preventDefault();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser.token,
         },
       };
       const { data } = await axios.post<{ success: boolean; message: string }>(

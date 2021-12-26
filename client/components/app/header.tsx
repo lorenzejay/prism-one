@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useAuth } from "../../hooks/useAuth";
+import useFirebaseAuth from "../../hooks/useAuth3";
 
 const AppHeader = () => {
-  const { userId, userToken, logout } = useAuth();
+  const { username, authUser, signOut } = useFirebaseAuth();
   const queryClient = useQueryClient();
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -12,11 +12,11 @@ const AppHeader = () => {
 
   const getUserFirstName = async () => {
     try {
-      if (!userToken) return;
+      if (!authUser?.token) return;
       const config = {
         headers: {
           "Content-Type": "application/json",
-          token: userToken,
+          token: authUser.token,
         },
       };
       const { data } = await axios.get("/api/users/get-firstname", config);
@@ -30,7 +30,7 @@ const AppHeader = () => {
     success: boolean;
     message: string | undefined;
     data: string;
-  }>(`users_firstname-${userId}`, getUserFirstName);
+  }>(`users_firstname-${authUser?.uid}`, getUserFirstName);
 
   return (
     <nav className="flex relative text-black items-center h-24 py-5 px-12 lg:px-24 w-screen">
@@ -70,7 +70,7 @@ const AppHeader = () => {
         </button>
         {openDropdown && (
           <div className="absolute top-10 bg-gray-100 p-3 shadow-2xl ">
-            <button onClick={logout}>Logout</button>
+            <button onClick={signOut}>Logout</button>
           </div>
         )}
       </div>
