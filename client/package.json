@@ -15,6 +15,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
+    "@types/sanitize-html": "^2.6.0",
     "axios": "^0.21.4",
     "cloudinary-core": "^2.12.0",
     "firebase": "^9.0.2",
@@ -25,12 +26,18 @@
     "react-dom": "17.0.2",
     "react-form-builder2": "^0.9.5",
     "react-google-login": "^5.2.2",
+    "react-mde": "^11.5.0",
     "react-pdf": "^5.5.0",
-    "react-query": "^3.24.5"
+    "react-query": "^3.24.5",
+    "sanitize-html": "^2.6.1",
+    "sanitize-html-react": "^1.13.0",
+    "showdown": "^1.9.1",
+    "showdown-xss-filter": "^0.2.0"
   },
   "devDependencies": {
     "@types/react": "17.0.19",
     "@types/react-pdf": "^5.0.9",
+    "@types/showdown": "^1.9.4",
     "autoprefixer": "^10.3.2",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.0",

@@ -159,7 +159,7 @@ projectRouter.get("/list-projects", authorization, async (req, res) => {
         owner_id: userId,
       },
     });
-    console.log("projects");
+
     res.send({ success: true, message: undefined, data: projects });
   } catch (error) {
     console.log(error);

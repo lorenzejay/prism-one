@@ -25,7 +25,7 @@ const HeroTwo = () => {
           <section className="relative w-full ">
             <img
               src="/colored_dash.png"
-              className="lg:w-4/6 xl:w-3/4 2xl:w-3/4 3xl:w-1/2  lg:mx-auto shadow-2xl rounded-b-xl"
+              className="lg:w-4/6 xl:w-3/4 2xl:w-3/5 3xl:w-1/2  lg:mx-auto shadow-2xl rounded-b-xl"
             />
           </section>
         </div>

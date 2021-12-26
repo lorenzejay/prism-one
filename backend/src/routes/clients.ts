@@ -52,9 +52,11 @@ clientRouter.get("/list-clients", authorization, async (req, res) => {
   try {
     const userId = req.user;
     if (!userId)
-      return res
-        .status(403)
-        .send({ success: false, message: "Forbidden", data: undefined });
+      return res.send({
+        success: true,
+        message: "Something went wrong",
+        data: null,
+      });
     const clientList = await prisma.client.findMany({
       where: {
         created_by: userId,

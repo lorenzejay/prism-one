@@ -1,8 +1,11 @@
 import { Industry, PrismaClient } from ".prisma/client";
 import { Router } from "express";
 import * as admin from "firebase-admin";
+import { auth } from "firebase-admin";
+import fetch from "node-fetch";
 import authorization from "../middlewares/auth";
 import { generateUserToken } from "../utils/jwtGenerator";
+require("dotenv").config();
 const userRouter = Router();
 
 const prisma = new PrismaClient();
@@ -27,8 +30,7 @@ userRouter.post("/register", async (req, res) => {
         last_name,
       },
     });
-    const token = await generateUserToken(uid);
-
+    //create a return object for new user
     //uid is the userId of the registered user
     res.status(200).send({
       success: true,
@@ -36,6 +38,31 @@ userRouter.post("/register", async (req, res) => {
 
       id: uid,
     });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+userRouter.get("/refetch-user-token/:refresh_token", async (req, res) => {
+  try {
+    const refreshToken = req.params.refresh_token;
+    const FB_API_KEY = process.env.FIREBASE_WEB_API_KEY;
+    const config = {
+      method: "post",
+      body: JSON.stringify({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+    const response = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=[${FB_API_KEY}]`,
+      config
+    );
+
+    res.send(response.json());
   } catch (error) {
     console.log(error);
   }
@@ -88,7 +115,7 @@ userRouter.get("/get-username", authorization, async (req, res) => {
     const userRecord = await admin.auth().getUser(userId.toString());
     if (!userRecord) return;
     const username = userRecord.displayName;
-    console.log(username);
+
     res.send({ username });
   } catch (error) {
     console.log(error);
@@ -116,5 +143,24 @@ userRouter.get("/get-firstname", authorization, async (req, res) => {
     console.log(error);
   }
 });
+
+userRouter.get(
+  "/user-credential-details/:uid",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user.toString();
+      const uid = req.params.uid;
+      const token = req.header("token");
+      if (userId == uid) {
+        const user = await admin.auth().getUser(uid);
+
+        res.send({ uid: user.uid, token });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 export default userRouter;

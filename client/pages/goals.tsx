@@ -16,7 +16,7 @@ const Goals = () => {
         </h3>
         <p className="text-xl mb-10 lg:w-3/4 leading-10 lg:mx-auto">
           I started Prism One after using many traditional CRM applications and
-          other tools to run my freelance photography filmmaking business.
+          other tools to run my freelance photography and filmmaking business.
           Combining apps from Tave to Pictime then Honeybook then last to
           Dropbox was just too much to juggle at a certain scale. I thought to
           myself, isn&apos;t there something that could fit everything I needed
@@ -26,16 +26,18 @@ const Goals = () => {
           Additionally, traditional CRM&apos;s are daunting just looking at it.
           CRM&apos;s are powerful business tools but it may dissuade many
           smaller freeancers from using one due to it&apos;s steep learning
-          curve. With my background in the creative freelance industry and in
-          tech, I decided to make an application that addressed the problem I
-          had. Prism One&apos;s goals is to create a workflow that is easy to
-          use, yet has all the features needed to run a freelance creative
-          business. From tracking your clients inquiries to your final
+          curve. Some CRM's are overloaded with features you don't even know
+          where to get started. With my background in the creative freelance
+          industry and in tech, I decided to make an application that addressed
+          the problem I had. Prism One&apos;s goals is to create a workflow that
+          is easy to use, yet has all the features needed to run a freelance
+          creative business. From tracking your clients inquiries to your final
           deliverables, Prism One has you covered.
         </p>
         <p className="text-xl mb-10 lg:w-3/4 leading-10 lg:mx-auto">
-          While the application is still in development, enter your email to get
-          notified when we launch.
+          While the application is still in development, I'd love to keep you
+          informed on the progress of the application and give you a heads up
+          before Prism One launches.
         </p>
         <WaitlistForm />
       </div>
