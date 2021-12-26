@@ -26,6 +26,11 @@ module.exports = {
       full: "100vh",
     },
     extend: {
+      colors: {
+        blue: {
+          theme: "#1D4757",
+        },
+      },
       screens: {
         i5: "320px",
         i6: "375px",
