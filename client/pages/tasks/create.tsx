@@ -1,21 +1,20 @@
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import AppLayout from "../../components/app/Layout";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import Head from "next/head";
-import sanitize from "sanitize-html";
 import { useRouter } from "next/router";
 import useFirebaseAuth from "../../hooks/useAuth3";
+import Link from "next/link";
+import SelectAssociatedProject from "../../components/app/Task/SelectAssociatedProject";
 
 const Create = () => {
   const queryClient = useQueryClient();
-  const { authUser, loading } = useFirebaseAuth();
-  const [emailFrom, setEmailFrom] = useState("");
-  const [emailTo, setEmailTo] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [taskDate, setTaskDate] = useState<Date>();
+  const { authUser } = useFirebaseAuth();
+  const [description, setDescription] = useState("");
+  const [projectAssociated, setProjectAssociated] = useState<number>();
+  const [taskDate, setTaskDate] = useState("");
 
   const getTodaysDate = () => {
     var d = new Date(),
@@ -36,6 +35,25 @@ const Create = () => {
   //santize message out
   const createTask = async (e: FormEvent) => {
     e.preventDefault();
+    if (!authUser?.token) return;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: authUser.token,
+      },
+    };
+    const { data } = await axios.post(
+      "/api/tasks/create-task",
+      {
+        description,
+        project_associated: projectAssociated,
+        due_date: taskDate,
+      },
+      config
+    );
+    if (data.success) {
+      router.push("/tasks");
+    }
   };
 
   const {
@@ -51,6 +69,8 @@ const Create = () => {
       router.push("/tasks");
     }
   }, [isSuccess, isLoading, router]);
+
+  console.log("project date", taskDate);
   return (
     <AppLayout>
       <>
@@ -64,45 +84,43 @@ const Create = () => {
           className="flex flex-col justify-start"
           onSubmit={handleCreateTask}
         >
-          <label htmlFor="emailFrom" className="text-lg">
-            From:
+          <label htmlFor="Description" className="text-lg">
+            Description:
           </label>
           <input
-            name="emailFrom"
+            name="Description"
             className="rounded-md p-2 mb-4  "
-            value={emailFrom}
+            value={description}
+            type="text"
+            onChange={(e) => setDescription(e.target.value)}
           />
-          <label htmlFor="emailTo" className="text-lg">
-            To:
-          </label>
-          <input
-            name="emailTo"
-            className="rounded-md p-2 mb-4  "
-            value={emailTo}
-            onChange={(e) => setEmailTo(e.target.value)}
+
+          <SelectAssociatedProject
+            createMode={true}
+            projectAssociated={projectAssociated}
+            setProjectAssociated={setProjectAssociated}
           />
-          <label htmlFor="subject" className="text-lg">
-            Subject:
-          </label>
           <div className="flex flex-col my-2">
-            <label htmlFor="projectDate">Project Date</label>
+            <label htmlFor="ProjectDate">Project Date</label>
 
             <input
-              type="datetime-local"
+              type="date"
+              name="ProjectDate"
               className="p-2 rounded-md "
               defaultValue={getTodaysDate()}
               onChange={(e) => {
-                const newDate = new Date(e.target.value);
-                setTaskDate(newDate);
+                setTaskDate(e.target.value);
               }}
             />
           </div>
 
           <div className="w-full flex justify-end mt-3 text-white">
-            <button className="p-2 w-24 rounded-md bg-red-500">Cancel</button>
-            <button className="p-2 w-24 rounded-md bg-blue-500 mx-3">
-              Save Draft
-            </button>
+            <Link href="/tasks">
+              <button className="p-2 w-24 mr-3 rounded-md bg-red-500">
+                Cancel
+              </button>
+            </Link>
+
             <button className="p-2 w-24 rounded-md bg-blue-theme" type="submit">
               Send
             </button>
