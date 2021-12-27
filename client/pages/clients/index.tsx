@@ -79,9 +79,9 @@ const Clients = () => {
   );
 
   //create a handle search and use that on the onchange
-  console.log("clients", clients);
-  console.log("searched", searchedClients);
-  console.log("clientSearched", clientSearched);
+  // console.log("clients", clients);
+  // console.log("searched", searchedClients);
+  // console.log("clientSearched", clientSearched);
   return (
     <AppLayout>
       <>
