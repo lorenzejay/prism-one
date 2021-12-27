@@ -121,7 +121,7 @@ const Create = () => {
             <label htmlFor="projectDate">Project Date</label>
 
             <input
-              type="datetime-local"
+              type="date"
               className="p-2 rounded-md "
               defaultValue={getTodaysDate()}
               onChange={(e) => {
