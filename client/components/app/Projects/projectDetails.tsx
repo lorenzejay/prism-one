@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useAuth } from "../../../hooks/useAuth";
+import useFirebaseAuth from "../../../hooks/useAuth3";
 import { ProjectDetails, ProjectStatus } from "../../../types/projectTypes";
 import { TaskDetails } from "../../../types/tasksTypes";
 import { ApiCallReturn } from "../../../types/userTypes";
@@ -17,7 +17,8 @@ const ProjectDetailsForm = ({
 }: ProjectFormTypes) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { userId, userToken } = useAuth();
+  const { authUser, loading } = useFirebaseAuth();
+
   const [title, setTitle] = useState<string>("");
   const [privateProject, setIsProjectPrivate] = useState<boolean>();
   const [clientEmail, setClientEmail] = useState<string>("");
@@ -47,21 +48,22 @@ const ProjectDetailsForm = ({
       setJobType(projectDetails.job_type);
       setAmountDue(projectDetails.amount_due);
       setJobType(projectDetails.job_type);
+      setProjectDate(projectDetails.project_date);
     }
   }, [projectDetails]);
-
   useEffect(() => {
-    if (!userId) {
-      router.push("/sign-in");
+    if (!authUser && !loading) {
+      router.push("/home");
     }
-  }, [userId]);
+  }, [authUser, loading]);
 
   const updateProjectDetails = async (e: FormEvent) => {
+    if (!authUser?.token) return;
     e.preventDefault();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: userToken,
+        token: authUser.token,
       },
     };
     await axios.post(
@@ -84,18 +86,20 @@ const ProjectDetailsForm = ({
       config
     );
   };
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      token: userToken,
-    },
-  };
+
   const deleteProject = async () => {
+    if (!authUser?.token) return;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: authUser.token,
+      },
+    };
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this contact?"
     );
     if (!confirmDelete) return;
-    if (!projectId || !userToken) return;
+    if (!projectId || !authUser.token) return;
 
     const { data } = await axios.delete<ApiCallReturn>(
       `/api/clients/delete-project/${projectId}`,
@@ -108,13 +112,15 @@ const ProjectDetailsForm = ({
   const { mutateAsync: handleUpdateProject, isLoading } = useMutation(
     updateProjectDetails,
     {
-      onSuccess: () => queryClient.invalidateQueries(`users_clients-${userId}`),
+      onSuccess: () =>
+        queryClient.invalidateQueries(
+          `project-details-${authUser?.uid}-${projectId}`
+        ),
     }
   );
   const { mutateAsync: handleDeleteProject } = useMutation(deleteProject, {
-    onSuccess: () => queryClient.invalidateQueries(`projects-${userId}`),
+    onSuccess: () => queryClient.invalidateQueries(`projects-${authUser?.uid}`),
   });
-  console.log(projectDate);
   return (
     <form
       className="w-full px-5 py-3 lg:w-1/2 mx-auto font-light flex flex-col text-black bg-white "
@@ -204,13 +210,13 @@ const ProjectDetailsForm = ({
         </select>
       </div>
       <div className="flex flex-col my-2">
-        <label htmlFor="state">Date</label>
+        <label htmlFor="date">Date</label>
         <input
           onChange={(e) => setProjectDate(e.target.value)}
-          value={projectDate}
-          name="state"
+          value={projectDate?.slice(0, 10)}
+          name="date"
           className="rounded-md p-2 border outline-none"
-          type="text"
+          type="date"
         />
       </div>
       <div className="flex flex-col my-2">
