@@ -145,6 +145,32 @@ projectRouter.get(
     }
   }
 );
+projectRouter.get(
+  "/project-title/:projectId",
+
+  async (req, res) => {
+    try {
+      // const userId = req.user;
+
+      const projectId = parseInt(req.params.projectId);
+      //find the project of the clientId
+      const title = await prisma.project.findUnique({
+        where: { id: projectId },
+        select: { title: true },
+      });
+      // if (projectDetails?.owner_id !== userId.toString()) {
+      //   res.send({
+      //     data: undefined,
+      //     success: false,
+      //     message: "You are not the owner of this application.",
+      //   });
+      // }
+      res.send({ data: title, success: true, message: "" });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 projectRouter.get("/list-projects", authorization, async (req, res) => {
   try {
@@ -165,6 +191,32 @@ projectRouter.get("/list-projects", authorization, async (req, res) => {
     console.log(error);
   }
 });
+
+projectRouter.get(
+  "/list-project-tasks/:projectId",
+  authorization,
+  async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      const userId = req.user;
+      const projectTasks = await prisma.task.findMany({
+        orderBy: [
+          {
+            created_at: "desc",
+          },
+        ],
+        where: {
+          project_associated: projectId,
+          created_by: userId,
+        },
+      });
+      res.send({ success: true, message: null, data: projectTasks });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+);
 
 //update title
 projectRouter.put(
@@ -762,7 +814,7 @@ projectRouter.put(
   authorization,
   async (req, res) => {
     try {
-      const newProjectDueDate: Date = req.body.newProjectDueDate;
+      const newProjectDueDate = req.body.newProjectDueDate;
       const projectId = parseInt(req.params.projectId);
 
       const userId = req.user;
