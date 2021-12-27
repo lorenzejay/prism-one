@@ -33,7 +33,7 @@ const Projects = () => {
     `projects-${authUser?.uid}`,
     getProjects
   );
-  console.log("prohect", projects);
+  // console.log("prohect", projects);
   return (
     <AppLayout>
       <section>
