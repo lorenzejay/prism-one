@@ -73,7 +73,7 @@ model Project {
   is_private Boolean @default(false)
   header_img String?
   created_at DateTime @default(now())
-  project_date DateTime?
+  project_date String?
   galleries Gallery[]
   tags String[]
   client_name String
@@ -104,8 +104,8 @@ model Contact {
 model Gallery {
   id Int @id @default(autoincrement()) 
   title String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt String 
+  updatedAt String? 
   quote String
   associatedProject Project @relation(fields: [associatedProjectId], references:[id])
   associatedProjectId Int
@@ -144,7 +144,7 @@ model Contract {
 model Task {
   id Int @id @default(autoincrement())
   description String @db.VarChar(150)
-  due_date DateTime? 
+  due_date String? 
   created_by String
   created_at DateTime @default(now())
   owner User @relation(fields: [created_by], references: [id])

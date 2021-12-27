@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "Gallery" ALTER COLUMN "createdAt" DROP DEFAULT,
+ALTER COLUMN "createdAt" SET DATA TYPE TEXT,
+ALTER COLUMN "updatedAt" DROP NOT NULL,
+ALTER COLUMN "updatedAt" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Project" ALTER COLUMN "project_date" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Task" ALTER COLUMN "due_date" SET DATA TYPE TEXT;
