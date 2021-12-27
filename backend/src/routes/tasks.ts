@@ -31,6 +31,7 @@ taskRouter.post("/create-task", authorization, async (req, res) => {
   try {
     const userId = req.user.toString();
     const { description, due_date, project_associated } = req.body;
+    // console.log("project_associated", project_associated);
     if (!userId)
       return res.send({
         success: false,
@@ -41,7 +42,7 @@ taskRouter.post("/create-task", authorization, async (req, res) => {
       data: {
         description,
         due_date,
-        project_associated,
+        project_associated: parseInt(project_associated),
         created_by: userId,
       },
     });
@@ -79,6 +80,32 @@ taskRouter.get("/list-tasks", authorization, async (req, res) => {
   }
 });
 
+//list specific task
+taskRouter.get(
+  "/list-specific-task/:taskId",
+  authorization,
+  async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const userId = req.user;
+      if (!userId)
+        return res.send({
+          success: true,
+          message: "Something went wrong",
+          data: null,
+        });
+      //list all tasks with the owner of userId
+      const tasks = await prisma.task.findFirst({
+        where: {
+          id: taskId,
+        },
+      });
+      res.send({ success: true, message: null, data: tasks });
+    } catch (error) {
+      console.log(console.log(error));
+    }
+  }
+);
 taskRouter.post("/update-due-date/:taskId", authorization, async (req, res) => {
   try {
     const userId = req.user;
@@ -189,5 +216,116 @@ taskRouter.post(
     }
   }
 );
+
+//update-task
+taskRouter.post(
+  "/update-task-details/:taskId",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user.toString();
+      const taskId = parseInt(req.params.taskId);
+      const { description, status, due_date, project_associated } = req.body;
+      //verify that task owner is the userId
+      const selectedTask = await prisma.task.findUnique({
+        where: {
+          id: taskId,
+        },
+      });
+      if (selectedTask?.created_by !== userId) {
+        return res.send({
+          success: false,
+          message: "You are not authorized to update this task.",
+          data: undefined,
+        });
+      }
+
+      await prisma.task.update({
+        where: {
+          id: taskId,
+        },
+        data: {
+          description,
+          due_date,
+          status: status ? FormType.completed : FormType.incomplete,
+          project_associated: project_associated,
+        },
+      });
+      res.send({
+        success: true,
+        message: "Updated client details",
+        data: null,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+//search for client
+taskRouter.get(
+  "/task-filter-by-name/:taskDescription",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user;
+      const taskDescription = req.params.taskDescription;
+      if (!userId) return;
+      //find the client
+      const tasks = await prisma.task.findMany({
+        where: {
+          description: {
+            startsWith: taskDescription,
+          },
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      });
+      if (tasks === undefined || tasks === null)
+        return res.send({
+          data: null,
+          success: false,
+          message: "Tasks not found.",
+        });
+
+      res.send({
+        data: tasks,
+        success: true,
+        message: "Successfully found the task.",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+taskRouter.get("/list-associated-projects", authorization, async (req, res) => {
+  try {
+    const userId = req.user;
+    if (!userId)
+      return res.send({
+        success: false,
+        message: "You aren't allowed to be here.",
+        data: null,
+      });
+
+    //fetch projects id and name from the one you created
+    const projects = await prisma.project.findMany({
+      where: {
+        owner_id: userId,
+      },
+      select: {
+        title: true,
+        id: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    res.send({ success: true, message: null, data: projects });
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+});
 
 export default taskRouter;
