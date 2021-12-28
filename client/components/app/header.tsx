@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import useFirebaseAuth from "../../hooks/useAuth3";
 
 const AppHeader = () => {
-  const { username, authUser, signOut } = useFirebaseAuth();
-  const queryClient = useQueryClient();
+  const { authUser, signOut } = useFirebaseAuth();
+  // const queryClient = useQueryClient();
   const [openDropdown, setOpenDropdown] = useState(false);
 
   // Queries
@@ -35,12 +35,14 @@ const AppHeader = () => {
   return (
     <nav className="flex relative text-black items-center h-24 py-5 px-12 lg:px-24 w-screen">
       <h3
-        className="lg:w-1/6 text-2xl tracking-widest uppercase"
+        className="lg:w-1/6 text-2xl flex-grow tracking-widest uppercase"
         style={{ color: "#F88946" }}
       >
         Prism One
       </h3>
-      <div className="flex items-center flex-grow ">
+      {/*
+      
+        <div className="flex items-center flex-grow ">
         <input
           className="border rounded-md p-3 outline-none"
           placeholder="Search Your Jobs...."
@@ -62,8 +64,9 @@ const AppHeader = () => {
           >
             +
           </span>
-        </button>
+        </button> 
       </div>
+        */}
       <div className="relative">
         <button className="" onClick={() => setOpenDropdown(!openDropdown)}>
           <span className="font-bold">Welcome ,</span> {user?.data}
