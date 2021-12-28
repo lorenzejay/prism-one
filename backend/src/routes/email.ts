@@ -8,8 +8,6 @@ import http from "http";
 import opn from "open";
 import destroyer from "server-destroy";
 import authorization from "../middlewares/auth";
-import fetch from "node-fetch";
-import { Credentials } from "google-auth-library";
 import { OAuth2Client } from "@grpc/grpc-js";
 
 const gmail = google.gmail("v1");
@@ -36,40 +34,40 @@ const oAuth2Client = new google.auth.OAuth2(
 google.options({ auth: oAuth2Client });
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-const sendMail = async (
-  emailFrom: string,
-  emailTo: string,
-  subject: string,
-  message: string,
-  html: string | null
-) => {
-  try {
-    const accessToken = await oAuth2Client.getAccessToken();
-    const transport = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAUTH2",
-        user: emailFrom,
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        refreshToken: REFRESH_TOKEN,
-        accessToken: accessToken,
-      },
-    } as SMTPTransport.Options);
-    const mailOptions = {
-      from: emailFrom,
-      to: emailTo,
-      subject: subject,
-      text: message,
-      html: html,
-    } as MailOptions;
-    const result = await transport.sendMail(mailOptions);
-    return result;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
+// const sendMail = async (
+//   emailFrom: string,
+//   emailTo: string,
+//   subject: string,
+//   message: string,
+//   html: string | null
+// ) => {
+//   try {
+//     const accessToken = await oAuth2Client.getAccessToken();
+//     const transport = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         type: "OAUTH2",
+//         user: emailFrom,
+//         clientId: CLIENT_ID,
+//         clientSecret: CLIENT_SECRET,
+//         refreshToken: REFRESH_TOKEN,
+//         accessToken: accessToken,
+//       },
+//     } as SMTPTransport.Options);
+//     const mailOptions = {
+//       from: emailFrom,
+//       to: emailTo,
+//       subject: subject,
+//       text: message,
+//       html: html,
+//     } as MailOptions;
+//     const result = await transport.sendMail(mailOptions);
+//     return result;
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };
 
 emailRouter.get("/integrate-gmail", async (req, res) => {
   try {
