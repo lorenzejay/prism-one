@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "../../hooks/useAuth";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Layout from "../../components/LandingPageComponents/Layout";
+import useFirebaseAuth from "../../hooks/useAuth3";
 const Register = () => {
   const router = useRouter();
-  const { registerUser } = useAuth();
+  const { createUserWithEmailAndPassword } = useFirebaseAuth();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,7 +20,7 @@ const Register = () => {
       if (confirmPassword !== password)
         return setFormError("Passwords do not match");
 
-      await registerUser({
+      await createUserWithEmailAndPassword({
         email,
         first_name: firstName,
         last_name: lastName,
