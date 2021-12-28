@@ -19,14 +19,13 @@ const ProjectsTable = () => {
     const { data } = await axios.get("/api/projects/list-projects", config);
     return data.data;
   };
-  const {
-    data: projects,
-    isLoading: loadingProjects,
-    error: fetchingProjectError,
-  } = useQuery<ProjectDetails[]>(`projects-${authUser?.uid}`, fetchProjects);
+
+  const { data: projects, isLoading: loadingProjects } = useQuery<
+    ProjectDetails[]
+  >(`projects-${authUser?.uid}`, fetchProjects);
   return (
     <table
-      className=" h-1/2 mb-5 rounded-md  p-5  flex-grow "
+      className=" h-auto mb-5 rounded-md  p-5  flex-grow "
       style={{ background: "#ffffff" }}
     >
       <thead>
@@ -44,21 +43,35 @@ const ProjectsTable = () => {
           projects.map((project, i) => (
             <Link href={`/projects/${project.id}`} key={i}>
               <tr
-                className="px-1 rounded-md w-full shadow-2xl bg-white text-sm cursor-pointer"
+                className="px-1 rounded-md w-full  shadow-2xl bg-white text-sm cursor-pointer"
                 style={{ height: 40 }}
               >
-                <td className="px-3 rounded-tl-md rounded-bl-md">
-                  <p className="py-2">{project.title}</p>
+                <td className="">
+                  <p className="px-3  rounded-tl-md rounded-bl-md py-2  overflow-hidden">
+                    {project.title}
+                  </p>
                 </td>
-                <td className="px-1  ">{project.job_type}</td>
-                <td className=" px-1 ">{project.project_status}</td>
-                <td className=" px-1  ">
-                  {!project.created_at
-                    ? project.project_date.slice(0, 10)
-                    : project.created_at.slice(0, 10)}
+                <td className=" ">
+                  <p className="px-1  my-auto h-full overflow-hidden">
+                    {project.job_type}
+                  </p>
                 </td>
-                <td className=" px-3  rounded-tr-md rounded-br-md text-center">
-                  ...
+                <td className=" ">
+                  <p className="px-1  overflow-hidden">
+                    {project.project_status}
+                  </p>
+                </td>
+                <td className="  ">
+                  <p className="px-1  overflow-hidden">
+                    {!project.created_at
+                      ? project.project_date.slice(0, 10)
+                      : project.created_at.slice(0, 10)}
+                  </p>
+                </td>
+                <td className=" ">
+                  <p className="px-3  rounded-tr-md rounded-br-md text-center  overflow-hidden">
+                    ...
+                  </p>
                 </td>
               </tr>
             </Link>
