@@ -16,6 +16,12 @@ const Create = () => {
 
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+
+  useEffect(() => {
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
   const getTodaysDate = () => {
     var d = new Date(),
       month = "" + (d.getMonth() + 1),
