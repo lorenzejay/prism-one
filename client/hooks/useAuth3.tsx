@@ -69,13 +69,47 @@ export default function useFirebaseAuth() {
     password: string;
   }) => firebase.auth().signInWithEmailAndPassword(email, password);
 
-  const createUserWithEmailAndPassword = ({
-    email,
-    password,
-  }: {
+  interface SignUpProperty {
     email: string;
     password: string;
-  }) => firebase.auth().createUserWithEmailAndPassword(email, password);
+    first_name: string;
+    last_name: string;
+    username: string;
+  }
+
+  const createUserWithEmailAndPassword = async ({
+    email,
+    password,
+    first_name,
+    last_name,
+    username,
+  }: SignUpProperty) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post<{
+      success: boolean;
+      message: string;
+      id: string;
+    }>(
+      "/api/users/register",
+      {
+        email,
+        first_name,
+        last_name,
+        password,
+        username,
+      },
+
+      config
+    );
+    if (data.success) {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+    }
+  };
 
   const signOut = () => firebase.auth().signOut().then(clear);
 
