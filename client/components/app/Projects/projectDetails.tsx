@@ -6,6 +6,7 @@ import useFirebaseAuth from "../../../hooks/useAuth3";
 import { ProjectDetails, ProjectStatus } from "../../../types/projectTypes";
 import { TaskDetails } from "../../../types/tasksTypes";
 import { ApiCallReturn } from "../../../types/userTypes";
+import SuccessMessage from "../SuccessMessage";
 
 interface ProjectFormTypes {
   projectDetails?: ProjectDetails | null;
@@ -39,7 +40,7 @@ const ProjectDetailsForm = ({
     if (projectDetails) {
       setClientName(projectDetails.client_name);
       setClientEmail(projectDetails.client_email);
-
+      setProjectStatus(projectDetails.project_status as any);
       setTitle(projectDetails.title);
       setIsProjectPrivate(projectDetails.is_private);
       setExpectedRevenue(projectDetails.expected_revenue);
@@ -67,18 +68,18 @@ const ProjectDetailsForm = ({
       },
     };
     await axios.post(
-      `/api/clients/update-project-details/${projectId}`,
+      `/api/projects/update-project-details/${projectId}`,
       {
-        clientName,
-        clientEmail,
+        client_name: clientName,
+        client_email: clientEmail,
         title,
-        privateProject,
-        projectDate,
-        jobType,
-        amountPaid,
-        amountDue,
-        expectedRevenue,
-        projectStatus,
+        is_private: privateProject,
+        project_date: projectDate,
+        job_type: jobType,
+        amount_paid: amountPaid,
+        amount_due: amountDue,
+        expected_revenue: expectedRevenue,
+        project_status: projectStatus,
         tags,
         tasks,
         goals,
@@ -102,32 +103,35 @@ const ProjectDetailsForm = ({
     if (!projectId || !authUser.token) return;
 
     const { data } = await axios.delete<ApiCallReturn>(
-      `/api/clients/delete-project/${projectId}`,
+      `/api/projects/delete-project/${projectId}`,
       config
     );
     if (data.success) {
-      router.push("/clients");
+      router.push("/projects");
     }
   };
-  const { mutateAsync: handleUpdateProject, isLoading } = useMutation(
-    updateProjectDetails,
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries(
-          `project-details-${authUser?.uid}-${projectId}`
-        ),
-    }
-  );
+  const {
+    mutateAsync: handleUpdateProject,
+    isLoading,
+    isSuccess,
+  } = useMutation(updateProjectDetails, {
+    onSuccess: () =>
+      queryClient.invalidateQueries(
+        `project-details-${authUser?.uid}-${projectId}`
+      ),
+  });
   const { mutateAsync: handleDeleteProject } = useMutation(deleteProject, {
     onSuccess: () => queryClient.invalidateQueries(`projects-${authUser?.uid}`),
   });
+
   return (
     <form
       className="w-full px-5 py-3 lg:w-1/2 mx-auto font-light flex flex-col text-black bg-white "
       onSubmit={handleUpdateProject}
     >
       {isLoading && <div className="loader mx-auto"></div>}
-      <h3 className="text-3xl font-semibold my-3">Contacts</h3>
+      {isSuccess && <SuccessMessage success="Updated" />}
+      <h3 className="text-3xl font-semibold my-3">Project Details</h3>
       <div className="flex flex-col my-2">
         <label htmlFor="FirstAndLastName">First and Last Name</label>
         <input
@@ -196,14 +200,12 @@ const ProjectDetailsForm = ({
           name="state"
           className="rounded-md p-2 border outline-none"
         >
-          <option value={ProjectStatus.Inquiry}>{ProjectStatus.Inquiry}</option>
-          <option value={ProjectStatus.Proposal}>
-            {ProjectStatus.Proposal}
+          <option value={ProjectStatus.Lead}>{ProjectStatus.Lead}</option>
+          <option value={ProjectStatus.Booked}>{ProjectStatus.Booked}</option>
+          <option value={ProjectStatus.Fulfillment}>
+            {ProjectStatus.Fulfillment}
           </option>
-          <option value={ProjectStatus.Proposal_Status}>
-            {ProjectStatus.Proposal_Status}
-          </option>
-          <option value={ProjectStatus.Deposit}>{ProjectStatus.Deposit}</option>
+
           <option value={ProjectStatus.Completed}>
             {ProjectStatus.Completed}
           </option>
