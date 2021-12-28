@@ -2,10 +2,9 @@ import { TaskDetails } from "./tasksTypes";
 
 export interface Gallery {}
 export enum ProjectStatus {
-  Inquiry = "Inquiry",
-  Proposal = "Proposal",
-  Proposal_Status = "Proposal_Status",
-  Deposit = "Deposit",
+  Lead = "Lead",
+  Booked = "Booked",
+  Fulfillment = "Fulfillment",
   Completed = "Completed",
 }
 export interface ProjectDetails {
