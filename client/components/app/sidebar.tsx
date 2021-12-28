@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { CurrentDash } from "../../types/UITypes";
-import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { config, dom } from "@fortawesome/fontawesome-svg-core";
@@ -14,7 +13,6 @@ interface SidebarProps {
 const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
   const [minimizeSidebar, setMinimizeSidebar] = useState(true);
   const [revealMinimizeSbButton, setRevealMinimizeSbButton] = useState(false);
-  const router = useRouter();
 
   const [emailDropdown, setEmailDropdown] = useState(false);
   // console.log("path", path.slice(1, path.length));
@@ -26,7 +24,6 @@ const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
       localStorage.setItem("minimizeSidebar", JSON.stringify(minimizeSidebar));
     }
   }, []);
-  console.log("currentDash", currentDash);
   return (
     <div
       className={`flex transition-width duration-500 ease-in-out flex-col  relative ${
@@ -283,7 +280,7 @@ const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
             </button>
           </li>
         </Link>
-        <Link href="Galleries">
+        <Link href="/galleries">
           <li className="mb-5">
             <button
               onClick={() => {
