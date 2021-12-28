@@ -57,11 +57,10 @@ model CompanyDetails {
 }
 
 enum ProjectStatus {
-  Inquiry
-  Proposal
-  Proposal_Status
-  Deposit
-  Completed
+ Lead
+ Booked
+ Fulfillment
+ Completed
 
 }
 
@@ -78,7 +77,7 @@ model Project {
   tags String[]
   client_name String
   client_email String
-  project_status ProjectStatus @default(Inquiry)
+  project_status ProjectStatus @default(Lead)
   expected_revenue Int?
   amount_paid Int?
   amount_due Int?
