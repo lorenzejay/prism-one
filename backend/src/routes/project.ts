@@ -28,7 +28,7 @@ const checkIfProjectOwner = async (
 projectRouter.post("/create-project", authorization, async (req, res) => {
   try {
     const userId = req.user;
-
+    // console.log("userId", userId);
     const { title, client_email, client_name, project_date, goals, tags } =
       req.body;
 
@@ -80,6 +80,9 @@ projectRouter.post(
         where: {
           id: projectId,
         },
+        select: {
+          owner_id: true,
+        },
       });
       if (selectedProject?.owner_id !== userId) {
         return res.send({
@@ -88,7 +91,6 @@ projectRouter.post(
           data: undefined,
         });
       }
-
       await prisma.project.update({
         where: {
           id: projectId,
@@ -105,10 +107,10 @@ projectRouter.post(
           expected_revenue,
           project_status,
           tags,
-          tasks,
           goals,
         },
       });
+
       res.send({
         success: true,
         message: "Updated client details",
@@ -158,13 +160,6 @@ projectRouter.get(
         where: { id: projectId },
         select: { title: true },
       });
-      // if (projectDetails?.owner_id !== userId.toString()) {
-      //   res.send({
-      //     data: undefined,
-      //     success: false,
-      //     message: "You are not the owner of this application.",
-      //   });
-      // }
       res.send({ data: title, success: true, message: "" });
     } catch (error) {
       console.log(error);
@@ -199,6 +194,7 @@ projectRouter.get(
     try {
       const projectId = parseInt(req.params.projectId);
       const userId = req.user;
+      if (!userId) return;
       const projectTasks = await prisma.task.findMany({
         orderBy: [
           {
@@ -210,6 +206,9 @@ projectRouter.get(
           created_by: userId,
         },
       });
+      if (projectTasks === [] || projectTasks.length === 0) {
+        return res.send({ success: true, message: null, data: null });
+      }
       res.send({ success: true, message: null, data: projectTasks });
     } catch (error) {
       console.log(error);
@@ -846,7 +845,86 @@ projectRouter.put(
   }
 );
 
-//update header_img (associated with gallery)
-//add galleries
+//listing project status stats
+projectRouter.get(
+  "/list-projects-status-counter",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user;
+      const counter = await prisma.project.groupBy({
+        where: {
+          owner_id: userId,
+          project_status: {
+            in: ["Booked", "Completed", "Fulfillment", "Lead"],
+          },
+        },
+
+        by: ["project_status"],
+
+        _count: {
+          project_status: true,
+        },
+      });
+
+      const leadCount = counter.find(
+        (x) => x.project_status === ProjectStatus.Lead
+      )?._count;
+      const bookedCount = counter.find(
+        (x) => x.project_status === ProjectStatus.Booked
+      )?._count;
+      const fulfillmentCount = counter.find(
+        (x) => x.project_status === ProjectStatus.Fulfillment
+      )?._count;
+      const completedCount = counter.find(
+        (x) => x.project_status === ProjectStatus.Completed
+      )?._count;
+      let statusCounts = {
+        leadCount: leadCount?.project_status || 0,
+        bookedCount: bookedCount?.project_status || 0,
+        fulfillmentCount: fulfillmentCount?.project_status || 0,
+        completedCount: completedCount?.project_status || 0,
+      };
+      res.send({
+        success: true,
+        message: undefined,
+        data: {
+          statusCounts,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+// list 6 of the most recent projects made
+projectRouter.get("/list-recent-projects", authorization, async (req, res) => {
+  try {
+    const userId = req.user;
+    if (!userId) {
+      res.send({
+        success: false,
+        message: "You are not authorized to view this data.",
+        data: null,
+      });
+    }
+    const projects = await prisma.project.findMany({
+      take: 6,
+      orderBy: [
+        {
+          created_at: "desc",
+        },
+      ],
+      where: {
+        owner_id: userId,
+      },
+    });
+
+    res.send({ success: true, message: undefined, data: projects });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export default projectRouter;
