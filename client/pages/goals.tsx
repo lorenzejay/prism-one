@@ -26,18 +26,18 @@ const Goals = () => {
           Additionally, traditional CRM&apos;s are daunting just looking at it.
           CRM&apos;s are powerful business tools but it may dissuade many
           smaller freeancers from using one due to it&apos;s steep learning
-          curve. Some CRM's are overloaded with features you don't even know
-          where to get started. With my background in the creative freelance
-          industry and in tech, I decided to make an application that addressed
-          the problem I had. Prism One&apos;s goals is to create a workflow that
-          is easy to use, yet has all the features needed to run a freelance
-          creative business. From tracking your clients inquiries to your final
-          deliverables, Prism One has you covered.
+          curve. Some CRM&apos;s are overloaded with features you don&apos;t
+          even know where to get started. With my background in the creative
+          freelance industry and in tech, I decided to make an application that
+          addressed the problem I had. Prism One&apos;s goals is to create a
+          workflow that is easy to use, yet has all the features needed to run a
+          freelance creative business. From tracking your clients inquiries to
+          your final deliverables, Prism One has you covered.
         </p>
         <p className="text-xl mb-10 lg:w-3/4 leading-10 lg:mx-auto">
-          While the application is still in development, I'd love to keep you
-          informed on the progress of the application and give you a heads up
-          before Prism One launches.
+          While the application is still in development, I&apos;d love to keep
+          you informed on the progress of the application and give you a heads
+          up before Prism One launches.
         </p>
         <WaitlistForm />
       </div>

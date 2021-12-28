@@ -9,6 +9,7 @@ import Head from "next/head";
 import sanitize from "sanitize-html";
 import { useRouter } from "next/router";
 import useFirebaseAuth from "../../hooks/useAuth3";
+import Script from "next/script";
 
 const Create = () => {
   const queryClient = useQueryClient();
@@ -102,9 +103,9 @@ const Create = () => {
     <AppLayout>
       <>
         <Head>
-          <script src="/path/to/showdown/src/showdown.js"></script>
-          <script src="/path/to/xss/dist/xss.min.js"></script>
-          <script src="/path/to/showdown-xss-filter.js"></script>
+          <Script src="/path/to/showdown/src/showdown.js"></Script>
+          <Script src="/path/to/xss/dist/xss.min.js"></Script>
+          <Script src="/path/to/showdown-xss-filter.js"></Script>
         </Head>
         <h3 className="font-bold text-2xl mb-3 ">Create Email</h3>
         <form
