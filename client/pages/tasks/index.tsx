@@ -104,8 +104,18 @@ const Tasks = () => {
               taskSearched === "" &&
               tasks.map((task, i) => (
                 <Link href={`/tasks/${task.id}`} key={i}>
-                  <tr className="bg-white rounded-md cursor-pointer">
-                    <td className="p-3 rounded-tl-md rounded-bl-md">
+                  <tr
+                    className={`bg-white relative rounded-md cursor-pointer  ${
+                      task.status === FormType.completed ? " opacity-50  " : ""
+                    }`}
+                  >
+                    <td
+                      className={`p-3 rounded-tl-md rounded-bl-md  ${
+                        task.status === FormType.completed
+                          ? " opacity-50 task-line-through "
+                          : ""
+                      }`}
+                    >
                       <input
                         type="checkbox"
                         checked={
@@ -114,15 +124,7 @@ const Tasks = () => {
                       />
                     </td>
                     <td className="p-3 ">
-                      <p
-                        className={`${
-                          task.status === FormType.completed
-                            ? "line-through"
-                            : ""
-                        } `}
-                      >
-                        {task.description}
-                      </p>
+                      <p className={` `}>{task.description}</p>
                     </td>
                     <td className="p-3">{task.due_date}</td>
                     <td className="p-3 rounded-tr-md rounded-br-md">
