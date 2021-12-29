@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import useFirebaseAuth from "../../../hooks/useAuth3";
@@ -57,11 +58,11 @@ const TaskTable = () => {
   const { mutateAsync: handleUpdateTaskStatus } = useMutation(
     updateTaskStatus,
     {
-      onSuccess: () => queryClient.invalidateQueries(`tasks`),
+      onSuccess: () => queryClient.invalidateQueries(`tasks-${authUser?.uid}`),
     }
   );
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex flex-col w-full mb-10">
       <h3>Tasks</h3>
       <div
         className=" p-3 2xl:mt-6 rounded-md"
@@ -71,7 +72,11 @@ const TaskTable = () => {
         {tasks?.map((task) => (
           <div
             key={task.id}
-            className="flex items-center shadow-2xl bg-white my-2 rounded-md p-5 "
+            className={`flex items-center shadow-2xl bg-white my-2 rounded-md p-5 ${
+              task.status === FormType.completed
+                ? "line-through opacity-50"
+                : "opacity-100"
+            }`}
           >
             <input
               type="checkbox"
@@ -87,7 +92,9 @@ const TaskTable = () => {
               id={task.id.toString()}
               name={task.description}
             />
-            <label htmlFor={task.description}>{task.description}</label>
+            <Link href={`/tasks/${task.id}`}>
+              <p className="cursor-pointer">{task.description}</p>
+            </Link>
           </div>
         ))}
       </div>
