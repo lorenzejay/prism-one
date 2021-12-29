@@ -15,6 +15,7 @@ const EmailTable = ({
   loadingEmails,
   fetchingEmailError,
 }: EmailTableProps) => {
+  // emails && console.log("emails", emails);
   return (
     <>
       <h2 className="tracking-wide flex-grow text-3xl font-medium ">Emails</h2>
@@ -55,7 +56,9 @@ const EmailTable = ({
                         dangerouslySetInnerHTML={{
                           __html: sanitizeHtml,
                         }}
-                      ></td>
+                      >
+                        {/* <span></span> */}
+                      </td>
                       {/* <td className="border p-3">placeholder x</td> */}
                     </tr>
                   </Link>

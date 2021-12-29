@@ -63,7 +63,7 @@ const TaskTable = () => {
   );
   return (
     <div className="flex flex-col w-full mb-10">
-      <h3>Tasks</h3>
+      <h2 className="tracking-wide text-xl font-semibold">Tasks</h2>
       <div
         className=" p-3 2xl:mt-6 rounded-md"
         style={{ background: "#f0f0f0" }}
