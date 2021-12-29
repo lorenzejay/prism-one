@@ -9,9 +9,15 @@ config.autoAddCss = false;
 interface SidebarProps {
   currentDash: CurrentDash;
   setCurrentDash: (x: CurrentDash) => void;
+  minimizeSidebar: boolean;
+  setMinimizeSidebar: (x: boolean) => void;
 }
-const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
-  const [minimizeSidebar, setMinimizeSidebar] = useState(true);
+const Sidebar = ({
+  currentDash,
+  setCurrentDash,
+  minimizeSidebar,
+  setMinimizeSidebar,
+}: SidebarProps) => {
   const [revealMinimizeSbButton, setRevealMinimizeSbButton] = useState(false);
 
   const [emailDropdown, setEmailDropdown] = useState(false);
