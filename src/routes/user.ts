@@ -1,10 +1,8 @@
 import { Industry, PrismaClient } from ".prisma/client";
 import { Router } from "express";
 import * as admin from "firebase-admin";
-import { auth } from "firebase-admin";
 import fetch from "node-fetch";
 import authorization from "../middlewares/auth";
-import { generateUserToken } from "../utils/jwtGenerator";
 require("dotenv").config();
 const userRouter = Router();
 
