@@ -8,6 +8,8 @@ import contractRouter from "./routes/contracts";
 import taskRouter from "./routes/tasks";
 import emailRouter from "./routes/email";
 import galleryRouter from "./routes/gallery";
+import path from "path";
+require("dotenv").config();
 
 // const cldy = cloudinary.v2;
 const app = express();
@@ -36,18 +38,18 @@ app.use("/api/tasks", taskRouter);
 app.use("/api/emails", emailRouter);
 app.use("/api/galleries", galleryRouter);
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../client/out/")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/out/")));
 
-//   app.get("*", (_, res) => {
-//     res.sendFile(path.resolve(__dirname, "../client/out/index.html"));
-//   });
-// } else {
-//   app.get("/", (_, res: Response) => {
-//     res.send("Server Started");
-//   });
-// }
-app.get("/", (_, res) => {
-  res.send("Server Started");
-});
+  app.get("*", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/out/index.html"));
+  });
+} else {
+  app.get("/", (_, res) => {
+    res.send("Server Started");
+  });
+}
+// app.get("/", (_, res) => {
+//   res.send("Server Started");
+// });
 app.listen(port, () => console.log(`Server started on port ${port}`));
