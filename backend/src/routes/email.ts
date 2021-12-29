@@ -176,7 +176,7 @@ emailRouter.post("/reply-to-message", async (req, res) => {
       "Content-Transfer-Encoding: 7bit",
       `References: ${messageId}`,
       `In-Reply-To":${messageId}`,
-      `Subject: ${utf8Subject}`,
+      `Subject: Re: ${utf8Subject}`,
       `From: ${from}`,
       `To: ${to}`,
       "",
@@ -314,6 +314,7 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
     });
     if (!data.payload) return;
     if (!data.payload.headers) return;
+    console.log("data", data);
     //need to look at the mime-type
     const mimeType = data.payload.mimeType;
 
@@ -334,7 +335,7 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
         emailSubject: data.payload.headers.find((h) => h.name === "Subject"),
         emailRecieved: data.payload.headers.find((h) => h.name === "Received"),
         emailDate: data.payload.headers.find((h) => h.name === "Date"),
-        messageId: data.payload.headers.find((h) => h.name === "Message-ID"),
+        messageId: data.payload.headers.find((h) => h.name === "Message-Id"),
         emailBody: decodedBody,
       };
 
@@ -360,7 +361,7 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
         emailSubject: data.payload.headers.find((h) => h.name === "Subject"),
         emailRecieved: data.payload.headers.find((h) => h.name === "Received"),
         emailDate: data.payload.headers.find((h) => h.name === "Date"),
-        messageId: data.payload.headers.find((h) => h.name === "Message-ID"),
+        messageId: data.payload.headers.find((h) => h.name === "Message-Id"),
         emailBody: decodedBody,
       };
       res.send(email);

@@ -10,6 +10,7 @@ import sanitize from "sanitize-html";
 import { useRouter } from "next/router";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import Script from "next/script";
+import Link from "next/link";
 
 const Create = () => {
   const queryClient = useQueryClient();
@@ -68,15 +69,14 @@ const Create = () => {
       setEmailFrom(integrationStatus);
     }
   }, [integrationStatus]);
-  console.log("integrationStatus", integrationStatus);
-  console.log("emailFrom", emailFrom);
+
   //santize message out
   const sendEmail = async (e: FormEvent) => {
     e.preventDefault();
     const sanitizeHtml = sanitize(message);
     if (sanitizeHtml === "" || sanitizeHtml === "")
       return window.alert("Body cannot be empty");
-    await axios.post("/api/emails/send-email", {
+    const { data } = await axios.post("/api/emails/send-email", {
       subject,
       from: emailFrom,
       to: emailTo,
@@ -84,6 +84,9 @@ const Create = () => {
     });
     setEmailTo("");
     setMessage("");
+    if (data.success) {
+      router.push("/email/sent");
+    }
   };
 
   const {
@@ -157,10 +160,14 @@ const Create = () => {
             // }}
           />
           <div className="w-full flex justify-end mt-3 text-white">
-            <button className="p-2 w-24 rounded-md bg-red-500">Cancel</button>
-            <button className="p-2 w-24 rounded-md bg-blue-500 mx-3">
+            <Link href="/email/inbox">
+              <button className="p-2 w-24 mr-3 rounded-md bg-red-500">
+                Cancel
+              </button>
+            </Link>
+            {/* <button className="p-2 w-24 rounded-md bg-blue-500 mx-3">
               Save Draft
-            </button>
+            </button> */}
             <button className="p-2 w-24 rounded-md bg-blue-theme" type="submit">
               Send
             </button>
