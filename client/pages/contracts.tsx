@@ -4,7 +4,7 @@ import AppLayout from "../components/app/Layout";
 import { Cloudinary } from "cloudinary-core";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Document } from "react-pdf";
+// import { Document } from "react-pdf";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import useFirebaseAuth from "../hooks/useAuth3";
 const Contracts = () => {
@@ -105,7 +105,7 @@ const Contracts = () => {
         {/* <FormBuilder /> */}
         <form>
           <img src="https://res.cloudinary.com/dbingokq3/image/upload/v1635963147/ghrcitrhehfls9z5iptn.pdf" />
-          {previewSource && <Document file={pdf} />}
+          {/* {previewSource && <Document file={pdf} />} */}
           <label htmlFor="contract_name">Contract Name</label>
           <input
             className="contract_name"
