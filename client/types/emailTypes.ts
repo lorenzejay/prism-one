@@ -12,4 +12,5 @@ export type SpecificEmailType = {
   emailRecieved: nameValue;
   emailDate: nameValue;
   emailBody: string;
+  messageId: nameValue;
 };

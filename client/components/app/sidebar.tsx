@@ -207,7 +207,7 @@ const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
                   Sent
                 </li>
               </Link>
-              <Link href={"/email/drafts"}>
+              {/* <Link href={"/email/drafts"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -234,7 +234,7 @@ const Sidebar = ({ currentDash, setCurrentDash }: SidebarProps) => {
                 >
                   Scheduled
                 </li>
-              </Link>
+              </Link> */}
               <Link href={"/email/create"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"

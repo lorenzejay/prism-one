@@ -161,6 +161,53 @@ emailRouter.post("/send-email", async (req, res) => {
     console.log(error);
   }
 });
+//send email
+emailRouter.post("/reply-to-message", async (req, res) => {
+  try {
+    google.options({ auth: oAuth2Client });
+    const { subject, from, to, body, threadId, messageId } = req.body;
+    const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString(
+      "base64"
+    )}?=`;
+
+    const messageParts = [
+      "Content-Type: text/html; charset=utf-8",
+      "MIME-Version: 1.0",
+      "Content-Transfer-Encoding: 7bit",
+      `References: ${messageId}`,
+      `In-Reply-To":${messageId}`,
+      `Subject: ${utf8Subject}`,
+      `From: ${from}`,
+      `To: ${to}`,
+      "",
+      body,
+    ];
+    console.log("message", messageParts);
+    const message = messageParts.join("\n");
+    // The body needs to be base64url encoded.
+    const encodedMessage = Buffer.from(message)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const response = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+        threadId: threadId,
+      },
+    });
+
+    res.send({
+      success: true,
+      message: "Successfully sent the email",
+      data: response,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 //refresh the tokens automatically?
 oAuth2Client.on("tokens", (tokens) => {
@@ -252,8 +299,6 @@ emailRouter.get("/fetch-specific-thread/:emailQuery", async (req, res) => {
   }
 });
 
-enum MimeTypes {}
-
 const decodeMessage = (message: string) => {
   const decodedBody = Buffer.from(message, "base64").toString("binary");
   return decodedBody;
@@ -267,14 +312,13 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
       userId: `me`,
       id: messageId,
     });
-
     if (!data.payload) return;
     if (!data.payload.headers) return;
     //need to look at the mime-type
     const mimeType = data.payload.mimeType;
 
     if (mimeType !== "multipart/alternative") {
-      console.log("passed", data.payload);
+      // console.log("passed", data.payload);
 
       //decode the email
       if (!data.payload.body) return;
@@ -290,6 +334,7 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
         emailSubject: data.payload.headers.find((h) => h.name === "Subject"),
         emailRecieved: data.payload.headers.find((h) => h.name === "Received"),
         emailDate: data.payload.headers.find((h) => h.name === "Date"),
+        messageId: data.payload.headers.find((h) => h.name === "Message-ID"),
         emailBody: decodedBody,
       };
 
@@ -315,6 +360,7 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
         emailSubject: data.payload.headers.find((h) => h.name === "Subject"),
         emailRecieved: data.payload.headers.find((h) => h.name === "Received"),
         emailDate: data.payload.headers.find((h) => h.name === "Date"),
+        messageId: data.payload.headers.find((h) => h.name === "Message-ID"),
         emailBody: decodedBody,
       };
       res.send(email);
