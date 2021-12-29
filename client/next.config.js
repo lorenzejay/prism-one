@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   async rewrites() {
-    const baseUrl = "https://kallo-productivity.herokuapp.com";
+    const baseUrl = "prismonecrm.com";
     if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
       return [
         {
