@@ -47,7 +47,7 @@ const ProjectTask = ({
   const { mutateAsync: handleUpdateTaskStatus } = useMutation(
     updateTaskStatus,
     {
-      onSuccess: () => queryClient.invalidateQueries(`tasks`),
+      onSuccess: () => queryClient.invalidateQueries(`tasks-${authUser?.uid}`),
     }
   );
 
