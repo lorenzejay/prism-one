@@ -35,8 +35,6 @@ const EmailTable = ({
             {emails &&
               emails.map((e, i) => {
                 const sanitizeHtml = sanitize(e.snippet);
-                const date = new Date(parseInt(e.internalDate) * 1000);
-
                 const dateObj: { name: string; value: string } =
                   e.payload.headers.find((e: any) => e.name === "Date");
                 const emailFromObj: { name: string; value: string } =
