@@ -47,17 +47,17 @@ const Projects = () => {
             <Link href="/projects/create">New Project</Link>
           </button>
         </div>
-        <div
+        {/* <div
           className="w-full py-1 my-3"
           style={{ backgroundColor: "#333642" }}
-        >
-          <div
-            className="w-full flex py-2 text-white"
-            style={{ background: "#252833" }}
-          >
-            <button
+        > */}
+        {/* <div
+            className="w-full flex py-4 px-2  text-white"
+            style={{ background: "#001419" }}
+          > */}
+        {/* <button
               style={{ background: "#252833" }}
-              className="relative  w-1/6 project-status-arrow  "
+              className="relative  w-1/6 p-3 project-status-arrow-first  "
             >
               All Active Projects
             </button>
@@ -65,34 +65,34 @@ const Projects = () => {
               style={{ background: "#676B7C" }}
               className=" mr-2 w-1/6 relative project-status-arrow-active"
             >
-              Inquiry
+              Lead
+            </button> */}
+        {/* <button
+              style={{ background: "#333642" }}
+              className="  w-1/6 relative project-status-arrow"
+            >
+              Booked
             </button>
             <button
               style={{ background: "#333642" }}
               className="  w-1/6 relative project-status-arrow"
             >
-              Proposals
-            </button>
-            <button
-              style={{ background: "#333642" }}
-              className="  w-1/6 relative project-status-arrow"
-            >
-              Deposited
+              Fullfilled
             </button>
             <button
               style={{ background: "#333642" }}
               className="p-3  w-1/6 relative project-status-arrow"
             >
               Completed
-            </button>
-            <button
+            </button> */}
+        {/* <button
               style={{ background: "#333642" }}
               className="p-3  w-1/6 relative rounded-l-md"
             >
               Archive
-            </button>
-          </div>
-        </div>
+            </button> */}
+        {/* </div> */}
+        {/* </div> */}
 
         <table className=" table-fixed  w-full text-black">
           <thead>
