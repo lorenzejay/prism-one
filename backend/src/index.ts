@@ -5,30 +5,24 @@ import userRouter from "./routes/user";
 import projectRouter from "./routes/project";
 import clientRouter from "./routes/clients";
 import contractRouter from "./routes/contracts";
-import cloudinary from "cloudinary";
 import taskRouter from "./routes/tasks";
-import nodemailer from "nodemailer";
-import { google } from "googleapis";
-import { OAuth2Client } from "google-auth-library";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import Mail from "nodemailer/lib/mailer";
-import { MailOptions } from "nodemailer/lib/json-transport";
 import emailRouter from "./routes/email";
+import galleryRouter from "./routes/gallery";
 
-const cldy = cloudinary.v2;
+// const cldy = cloudinary.v2;
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
-cldy.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-});
+// cldy.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+//   secure: true,
+// });
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
@@ -40,6 +34,7 @@ app.use("/api/clients", clientRouter);
 app.use("/api/contracts", contractRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/emails", emailRouter);
+app.use("/api/galleries", galleryRouter);
 
 // if (process.env.NODE_ENV === "production") {
 //   app.use(express.static(path.join(__dirname, "../client/out/")));
