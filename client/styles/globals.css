@@ -89,3 +89,15 @@ table tbody tr:first-child td:last-child {
   height: 0;
   z-index: 10;
 }
+
+.task-line-through::after {
+  position: absolute;
+  left: 0;
+  top: 50%;
+
+  height: 1px;
+  background: #000000;
+  content: "";
+  width: 100%;
+  display: block;
+}
