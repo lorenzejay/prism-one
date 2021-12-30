@@ -32,7 +32,6 @@ const serviceAccount = JSON.stringify({
   // auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
   // client_x509_cert_url: process.env.client_x509_cert_url,
 });
-console.log(serviceAccount);
 
 admin.initializeApp({
   credential: admin.credential.cert(
