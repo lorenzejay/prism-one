@@ -71,7 +71,7 @@ const Create = () => {
     }
   }, [isSuccess, isLoading, router]);
 
-  console.log("project date", taskDate);
+  // console.log("project date", taskDate);
   return (
     <AppLayout>
       <>

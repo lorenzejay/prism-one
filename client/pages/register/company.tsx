@@ -21,7 +21,6 @@ const Company = () => {
     }
   }, [loading, authUser]);
 
-  console.log(industry);
   const handleFinishCreatingProfile = async (e: React.FormEvent) => {
     try {
       if (!authUser?.token) return;

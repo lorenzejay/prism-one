@@ -24,7 +24,6 @@ const Clients = () => {
   const handleGetUserClients = async () => {
     try {
       if (!authUser?.token) return;
-      console.log("authtoken,", authUser.token);
       const config = {
         headers: {
           "Content-Type": "application/json",

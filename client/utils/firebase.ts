@@ -27,7 +27,7 @@ const authState = getAuth();
 
 // const googleProvider = auth.GoogleAuthProvider;
 
-console.log("firebase running bb");
+// console.log("firebase running bb");
 export default firebase;
 
 // if (firebase.getApp === undefined) {

@@ -114,7 +114,7 @@ const SpecificEmail = () => {
     }
   };
 
-  console.log("emaildetails", specificEmailData);
+  // console.log("emaildetails", specificEmailData);
   return (
     <AppLayout>
       <>

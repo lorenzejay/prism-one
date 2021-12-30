@@ -71,7 +71,6 @@ const Task = () => {
     }
   };
 
-  console.log("ass proj", project_associated);
   const updateTaskStatus = async (e: FormEvent) => {
     if (!authUser?.token) return;
     e.preventDefault();
@@ -145,7 +144,7 @@ const Task = () => {
     }
   }, [task]);
 
-  console.log("project ass", project_associated);
+  // console.log("project ass", project_associated);
   return (
     <AppLayout>
       <div>

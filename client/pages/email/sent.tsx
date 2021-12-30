@@ -35,7 +35,7 @@ const Sent = () => {
     };
 
     const { data } = await axios.get("/api/emails/fetch-sent-messages", config);
-    console.log(data.data);
+    // console.log(data.data);
     return data.data;
   };
   const { data: integrationStatus, isLoading } = useQuery<boolean>(

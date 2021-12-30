@@ -48,7 +48,7 @@ const Create = () => {
 
   const removetagFromTagList = (toBeRemovedTag: number) => {
     const updatedTags = [...tags];
-    console.log(toBeRemovedTag);
+
     updatedTags.splice(toBeRemovedTag, 1);
     return setTags(updatedTags);
   };
@@ -132,7 +132,6 @@ const Create = () => {
               defaultValue={getTodaysDate()}
               onChange={(e) => {
                 const newDate = new Date(e.target.value);
-                console.log(newDate);
                 setProjectDate(newDate);
               }}
             />

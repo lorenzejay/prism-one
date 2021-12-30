@@ -45,7 +45,6 @@ const Email = () => {
       router.push("/email/inbox");
     }
   }, [integrationStatus]);
-  console.log("intgrationstatus", integrationStatus);
   return !integrationStatus ? (
     <AppLayout>
       <>
