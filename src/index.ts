@@ -11,6 +11,7 @@ import galleryRouter from "./routes/gallery";
 import path from "path";
 require("dotenv").config();
 
+const serviceAccount = require("../GOOGLE_APPLICATION_CREDENTIALS.json");
 // const cldy = cloudinary.v2;
 const app = express();
 const port = process.env.PORT || 5000;
@@ -26,7 +27,7 @@ app.use(express.urlencoded({ limit: "20mb", extended: true }));
 //   secure: true,
 // });
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+  credential: admin.credential.cert(serviceAccount),
 });
 
 //routes

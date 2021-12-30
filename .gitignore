@@ -12,6 +12,7 @@ node_modules
 /build
 /dist/*
 /dist
+GOOGLE_APPLICATION_CREDENTIALS.json
 
 # misc
 .DS_Store
