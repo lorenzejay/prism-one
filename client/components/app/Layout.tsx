@@ -6,7 +6,7 @@ import Sidebar from "./sidebar";
 
 const AppLayout = ({ children }: { children: ReactChild }) => {
   const [currentDash, setCurrentDash] = useState<CurrentDash>(CurrentDash.Home);
-  const [minimizeSidebar, setMinimizeSidebar] = useState(true);
+  const [minimizeSidebar, setMinimizeSidebar] = useState(false);
 
   const router = useRouter();
   const path = router.pathname.slice(1, router.pathname.length);
