@@ -9,9 +9,9 @@ import taskRouter from "./routes/tasks";
 import emailRouter from "./routes/email";
 import galleryRouter from "./routes/gallery";
 import path from "path";
+import { ServiceAccount } from "firebase-admin";
 require("dotenv").config();
 
-const serviceAccount = require("../GOOGLE_APPLICATION_CREDENTIALS.json");
 // const cldy = cloudinary.v2;
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,14 +20,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
-// cldy.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-//   secure: true,
-// });
+const serviceAccount = JSON.stringify({
+  // type: process.env.type,
+  project_id: process.env.project_id,
+  // private_key_id: process.env.private_key_id,
+  private_key: process.env.private_key?.replace(/\\n/g, "\n"),
+  client_email: process.env.client_email,
+  // client_id: process.env.client_id,
+  // auth_uri: process.env.auth_uri,
+  // token_uri: process.env.token_uri,
+  // auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
+  // client_x509_cert_url: process.env.client_x509_cert_url,
+});
+console.log(serviceAccount);
+
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(
+    JSON.parse(serviceAccount) as ServiceAccount
+  ),
 });
 
 //routes
