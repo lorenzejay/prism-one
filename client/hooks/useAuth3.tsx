@@ -21,7 +21,7 @@ export default function useFirebaseAuth() {
     token: string | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  console.log("user", authUser);
+  // console.log("user", authUser);
   const authStateChanged = async (authState: User) => {
     if (!authState) {
       setLoading(false);

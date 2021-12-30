@@ -37,7 +37,7 @@ const ProjectStatusCharts = () => {
       `projects-status-${authUser?.uid}`,
       getProjectStatusCounts
     );
-  console.log("statusCounters", statusCounters);
+  // console.log("statusCounters", statusCounters);
   return (
     <>
       <h2 className="tracking-wide text-xl font-semibold">Stats</h2>
