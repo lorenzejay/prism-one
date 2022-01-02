@@ -1,23 +1,21 @@
 import { Industry, PrismaClient } from ".prisma/client";
 import { Router } from "express";
-import * as admin from "firebase-admin";
 import fetch from "node-fetch";
 import authorization from "../middlewares/auth";
-require("dotenv").config();
+import { auth } from "../utils/firebaseInit";
 const userRouter = Router();
 
 const prisma = new PrismaClient();
 
-userRouter.post("/register", async (req, res) => {
+userRouter.post("/register", async (req, res, next) => {
   try {
     const { email, username, first_name, last_name, password } = req.body;
     // return res.send(JSON.stringify(phone_number));
-    const createdUser = await admin.auth().createUser({
+    const createdUser = await auth.createUser({
       email,
       password,
       displayName: username,
     });
-    // console.log("createdUser", createdUser);
 
     const { uid } = createdUser;
     await prisma.user.create({
@@ -34,10 +32,15 @@ userRouter.post("/register", async (req, res) => {
       success: true,
       message: "Successfully created a user.",
 
-      id: uid,
+      data: uid,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    res.send({
+      data: error,
+      message: error.errorInfo.message,
+      success: false,
+    });
   }
 });
 
@@ -97,7 +100,7 @@ userRouter.get("/get-user-id/:userToken", async (req, res) => {
   try {
     const { userToken } = req.params;
     //verify the token with firebase
-    const decodedToken = await admin.auth().verifyIdToken(userToken);
+    const decodedToken = await auth.verifyIdToken(userToken);
     const uid = decodedToken.uid;
     res.send({ userId: uid });
   } catch (error) {
@@ -109,12 +112,11 @@ userRouter.get("/get-username", authorization, async (req, res) => {
   try {
     const userId = req.user;
     if (!userId) return;
-    console.log("userId", userId);
-    const userRecord = await admin.auth().getUser(userId.toString());
+    const userRecord = await auth.getUser(userId.toString());
     if (!userRecord) return;
     const username = userRecord.displayName;
 
-    res.send({ username });
+    res.send(username);
   } catch (error) {
     console.log(error);
   }
@@ -151,7 +153,7 @@ userRouter.get(
       const uid = req.params.uid;
       const token = req.header("token");
       if (userId == uid) {
-        const user = await admin.auth().getUser(uid);
+        const user = await auth.getUser(uid);
 
         res.send({ uid: user.uid, token });
       }

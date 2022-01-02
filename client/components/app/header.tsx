@@ -9,7 +9,6 @@ const AppHeader = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
   // Queries
-
   const getUserFirstName = async () => {
     try {
       if (!authUser?.token) return;
@@ -19,18 +18,17 @@ const AppHeader = () => {
           token: authUser.token,
         },
       };
-      const { data } = await axios.get("/api/users/get-firstname", config);
+      const { data } = await axios.get("/api/users/get-username", config);
 
       return data;
     } catch (error) {
       return error;
     }
   };
-  const { data: user } = useQuery<{
-    success: boolean;
-    message: string | undefined;
-    data: string;
-  }>(`users_firstname-${authUser?.uid}`, getUserFirstName);
+  const { data: username } = useQuery<string>(
+    `users_firstname-${authUser?.uid}`,
+    getUserFirstName
+  );
 
   return (
     <nav className="flex relative text-black items-center h-24 py-5 px-12 lg:px-24 w-screen">
@@ -68,9 +66,11 @@ const AppHeader = () => {
       </div>
         */}
       <div className="relative">
-        <button className="" onClick={() => setOpenDropdown(!openDropdown)}>
-          <span className="font-bold">Welcome ,</span> {user?.data}
-        </button>
+        {username && (
+          <button className="" onClick={() => setOpenDropdown(!openDropdown)}>
+            <span className="font-bold">Welcome ,</span> {username}
+          </button>
+        )}
         {openDropdown && (
           <div className="absolute top-10 bg-gray-100 p-3 shadow-2xl ">
             <button onClick={signOut}>Logout</button>
