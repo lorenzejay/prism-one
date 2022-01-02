@@ -1,10 +1,10 @@
 import { Response, NextFunction } from "express";
-import * as admin from "firebase-admin";
 require("dotenv").config();
+import { auth } from "../utils/firebaseInit";
 // //checks if the token is valid
 const authorization = async (req: any, res: Response, next: NextFunction) => {
   try {
-    const decodedToken = await admin.auth().verifyIdToken(req.header("token"));
+    const decodedToken = await auth.verifyIdToken(req.header("token"));
 
     //pull the token from the request of the user
     // const jwtToken = req.header("token");
