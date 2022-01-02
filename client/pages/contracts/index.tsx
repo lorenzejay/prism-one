@@ -5,7 +5,7 @@ import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import Link from "next/link";
 import { ContractTypes } from "../../types/contract";
-const index = () => {
+const Index = () => {
   const { authUser } = useFirebaseAuth();
   const fetchContracts = async () => {
     try {
@@ -31,7 +31,7 @@ const index = () => {
 
   //list out the fetched contracts
 
-  console.log("contractList", contractList);
+  // console.log("contractList", contractList);
   return (
     <AppLayout>
       <>
@@ -60,4 +60,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

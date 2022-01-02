@@ -1,12 +1,11 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import {
   getStorage,
   ref,
   TaskState,
-  uploadBytes,
   uploadBytesResumable,
   UploadTaskSnapshot,
 } from "firebase/storage";
@@ -29,7 +28,6 @@ const Upload = () => {
   const [contract_name, setContractName] = useState("");
   const [attached_file, setAttachedFile] = useState<File | null>(); //what is actually sent out to cloud storage
   const [custom_contract, setCustomContract] = useState(false);
-  const [text_field_response, setTextFieldResponse] = useState("");
   const [uploadState, setUploadState] = useState<TaskState>({} as TaskState);
 
   //previews
@@ -68,15 +66,6 @@ const Upload = () => {
     }
   };
 
-  // const previewFile = (file: any) => {
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file); //convers images into a string
-  //   reader.onloadend = () => {
-  //     setPreviewSource(reader.result);
-  //     setAttachedFile(reader.result);
-  //   };
-  // };
-
   const createContractWithFirebase = async (e: FormEvent) => {
     try {
       e.preventDefault();
@@ -111,28 +100,7 @@ const Upload = () => {
       console.log("error", error);
     }
   };
-  const fetchContracts = async () => {
-    try {
-      if (!authUser?.token) return;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          token: authUser?.token,
-        },
-      };
-      const { data } = await axios.get("/api/contracts/list-contracts", config);
-      if (data.success) {
-        return data.data;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const { data: contractList } = useQuery<{
-    success: boolean;
-    message: string | undefined;
-    data: string;
-  }>(`contracts-${authUser?.uid}`, fetchContracts);
+
   const createContract = async (uploadTask: UploadTaskSnapshot) => {
     try {
       if (!authUser?.token) return;

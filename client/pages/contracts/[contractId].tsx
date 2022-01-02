@@ -68,7 +68,6 @@ const IndvContract = () => {
     }
   }, [refPath]);
 
-  console.log("url", donwloadUrl);
   return (
     <AppLayout>
       <div className="flex flex-col justify-start p-5 lg:">
