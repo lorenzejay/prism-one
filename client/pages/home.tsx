@@ -21,6 +21,7 @@ const Home = () => {
     if (!loading && !authUser) {
       router.push("/sign-in");
     }
+    window.localStorage.setItem("currentDash", "Home");
   }, [loading, authUser]);
   const data = [
     {
@@ -88,9 +89,13 @@ const Home = () => {
             <h2 className="tracking-wide text-xl font-semibold mb-3">
               Revenue
             </h2>
-            <div style={{ background: "#f0f0f0" }} className="rounded-md p-2">
+            <div
+              style={{ background: "#f0f0f0" }}
+              className="w-full rounded-md p-2"
+            >
               <AreaChart
-                width={400}
+                className="w-full"
+                width={375}
                 height={400}
                 data={data}
                 margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
