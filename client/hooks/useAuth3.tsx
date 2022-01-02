@@ -15,13 +15,14 @@ const formatAuthUser = async (user: User) => {
 
 export default function useFirebaseAuth() {
   const [username, setUsername] = useState("");
+  const [authError, setAuthError] = useState<null | string>();
   const [authUser, setAuthUser] = useState<{
     uid: string | null;
     email: string | null;
     token: string | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  // console.log("user", authUser);
+  // console.log(authUser?.token);
   const authStateChanged = async (authState: User) => {
     if (!authState) {
       setLoading(false);
@@ -34,32 +35,33 @@ export default function useFirebaseAuth() {
     if (formattedUser) {
       setAuthUser(formattedUser);
     }
-    await getUsername();
+    // await getUsername();
     setLoading(false);
   };
 
   const clear = () => {
     setAuthUser(null);
     setLoading(true);
+    setAuthError(null);
   };
 
-  const getUsername = async () => {
-    if (authUser === null) return;
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: authUser.token,
-      },
-    };
-    const { data } = await axios.get<{ username: string }>(
-      `/api/users/get-username`,
-      config
-    );
-    if (data) {
-      setUsername(data.username);
-    }
-    // console.log("user", user.data.userId);
-  };
+  // const getUsername = async () => {
+  //   if (authUser?.token) return;
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       token: authUser?.token,
+  //     },
+  //   };
+  //   const { data } = await axios.get<{ username: string }>(
+  //     `/api/users/get-username`,
+  //     config
+  //   );
+  //   if (data) {
+  //     setUsername(data.username);
+  //   }
+  //   // console.log("user", user.data.userId);
+  // };
 
   const signInWithEmailAndPassword = ({
     email,
@@ -67,7 +69,18 @@ export default function useFirebaseAuth() {
   }: {
     email: string;
     password: string;
-  }) => firebase.auth().signInWithEmailAndPassword(email, password);
+  }) =>
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch((err) => {
+        console.log(err.code === "auth/wrong-password");
+        if (err.code) {
+          setAuthError(
+            "Either your Email or password is invalid. But I really don't know which..."
+          );
+        }
+      });
 
   interface SignUpProperty {
     email: string;
@@ -84,30 +97,36 @@ export default function useFirebaseAuth() {
     last_name,
     username,
   }: SignUpProperty) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
 
-    const { data } = await axios.post<{
-      success: boolean;
-      message: string;
-      id: string;
-    }>(
-      "/api/users/register",
-      {
-        email,
-        first_name,
-        last_name,
-        password,
-        username,
-      },
+      const { data } = await axios.post<{
+        success: boolean;
+        message: string;
+        data: string | any;
+      }>(
+        "/api/users/register",
+        {
+          email,
+          first_name,
+          last_name,
+          password,
+          username,
+        },
 
-      config
-    );
-    if (data.success) {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+        config
+      );
+      if (data.success === true) {
+        setAuthError(null);
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+      }
+    } catch (error: any) {
+      console.log("error", error);
+      throw new Error("That email is already registered.");
     }
   };
 
@@ -127,5 +146,6 @@ export default function useFirebaseAuth() {
     createUserWithEmailAndPassword,
     signOut,
     username,
+    authError,
   };
 }
