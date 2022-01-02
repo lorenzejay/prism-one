@@ -65,10 +65,11 @@ const TaskTable = () => {
     <div className="flex flex-col w-full mb-10">
       <h2 className="tracking-wide text-xl font-semibold">Tasks</h2>
       <div
-        className=" p-3 2xl:mt-6 rounded-md"
+        className="min-h-1/4 p-3 2xl:mt-6 rounded-md"
         style={{ background: "#f0f0f0" }}
       >
         {loadingTasks && <Loader />}
+        {tasks?.length === 0 && <p>No Tasks</p>}
         {tasks?.map((task) => (
           <div
             key={task.id}

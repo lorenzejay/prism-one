@@ -28,6 +28,7 @@ const ProjectsTable = () => {
       className=" h-auto mb-5 rounded-md  p-5  flex-grow "
       style={{ background: "#ffffff" }}
     >
+      {projects?.length === 0 && <p>You have no jobs.</p>}
       <thead>
         <tr className="text-left  font-bold underline">
           <th className="px-3">Job Name</th>
@@ -40,6 +41,7 @@ const ProjectsTable = () => {
       {loadingProjects && <Loader />}
       <tbody>
         {projects &&
+          projects.length !== 0 &&
           projects.map((project, i) => (
             <Link href={`/projects/${project.id}`} key={i}>
               <tr
