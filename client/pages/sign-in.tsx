@@ -11,7 +11,8 @@ const SignIn = () => {
   // const auth = getAuth(app);
 
   // const { signIn, userId, error } = useAuth();
-  const { signInWithEmailAndPassword, authUser, loading } = useFirebaseAuth();
+  const { signInWithEmailAndPassword, authUser, authError, loading } =
+    useFirebaseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberUserSignIn, setRememberUserSignIn] = useState(false);
@@ -52,6 +53,7 @@ const SignIn = () => {
           onSubmit={handleLogin}
         >
           <h1 className="text-center text-3xl ">Sign In</h1>
+          {authError && <ErrorMessage error={authError} />}
           {/* {error && (
             <ErrorMessage
               error={

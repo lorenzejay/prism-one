@@ -17,6 +17,7 @@ const Clients = () => {
     if (!loading && !authUser) {
       router.push("/sign-in");
     }
+    window.localStorage.setItem("currentDash", "Clients");
   }, [loading, authUser]);
 
   //list all clients out here

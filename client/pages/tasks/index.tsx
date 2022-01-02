@@ -16,6 +16,7 @@ const Tasks = () => {
     if (!loading && !authUser) {
       router.push("/sign-in");
     }
+    window.localStorage.setItem("currentDash", "Tasks");
   }, [loading, authUser]);
 
   const listTasks = async () => {
