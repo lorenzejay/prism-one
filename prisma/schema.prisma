@@ -127,13 +127,10 @@ model Client {
 model Contract {
   id Int @id @default(autoincrement())
   contract_name String
-  attachment_file String?
   custom_contract Boolean @default(false)
   text_field_response String?
-  cloudinary_public_id String?
-  cloudinary_asset_id String?
-  cloudinary_secure_link String?
-  cloduinary_file_url String?
+  firebase_path String
+  location_bucket String
   owner User @relation(fields: [created_by], references: [id])
   created_by String
   created_at DateTime @default(now())
