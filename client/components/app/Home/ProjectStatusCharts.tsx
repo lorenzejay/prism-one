@@ -61,7 +61,7 @@ const ProjectStatusCharts = () => {
             <h4 className="text-xl">Booked</h4>
             <p className="text-xl font-bold">{statusCounters?.bookedCount}</p>
           </div>
-          <img src={"/InProgress.png"} className="w-24 object-cover" />
+          <img src={"/Inprogress.png"} className="w-24 object-cover" />
         </div>
 
         <div
