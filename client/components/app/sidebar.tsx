@@ -21,14 +21,20 @@ const Sidebar = ({
   const [revealMinimizeSbButton, setRevealMinimizeSbButton] = useState(false);
 
   const [emailDropdown, setEmailDropdown] = useState(false);
+  const [contractDropdown, setContractDropdown] = useState(false);
   // console.log("path", path.slice(1, path.length));
   useEffect(() => {
     const lastSidebarState = window.localStorage.getItem("minimizeSidebar");
+    const currentDashFromLocalStorage =
+      window.localStorage.getItem("currentDash");
     if (lastSidebarState) {
       setMinimizeSidebar(JSON.parse(lastSidebarState));
     } else {
       localStorage.setItem("minimizeSidebar", JSON.stringify(minimizeSidebar));
     }
+    // if (currentDashFromLocalStorage !== "") {
+    setCurrentDash(currentDashFromLocalStorage as CurrentDash);
+    // }
   }, []);
   return (
     <div
@@ -259,33 +265,93 @@ const Sidebar = ({
           )}
         </li>
         {/* </Link> */}
-
-        <Link href="/contracts">
-          <li
-            className={`mb-5 ${
+        <li
+          className="mb-5 relative"
+          onClick={() => setContractDropdown(!contractDropdown)}
+        >
+          <button
+            // onClick={() => {
+            //   window.localStorage.setItem("currentDash", CurrentDash.Email);
+            //   setCurrentDash(CurrentDash.Email);
+            // }}
+            className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
               currentDash === CurrentDash.Contracts
                 ? "bg-gray-100 border-l-2 border-yellow-600"
                 : "border-none bg-none"
             }`}
           >
-            <button
-              onClick={() => {
-                window.localStorage.setItem(
-                  "currentDash",
-                  CurrentDash.Contracts
-                );
-                setCurrentDash(CurrentDash.Contracts);
-              }}
-              className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 `}
-            >
-              {minimizeSidebar ? (
-                <img src="/handshake.png" className="object-cover w-1/4" />
-              ) : (
-                "Contracts"
-              )}
-            </button>
-          </li>
-        </Link>
+            {minimizeSidebar ? (
+              <img src="/handshake.png" className="object-cover w-1/4" />
+            ) : (
+              <p>
+                Contracts
+                <span className="absolute right-5 text-black">
+                  {!contractDropdown ? (
+                    <FontAwesomeIcon
+                      icon={faCaretRight}
+                      size={"lg"}
+                      color="black"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faCaretDown}
+                      size={"lg"}
+                      color="black"
+                    />
+                  )}
+                </span>
+              </p>
+            )}
+          </button>
+          {contractDropdown && (
+            <ul className="transition-all duration-500 ease-in-out">
+              <Link href={"/contracts"}>
+                <li
+                  className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
+                  onClick={() => {
+                    window.localStorage.setItem(
+                      "currentDash",
+                      CurrentDash.Contracts
+                    );
+                    setEmailDropdown(!contractDropdown);
+                  }}
+                >
+                  Contracts
+                </li>
+              </Link>
+              <Link href={"/contracts/upload"}>
+                <li
+                  className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
+                  onClick={() => {
+                    window.localStorage.setItem(
+                      "currentDash",
+                      CurrentDash.Contracts
+                    );
+                    setEmailDropdown(!contractDropdown);
+                  }}
+                >
+                  Upload
+                </li>
+              </Link>
+
+              {/* <Link href={"/contracts/upload"}>
+                <li
+                  className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
+                  onClick={() => {
+                    window.localStorage.setItem(
+                      "currentDash",
+                      CurrentDash.Email
+                    );
+                    setEmailDropdown(!emailDropdown);
+                  }}
+                >
+                  Upload
+                </li>
+              </Link> */}
+            </ul>
+          )}
+        </li>
+
         <Link href="/galleries">
           <li className="mb-5">
             <button
