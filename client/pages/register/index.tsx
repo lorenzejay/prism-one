@@ -3,8 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "../../components/LandingPageComponents/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
+import ErrorMessage from "../../components/app/ErrorMessage";
 const Register = () => {
   const router = useRouter();
+  const { authError } = useFirebaseAuth();
   const { createUserWithEmailAndPassword } = useFirebaseAuth();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -14,11 +16,13 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [formError, setFormError] = useState("");
   const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
+      setFormError("");
       //check if pass and confirm pass are the same
-      if (confirmPassword !== password)
+      if (confirmPassword !== password) {
         return setFormError("Passwords do not match");
+      }
 
       await createUserWithEmailAndPassword({
         email,
@@ -27,10 +31,11 @@ const Register = () => {
         password,
         username,
       });
+
       router.push("/register/company");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw new Error("Unable to create account, please try again.");
+      setFormError(error.message);
     }
   };
 
@@ -39,9 +44,11 @@ const Register = () => {
       <>
         <form
           className="px-5 py-4 lg:py-10  lg:px-12 xl:px-32 flex flex-col justify-center "
-          onSubmit={handleRegister}
+          onSubmit={(e) => handleRegister(e)}
         >
           <h1 className="text-center text-3xl ">Sign Up </h1>
+          {formError && <ErrorMessage error={formError} />}
+          {authError && <ErrorMessage error={authError} />}
           <input
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
