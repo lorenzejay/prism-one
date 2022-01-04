@@ -119,6 +119,7 @@ userRouter.get("/get-username", authorization, async (req, res) => {
     res.send(username);
   } catch (error) {
     console.log(error);
+    res.send(error);
   }
 });
 userRouter.get("/get-firstname", authorization, async (req, res) => {

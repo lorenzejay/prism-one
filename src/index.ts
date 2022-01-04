@@ -8,6 +8,7 @@ import taskRouter from "./routes/tasks";
 import emailRouter from "./routes/email";
 import galleryRouter from "./routes/gallery";
 import path from "path";
+import leadRouter from "./routes/leads";
 
 require("dotenv").config();
 
@@ -27,6 +28,7 @@ app.use("/api/contracts", contractRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/emails", emailRouter);
 app.use("/api/galleries", galleryRouter);
+app.use("/api/leads", leadRouter);
 
 if (process.env.NODE_ENV === "production") {
   //list out all the routes specifically
@@ -73,6 +75,18 @@ if (process.env.NODE_ENV === "production") {
       path.resolve(__dirname, "../client/out/email/view/[messageId].html")
     );
   });
+  app.get("/leads/view/:leadId", (_, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "../client/out/leads/view/[leadId].html")
+    );
+  });
+  app.get("/leads/:leadId", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/out/leads/[leadId].html"));
+  });
+  app.get("/leads/create", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/out/leads/create.html"));
+  });
+
   app.get("/projects/create", (_, res) => {
     res.sendFile(path.resolve(__dirname, "../client/out/projects/create.html"));
   });
