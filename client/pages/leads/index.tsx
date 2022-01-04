@@ -49,8 +49,8 @@ const Index = () => {
           <tbody>
             {leads &&
               leads.map((lead, i) => (
-                <Link href={`/leads/${lead.id}`}>
-                  <tr key={i} className="w-full bg-white cursor-pointer">
+                <Link href={`/leads/${lead.id}`} key={i}>
+                  <tr className="w-full bg-white cursor-pointer">
                     <td className="p-3 rounded-l-md">
                       <p>{lead.title}</p>
                     </td>

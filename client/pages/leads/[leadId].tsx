@@ -272,10 +272,10 @@ const LeadSpec = () => {
                   on your website. The data will be posted on the response tab.
                 </p>
                 <p className="rounded-md bg-blue-theme text-white text-center p-10">
-                  &lt;iframe frameBorder="0" scrolling="no" width="100%"
-                  height="545" src=
+                  &lt;iframe frameBorder=&quot;0&quot; scrolling=&quot;no&quot;
+                  width=&quot;100%&quot; height=&quot;545&quot; src=
                   {`https://${process.env.NEXT_PUBLIC_BASE_PATH}/leads/view/${leadDetails.id}`}
-                  &gt; &lt;/iframe&gt;"
+                  &gt; &lt;/iframe&gt;&quot;
                 </p>
               </div>
             )}
