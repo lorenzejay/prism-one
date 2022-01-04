@@ -30,6 +30,9 @@ module.exports = {
         blue: {
           theme: "#1D4757",
         },
+        orange: {
+          theme: "#FEC828",
+        },
       },
       screens: {
         i5: "320px",

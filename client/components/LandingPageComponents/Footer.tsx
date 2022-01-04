@@ -9,7 +9,7 @@ export const Footer = () => {
       <div className="flex flex-col">
         <h4 className="font-semibold text-xl tracking-wide">PRISM ONE CRM</h4>
         <p className="font-thin" style={{ color: "#7E7E7E" }}>
-          Our mission is to optimize the business workflow.
+          Simple and powerful CRM solution.
         </p>
       </div>
       <div className="flex items-center">

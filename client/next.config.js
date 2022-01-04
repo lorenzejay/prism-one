@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   async rewrites() {
-    const baseUrl = "https://prism-one-crm-backend.herokuapp.com/";
+    const baseUrl = "https://prism-one-crm-backend.herokuapp.com";
     if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
       return [
         {

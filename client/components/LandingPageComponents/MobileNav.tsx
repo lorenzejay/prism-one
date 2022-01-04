@@ -21,18 +21,9 @@ const MobileNav = ({ isOpen, toggle }: ModalNavProps) => {
         <li className="my-1">
           <Link href="/">Home</Link>
         </li>
-        <li className="my-1">
-          <Link href="/about">About</Link>
+        <li className="my-1 ">
+          <Link href="/goals">Goals</Link>
         </li>
-        <li className="my-1">
-          <Link href="/projects">Projects</Link>
-        </li>
-        <li className="my-1">
-          <Link href="/contact">Contact</Link>
-        </li>
-        {/* <li>
-            <Link href="/blog">Blog</Link>
-          </li> */}
       </ul>
     </div>
   );

@@ -19,13 +19,12 @@ const AppHeader = () => {
         },
       };
       const { data } = await axios.get("/api/users/get-username", config);
-
       return data;
     } catch (error) {
       return error;
     }
   };
-  const { data: username } = useQuery<string>(
+  const { data: username, isError } = useQuery<string>(
     `users_firstname-${authUser?.uid}`,
     getUserFirstName
   );
@@ -66,10 +65,13 @@ const AppHeader = () => {
       </div>
         */}
       <div className="relative">
-        {username && (
+        {username && !isError && (
           <button className="" onClick={() => setOpenDropdown(!openDropdown)}>
             <span className="font-bold">Welcome ,</span> {username}
           </button>
+        )}
+        {isError && (
+          <p className="p-2 rounded-md text-red-600">Something went wrong</p>
         )}
         {openDropdown && (
           <div className="absolute top-10 bg-gray-100 p-3 shadow-2xl ">
