@@ -44,6 +44,7 @@ model User {
   clients Client[]
   contracts Contract[]
   tasks Task[]
+  leadForms LeadForms[]
 }
 
 model CompanyDetails {
@@ -146,4 +147,22 @@ model Task {
   project Project? @relation(fields: [project_associated], references: [id])
   project_associated Int?
   status TaskStatus @default(Incomplete)
+}
+
+model LeadForms {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(100)
+  formElements Json[]
+  owner User @relation(fields: [created_by], references: [id])
+  created_by String
+  leadResponses LeadResponses[]
+  created_at DateTime @default(now())
+}
+
+model LeadResponses{
+  id Int @id @default(autoincrement())
+  lead LeadForms @relation(fields: [lead_associated], references: [id])
+  lead_associated Int
+  created_at DateTime @default(now())
+  response Json[]
 }
