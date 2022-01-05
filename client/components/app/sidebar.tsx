@@ -39,7 +39,7 @@ const Sidebar = ({
   return (
     <div
       className={`flex transition-width duration-500 ease-in-out flex-col  relative ${
-        minimizeSidebar ? "lg:w-1/12" : "lg:w-1/6"
+        minimizeSidebar ? "w-full  md:w-1/12" : " lg:w-1/6"
       }`}
       onMouseOver={() => setRevealMinimizeSbButton(true)}
       onMouseLeave={() => setRevealMinimizeSbButton(false)}
@@ -48,8 +48,8 @@ const Sidebar = ({
         <style>{dom.css()}</style>
       </Head>
       <div
-        className={`text-black absolute top-0 right-2  ${
-          revealMinimizeSbButton ? "block" : "hidden"
+        className={`hidden md:block text-black md:absolute md:top-0 md:right-2  ${
+          revealMinimizeSbButton ? "md:block" : "hidden"
         }`}
         onClick={() => {
           localStorage.setItem(
@@ -61,7 +61,7 @@ const Sidebar = ({
       >
         x
       </div>
-      <ul className="">
+      <ul className="flex justify-start lg:flex-col overflow-auto max-w-full">
         <Link href="/home">
           <li
             className="mb-5"
@@ -78,7 +78,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/dashboard.png" className="object-cover w-1/4" />
+                <img src="/dashboard.png" className="object-cover " />
               ) : (
                 "Dashboard"
               )}
@@ -160,7 +160,7 @@ const Sidebar = ({
             //   window.localStorage.setItem("currentDash", CurrentDash.Email);
             //   setCurrentDash(CurrentDash.Email);
             // }}
-            className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
+            className={`cursor-pointer text-left w-24 p-2 focus:border-l-2 ${
               currentDash === CurrentDash.Email
                 ? "bg-gray-100 border-l-2 border-yellow-600"
                 : "border-none bg-none"
@@ -283,7 +283,7 @@ const Sidebar = ({
             {minimizeSidebar ? (
               <img src="/handshake.png" className="object-cover w-1/4" />
             ) : (
-              <p>
+              <p className="w-24">
                 Contracts
                 <span className="absolute right-5 text-black">
                   {!contractDropdown ? (
@@ -352,7 +352,28 @@ const Sidebar = ({
           )}
         </li>
 
-        <Link href="/galleries">
+        <Link href="/leads">
+          <li className="mb-5">
+            <button
+              onClick={() => {
+                window.localStorage.setItem("currentDash", CurrentDash.LEADS);
+                setCurrentDash(CurrentDash.LEADS);
+              }}
+              className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
+                currentDash === CurrentDash.LEADS
+                  ? "bg-gray-100 border-l-2 border-yellow-600"
+                  : "border-none bg-none"
+              }`}
+            >
+              {minimizeSidebar ? (
+                <img src="/attraction.png" className="object-cover w-1/4" />
+              ) : (
+                "Leads"
+              )}
+            </button>
+          </li>
+        </Link>
+        {/* <Link href="/galleries">
           <li className="mb-5">
             <button
               onClick={() => {
@@ -375,7 +396,7 @@ const Sidebar = ({
               )}
             </button>
           </li>
-        </Link>
+        </Link> */}
       </ul>
     </div>
   );

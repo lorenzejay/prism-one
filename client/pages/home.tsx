@@ -75,16 +75,16 @@ const Home = () => {
   ];
   return (
     <AppLayout>
-      <div className="smooth ">
+      <div className="smooth overflow-hidden">
         {/* <h2 className="font-bold text-2xl ">Dashboard</h2> */}
 
-        <section className="flex justify-between w-full">
-          <div className="flex flex-col w-3/5 flex-wrap md:mr-2 2xl:mr-10">
+        <section className="flex flex-col md:flex-row md:justify-between w-full">
+          <div className="flex flex-col w-full md:w-3/5 flex-wrap md:mr-2 2xl:mr-10">
             <h2 className="tracking-wide text-xl font-semibold">Job List</h2>
             <ProjectsTable />
             <ProjectStatusCharts />
           </div>
-          <div className="w-2/5 flex flex-col ">
+          <div className="md:w-2/5 flex flex-col ">
             <TaskTable />
             <h2 className="tracking-wide text-xl font-semibold mb-3">
               Revenue

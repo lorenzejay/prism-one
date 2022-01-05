@@ -39,9 +39,9 @@ const ProjectStatusCharts = () => {
     );
   // console.log("statusCounters", statusCounters);
   return (
-    <>
+    <section className="mb-20 ">
       <h2 className="tracking-wide text-xl font-semibold">Stats</h2>
-      <section className="grid grid-cols-2 gap-4">
+      <section className="w-full md:grid md:grid-cols-2 md:gap-4">
         <div
           className="mt-2  px-5 py-3 flex rounded-md shadow-2xl items-start justify-between"
           style={{ background: "#ffffff" }}
@@ -92,7 +92,7 @@ const ProjectStatusCharts = () => {
           />
         </div>
       </section>
-    </>
+    </section>
   );
 };
 

@@ -25,52 +25,52 @@ const ProjectsTable = () => {
   >(`projects-${authUser?.uid}`, fetchProjects);
   return (
     <table
-      className=" h-auto mb-5 rounded-md  p-5  flex-grow "
+      className="w-full table-auto flex flex-col overflow-x-auto text-sm lg:text-base h-auto mb-5 rounded-md  p-5  "
       style={{ background: "#ffffff" }}
     >
-      {projects?.length === 0 && <p>You have no jobs.</p>}
       <thead>
-        <tr className="text-left  font-bold underline">
-          <th className="px-3">Job Name</th>
-          <th className="px-3">Job Type</th>
-          <th className="px-3">Status</th>
-          <th className="px-3">Date</th>
-          <th className="px-3">Action</th>
+        <tr className="w-full text-left font-bold underline">
+          <th className="w-1/5 px-3">Job Name</th>
+          <th className="w-1/5 px-3">Job Type</th>
+          <th className="w-1/5 px-3">Status</th>
+          <th className="w-1/5 px-3">Date</th>
+          <th className="w-1/5 px-3">Action</th>
         </tr>
       </thead>
       {loadingProjects && <Loader />}
+      {projects?.length === 0 && <p>You have no jobs.</p>}
       <tbody>
         {projects &&
           projects.length !== 0 &&
           projects.map((project, i) => (
             <Link href={`/projects/${project.id}`} key={i}>
               <tr
-                className="px-1 rounded-md w-full  shadow-2xl bg-white text-sm cursor-pointer"
+                className="px-1 rounded-md w-full  shadow-2xl bg-white text-sm cursor-pointer "
                 style={{ height: 40 }}
               >
-                <td className="">
+                <td className="w-1/5">
                   <p className="px-3  rounded-tl-md rounded-bl-md py-2  overflow-hidden">
                     {project.title}
                   </p>
                 </td>
-                <td className=" ">
-                  <p className="px-1  my-auto h-full overflow-hidden">
-                    {project.job_type}
+                <td className="w-1/5 ">
+                  <p className="px-1  my-auto h-full ">
+                    {project.job_type || ""}
                   </p>
                 </td>
-                <td className=" ">
+                <td className="w-1/5 ">
                   <p className="px-1  overflow-hidden">
-                    {project.project_status}
+                    {project.project_status || ""}
                   </p>
                 </td>
-                <td className="  ">
-                  <p className="px-1  overflow-hidden">
+                <td className="w-1/5  ">
+                  <p className="px-1  w-full">
                     {!project.created_at
                       ? project.project_date.slice(0, 10)
                       : project.created_at.slice(0, 10)}
                   </p>
                 </td>
-                <td className=" ">
+                <td className="w-1/5 ">
                   <p className="px-3  rounded-tr-md rounded-br-md text-center  overflow-hidden">
                     ...
                   </p>
