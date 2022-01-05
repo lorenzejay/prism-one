@@ -70,7 +70,6 @@ const Create = () => {
       onSuccess: () => queryClient.invalidateQueries(`leads-${authUser?.uid}`),
     }
   );
-  console.log(formElements);
   return (
     <AppLayout>
       <div>

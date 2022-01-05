@@ -34,7 +34,6 @@ const Index = () => {
     isLoading,
     error,
   } = useQuery<LeadFormType[]>(`leads-${authUser?.uid}`, getLeads);
-  console.log("leads", leads);
   return (
     <AppLayout>
       <>

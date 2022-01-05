@@ -273,9 +273,9 @@ const LeadSpec = () => {
                 </p>
                 <p className="rounded-md bg-blue-theme text-white text-center p-10">
                   &lt;iframe frameBorder=&quot;0&quot; scrolling=&quot;no&quot;
-                  width=&quot;100%&quot; height=&quot;545&quot; src=
-                  {`https://${process.env.NEXT_PUBLIC_BASE_PATH}/leads/view/${leadDetails.id}`}
-                  &gt; &lt;/iframe&gt;&quot;
+                  width=&quot;100%&quot; height=&quot;545&quot; src=&quot;
+                  {`${process.env.NEXT_PUBLIC_BASE_PATH}/leads/view/${leadDetails.id}`}
+                  &quot; &gt; &lt;/iframe&gt;&quot;
                 </p>
               </div>
             )}

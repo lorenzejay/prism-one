@@ -8,4 +8,5 @@ export enum CurrentDash {
   Analytics = "Analytics",
   Feedback = "Feedback",
   Galleries = "Galleries",
+  LEADS = "LEADS",
 }
