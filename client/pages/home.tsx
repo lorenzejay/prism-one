@@ -5,18 +5,7 @@ import ProjectsTable from "../components/app/Home/ProjectsTable";
 import TaskTable from "../components/app/Home/TaskTable";
 import ProjectStatusCharts from "../components/app/Home/ProjectStatusCharts";
 import useFirebaseAuth from "../hooks/useAuth3";
-import {
-  LineChart,
-  XAxis,
-  Tooltip,
-  CartesianGrid,
-  Line,
-  Area,
-  AreaChart,
-  YAxis,
-} from "recharts";
-import axios from "axios";
-import { useQuery } from "react-query";
+
 import LeadStats from "../components/app/Home/LeadStats";
 const Home = () => {
   const router = useRouter();
