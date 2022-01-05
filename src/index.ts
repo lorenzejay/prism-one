@@ -75,16 +75,16 @@ if (process.env.NODE_ENV === "production") {
       path.resolve(__dirname, "../client/out/email/view/[messageId].html")
     );
   });
-  app.get("/leads/view/:leadId", (_, res) => {
-    res.sendFile(
-      path.resolve(__dirname, "../client/out/leads/view/[leadId].html")
-    );
+  app.get("/leads/create", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/out/leads/create.html"));
   });
   app.get("/leads/:leadId", (_, res) => {
     res.sendFile(path.resolve(__dirname, "../client/out/leads/[leadId].html"));
   });
-  app.get("/leads/create", (_, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/out/leads/create.html"));
+  app.get("/leads/view/:leadId", (_, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "../client/out/leads/view/[leadId].html")
+    );
   });
 
   app.get("/projects/create", (_, res) => {
