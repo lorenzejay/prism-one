@@ -5,6 +5,11 @@ export enum InputType {
   DATE = "date",
 }
 
+export enum CreateMode {
+  NEW = "NEW",
+  EDIT = "EDIT",
+}
+
 //CLIENT MODE => is what the embedable needs to use
 export enum LeadFormMode {
   PREVIEW = "PREVIEW",

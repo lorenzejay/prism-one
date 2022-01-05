@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import AppLayout from "../../components/app/Layout";
 import LeadForm from "../../components/app/Leads/Form";
+import LeadData from "../../components/app/Leads/LeadData";
 import LeadInputField from "../../components/app/Leads/LeadInputField";
 import Loader from "../../components/app/Loader";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import {
+  CreateMode,
   InputData,
   InputType,
   LeadFormMode,
@@ -17,6 +19,7 @@ enum DisplayMode {
   Create = "Create",
   Preview = "Preview",
   EmbededCode = "EmbededCode",
+  DATA = "DATA",
 }
 
 const LeadSpec = () => {
@@ -31,7 +34,7 @@ const LeadSpec = () => {
   }, [loading, authUser]);
   const [formElements, setFormElements] = useState<InputData[]>([]);
 
-  const fetchLead = async () => {
+  const fetchLeadForm = async () => {
     try {
       if (!leadId || !authUser?.token) return;
       const config = {
@@ -52,11 +55,14 @@ const LeadSpec = () => {
     }
   };
   const {
-    data: leadDetails,
+    data: leadFormDetails,
     isLoading,
     isError,
     error,
-  } = useQuery<LeadFormType>(`leadform-${leadId}-${authUser?.uid}`, fetchLead);
+  } = useQuery<LeadFormType>(
+    `leadform-${leadId}-${authUser?.uid}`,
+    fetchLeadForm
+  );
 
   const [displayMode, setDisplayMode] = useState<DisplayMode>(
     DisplayMode.Create
@@ -93,15 +99,15 @@ const LeadSpec = () => {
     }
   );
   useEffect(() => {
-    if (leadDetails) {
-      setFormElements(leadDetails.formElements);
+    if (leadFormDetails) {
+      setFormElements(leadFormDetails.formElements);
     }
-  }, [leadDetails]);
+  }, [leadFormDetails]);
   return (
     <AppLayout>
       <>
         {isLoading && <Loader />}
-        {leadDetails && !isLoading && (
+        {leadFormDetails && !isLoading && (
           <div>
             {/* <FormBuilder /> */}
             <h2 className="flex-grow text-3xl tracking-wide font-medium ">
@@ -121,9 +127,9 @@ const LeadSpec = () => {
               required={true}
             />
 
-            <div className="flex items-center w-full border-none">
+            <div className="flex text-xs items-center w-full border-none">
               <div
-                className={`w-1/3 text-center p-3 cursor-pointer border-t ${
+                className={`w-1/4 text-center p-3 cursor-pointer border-t ${
                   displayMode === DisplayMode.Create
                     ? "bg-white border-b-0"
                     : "bg-gray-200 border-b-2"
@@ -133,7 +139,7 @@ const LeadSpec = () => {
                 Create
               </div>
               <div
-                className={`w-1/3 text-center  p-3 cursor-pointer border-t ${
+                className={`w-1/4 text-center  p-3 cursor-pointer border-t ${
                   displayMode === DisplayMode.Preview
                     ? "bg-white border-none"
                     : "bg-gray-200 border-b-2"
@@ -143,14 +149,24 @@ const LeadSpec = () => {
                 Preview
               </div>
               <div
-                className={`w-1/3 text-center  p-3 cursor-pointer border-t ${
+                className={`w-1/4 text-center  p-3 cursor-pointer border-t ${
                   displayMode === DisplayMode.EmbededCode
                     ? "bg-white border-none"
                     : "bg-gray-200 border-b"
                 }`}
                 onClick={() => setDisplayMode(DisplayMode.EmbededCode)}
               >
-                Embed Code
+                Embed
+              </div>
+              <div
+                className={`w-1/4 text-center  p-3 cursor-pointer border-t ${
+                  displayMode === DisplayMode.DATA
+                    ? "bg-white border-none"
+                    : "bg-gray-200 border-b"
+                }`}
+                onClick={() => setDisplayMode(DisplayMode.DATA)}
+              >
+                Your Leads
               </div>
             </div>
             {displayMode === DisplayMode.Create && (
@@ -174,6 +190,7 @@ const LeadSpec = () => {
                       index={i}
                       formElements={formElements}
                       setFormElements={setFormElements}
+                      mode={CreateMode.EDIT}
                     />
                   ))}
 
@@ -264,7 +281,7 @@ const LeadSpec = () => {
               </div>
             )}
 
-            {displayMode === DisplayMode.EmbededCode && leadDetails && (
+            {displayMode === DisplayMode.EmbededCode && leadFormDetails && (
               <div className={`-mt-1 bg-white`}>
                 <h3 className=" p-3 text-2xl ">Embed Code</h3>
                 <p className="p-3">
@@ -274,10 +291,16 @@ const LeadSpec = () => {
                 <p className="rounded-md bg-blue-theme text-white text-center p-10">
                   &lt;iframe frameBorder=&quot;0&quot; scrolling=&quot;no&quot;
                   width=&quot;100%&quot; height=&quot;545&quot; src=&quot;
-                  {`${process.env.NEXT_PUBLIC_BASE_PATH}/leads/view/${leadDetails.id}`}
+                  {`${process.env.NEXT_PUBLIC_BASE_PATH}/leads/view/${leadFormDetails.id}`}
                   &quot; &gt; &lt;/iframe&gt;&quot;
                 </p>
               </div>
+            )}
+
+            {displayMode === DisplayMode.DATA && leadFormDetails && (
+              <section className="overflow-x-auto bg-white w-full -mt-1 px-3 py-10">
+                <LeadData leadId={parseInt(leadId as string)} />
+              </section>
             )}
           </div>
         )}
