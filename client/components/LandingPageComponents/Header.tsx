@@ -83,11 +83,11 @@ const Header = ({ toggle }: { toggle: () => void }) => {
         <FontAwesomeIcon icon={faBars} size="sm" />
       </div>
       {process.env.NEXT_PUBLIC_NODE_ENV === "development" ? (
-        <ul className="justify-between relative right-5 lg:right-12 xl:right-32 text-white text-lg lg:text-2xl p-3 hidden md:block">
+        <ul className="hidden md:block justify-between relative right-5 lg:right-12 xl:right-32 text-white text-lg lg:text-2xl p-3 ">
           In Development
         </ul>
       ) : !authUser?.uid ? (
-        <ul className="flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
+        <ul className="hidden md:flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
           <li style={{ background: "#F7FAFC" }} className="p-3 mr-1 rounded-md">
             <Link href="/sign-in">Sign In</Link>
           </li>
@@ -96,7 +96,7 @@ const Header = ({ toggle }: { toggle: () => void }) => {
           </li>
         </ul>
       ) : (
-        <ul className="flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
+        <ul className="hidden md:flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
           <li style={{ background: "#F7FAFC" }} className="p-2 mr-1 rounded-md">
             <button onClick={signOut}>Logout</button>
           </li>
