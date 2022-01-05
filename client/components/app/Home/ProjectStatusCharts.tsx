@@ -41,9 +41,12 @@ const ProjectStatusCharts = () => {
   return (
     <section className="mb-20 ">
       <h2 className="tracking-wide text-xl font-semibold">Stats</h2>
-      <section className="w-full md:grid md:grid-cols-2 md:gap-4">
+      <section
+        className="w-full md:grid md:grid-cols-2 md:gap-4 p-3 rounded-md"
+        style={{ background: "#f0f0f0" }}
+      >
         <div
-          className="mt-2  px-5 py-3 flex rounded-md shadow-2xl items-start justify-between"
+          className="mt-2  px-5 py-3 flex rounded-md shadow-xl items-start justify-between"
           style={{ background: "#ffffff" }}
         >
           <div className="flex flex-col">
@@ -54,7 +57,7 @@ const ProjectStatusCharts = () => {
         </div>
 
         <div
-          className="mt-2 px-5 py-3 flex rounded-md shadow-2xl items-start justify-between"
+          className="mt-2 px-5 py-3 flex rounded-md shadow-xl items-start justify-between"
           style={{ background: "#ffffff" }}
         >
           <div className="flex flex-col">
@@ -65,7 +68,7 @@ const ProjectStatusCharts = () => {
         </div>
 
         <div
-          className="mt-2  px-5 py-3 flex rounded-md shadow-2xl items-start justify-between"
+          className="mt-2  px-5 py-3 flex rounded-md shadow-xl items-start justify-between"
           style={{ background: "#ffffff" }}
         >
           <div className="flex flex-col">
@@ -77,7 +80,7 @@ const ProjectStatusCharts = () => {
           <img src={"/Pending.png"} className="w-24 object-cover" />
         </div>
         <div
-          className="mt-2  px-5 py-3 flex rounded-md shadow-2xl items-start justify-between"
+          className="mt-2  px-5 py-3 flex rounded-md shadow-xl items-start justify-between"
           style={{ background: "#ffffff" }}
         >
           <div className="flex flex-col">

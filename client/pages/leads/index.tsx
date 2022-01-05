@@ -37,12 +37,21 @@ const Index = () => {
   return (
     <AppLayout>
       <>
-        <h2 className="flex-grow text-3xl font-medium ">Leads</h2>
-        <table className="w-1/2">
+        <div className="flex mb-5">
+          <h2 className="flex-grow text-3xl font-medium ">Leads</h2>
+
+          <button
+            className="p-2 rounded-md text-white"
+            style={{ background: "#1D4757" }}
+          >
+            <Link href="/leads/create">New Lead</Link>
+          </button>
+        </div>
+        <table className="w-full border border-collapse p-3">
           <thead>
             <tr>
-              <td>Name</td>
-              <td>Created By</td>
+              <td className="border p-3 bg-white">Name</td>
+              <td className="border p-3 bg-white">Created By</td>
             </tr>
           </thead>
           <tbody>
@@ -50,10 +59,10 @@ const Index = () => {
               leads.map((lead, i) => (
                 <Link href={`/leads/${lead.id}`} key={i}>
                   <tr className="w-full bg-white cursor-pointer">
-                    <td className="p-3 rounded-l-md">
+                    <td className="border p-3 ">
                       <p>{lead.title}</p>
                     </td>
-                    <td className="p-3 rounded-r-md">
+                    <td className="border p-3 ">
                       <p>{lead.created_at.slice(0, 10)}</p>
                     </td>
                   </tr>

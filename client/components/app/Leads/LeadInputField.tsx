@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { InputData, InputType } from "../../../types/leadsTypes";
+import { CreateMode, InputData, InputType } from "../../../types/leadsTypes";
+
 interface LeadInputFieldProps {
   e: InputData;
   formElements: InputData[];
   setFormElements: React.Dispatch<React.SetStateAction<InputData[]>>;
   index: number;
+  mode: CreateMode;
 }
 
 const LeadInputField = ({
@@ -12,6 +14,7 @@ const LeadInputField = ({
   formElements,
   setFormElements,
   index,
+  mode,
 }: LeadInputFieldProps) => {
   const [title, setTitle] = useState("");
 
@@ -52,6 +55,7 @@ const LeadInputField = ({
           <input
             type={e.inputType}
             id={e.name}
+            value={""}
             className="p-1 bg-none border-2 outline-gray-300 rounded-md "
             disabled={true}
           />
@@ -73,7 +77,6 @@ const LeadInputField = ({
           type="text"
           id={e.name}
           className="p-1 bg-none border-2  outline-gray-300 rounded-md"
-          value={title}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               let newArr = [...formElements];
@@ -84,7 +87,7 @@ const LeadInputField = ({
           onChange={(e) => {
             setTitle(e.target.value);
             let newArr = [...formElements];
-            console.log(newArr[index]);
+
             newArr[index].name = e.target.value;
             setFormElements(newArr);
           }}

@@ -48,7 +48,7 @@ const Sidebar = ({
         <style>{dom.css()}</style>
       </Head>
       <div
-        className={`hidden md:block text-black md:absolute md:top-0 md:right-2  ${
+        className={`hidden  text-black md:absolute md:top-0 md:right-2  ${
           revealMinimizeSbButton ? "md:block" : "hidden"
         }`}
         onClick={() => {

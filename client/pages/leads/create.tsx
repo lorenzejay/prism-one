@@ -6,7 +6,12 @@ import AppLayout from "../../components/app/Layout";
 import LeadForm from "../../components/app/Leads/Form";
 import LeadInputField from "../../components/app/Leads/LeadInputField";
 import useFirebaseAuth from "../../hooks/useAuth3";
-import { InputData, InputType, LeadFormMode } from "../../types/leadsTypes";
+import {
+  CreateMode,
+  InputData,
+  InputType,
+  LeadFormMode,
+} from "../../types/leadsTypes";
 enum DisplayMode {
   Create = "Create",
   Preview = "Preview",
@@ -17,6 +22,7 @@ const Create = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [uploadError, setUploadError] = useState("");
   useEffect(() => {
     if (!loading && !authUser) {
       router.push("/sign-in");
@@ -44,6 +50,9 @@ const Create = () => {
   const createLeadForm = async (e: any) => {
     try {
       e.preventDefault();
+      if (leadTitle === "") {
+        return setUploadError("You must include a title for your lead form.");
+      }
       if (!authUser?.token) return;
       const config = {
         headers: {
@@ -78,11 +87,12 @@ const Create = () => {
           Lead Form
         </h2>
         <div className="flex flex-col">
-          <label>
+          <label htmlFor="leadFormTitle">
             Give it a name and message after someone submitted the form itself.
           </label>
         </div>
         <input
+          id="leadFormTitle"
           className="p-1 rounded-md my-2 border-2 bg-none w-full outline-gray-300 transition-all duration-500 ease-in-out"
           maxLength={64}
           value={leadTitle}
@@ -143,6 +153,7 @@ const Create = () => {
                   index={i}
                   formElements={formElements}
                   setFormElements={setFormElements}
+                  mode={CreateMode.NEW}
                 />
               ))}
 
