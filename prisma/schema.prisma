@@ -45,6 +45,7 @@ model User {
   contracts Contract[]
   tasks Task[]
   leadForms LeadForms[]
+  gmailIntegrationDetails GmailIntegrationDetails[]
 }
 
 model CompanyDetails {
@@ -165,4 +166,12 @@ model LeadResponses{
   lead_associated Int
   created_at DateTime @default(now())
   response Json[]
+}
+
+model GmailIntegrationDetails{
+  id Int @id @default(autoincrement())
+  email String @db.VarChar(255) @unique
+  owner User @relation(fields: [integrated_user], references: [id]) 
+  integrated_user String 
+
 }

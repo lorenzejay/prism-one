@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.0.2",
+    "@types/express-session": "^1.17.4",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.27.1",
     "cors": "^2.8.5",
