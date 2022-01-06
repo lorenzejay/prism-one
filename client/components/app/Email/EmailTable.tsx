@@ -28,7 +28,7 @@ const EmailTable = ({
         <table className="border-collapse table-fixed  w-full text-black">
           <thead>
             <th className="w-1/6 font-semibold text-left">Recieved</th>
-            <th className="w-1/6 font-semibold text-left">From</th>
+            <th className="w-2/6 font-semibold text-left">From</th>
             <th className="w-1/2 font-semibold text-left">Message</th>
             {/* <th className="w-1/6 font-semibold text-left">Etc</th> */}
           </thead>

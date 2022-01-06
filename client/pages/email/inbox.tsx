@@ -3,7 +3,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import AppLayout from "../../components/app/Layout";
-import sanitize from "sanitize-html";
 import Loader from "../../components/app/Loader";
 import ErrorMessage from "../../components/app/ErrorMessage";
 import useFirebaseAuth from "../../hooks/useAuth3";
@@ -21,7 +20,17 @@ const Inbox = () => {
 
   const checkIfYouIntegratedGmail = async () => {
     try {
-      const { data } = await axios.get("/api/emails/check-integration-status");
+      if (!authUser?.token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser.token,
+        },
+      };
+      const { data } = await axios.get(
+        "/api/emails/check-integration-status",
+        config
+      );
       //make them integrate their account if they are not authorized
       if (!data.success) {
         router.push("/email");
@@ -42,8 +51,9 @@ const Inbox = () => {
     };
 
     const { data } = await axios.get("/api/emails/fetch-messages", config);
-    console.log(data.data);
-    return data.data;
+    if (data.success) {
+      return data.data;
+    }
   };
   const { data: integrationStatus, isLoading } = useQuery<boolean>(
     `gmail-integration-status-${authUser?.uid}`,
@@ -54,14 +64,15 @@ const Inbox = () => {
     isLoading: loadingEmails,
     error: fetchingEmailError,
   } = useQuery<any[]>(`emails-${authUser?.uid}`, fetchMailbox);
-
+  // console.log("integrationStatus", integrationStatus);
+  // console.log("emails", emails);
   if (!isLoading && integrationStatus) {
     return (
       <AppLayout>
         <>
-          <h2 className="tracking-wide flex-grow text-3xl font-medium ">
+          {/* <h2 className="tracking-wide flex-grow text-3xl font-medium ">
             Emails
-          </h2>
+          </h2> */}
           {fetchingEmailError && (
             <ErrorMessage error={fetchingEmailError as string} />
           )}

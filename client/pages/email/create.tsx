@@ -14,7 +14,7 @@ import Link from "next/link";
 
 const Create = () => {
   const queryClient = useQueryClient();
-  const { authUser } = useFirebaseAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const [emailFrom, setEmailFrom] = useState("");
   const [emailTo, setEmailTo] = useState("");
   const [subject, setSubject] = useState("");
@@ -23,6 +23,12 @@ const Create = () => {
     "write"
   );
   const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
   //react mde stuff
   const loadSuggestions = async (text: string) => {
     return new Promise<Suggestion[]>((accept, reject) => {
