@@ -45,7 +45,7 @@ const LeadData = ({ leadId }: LeadDataProps) => {
       response: { key: string; value: string }[];
     }[]
   >(`leadData-${leadId}-${authUser?.uid}`, fetchLeadForm);
-  console.log("leadData", leadData);
+  //   console.log("leadData", leadData);
   return (
     <div>
       {isLoading && <Loader />}
@@ -54,16 +54,20 @@ const LeadData = ({ leadId }: LeadDataProps) => {
         <table className="w-full overflow-x-auto border border-collapse h-auto ">
           <thead>
             <tr className="text-left ">
-              {leadData[0].response.map((res) => (
-                <th className="border p-2 rounded-l-md">{res.key}</th>
+              {leadData[0].response.map((res, i) => (
+                <th key={i} className="border p-2 rounded-l-md">
+                  {res.key}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody className="">
-            {leadData.map((lead) => (
-              <tr className="text-left" aria-rowspan={4}>
-                {lead.response.map((res) => (
-                  <td className="border p-2 rounded-l-md">{res.value}</td>
+            {leadData.map((lead, i) => (
+              <tr className="text-left" aria-rowspan={4} key={i}>
+                {lead.response.map((res, i) => (
+                  <td className="border p-2 rounded-l-md" key={i}>
+                    {res.value}
+                  </td>
                 ))}
               </tr>
             ))}

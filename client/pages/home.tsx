@@ -5,7 +5,6 @@ import ProjectsTable from "../components/app/Home/ProjectsTable";
 import TaskTable from "../components/app/Home/TaskTable";
 import ProjectStatusCharts from "../components/app/Home/ProjectStatusCharts";
 import useFirebaseAuth from "../hooks/useAuth3";
-
 import LeadStats from "../components/app/Home/LeadStats";
 const Home = () => {
   const router = useRouter();
