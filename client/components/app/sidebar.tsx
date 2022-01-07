@@ -85,6 +85,29 @@ const Sidebar = ({
             </button>
           </li>
         </Link>
+
+        <Link href="/leads">
+          <li className="mb-5">
+            <button
+              onClick={() => {
+                window.localStorage.setItem("currentDash", CurrentDash.LEADS);
+                setCurrentDash(CurrentDash.LEADS);
+              }}
+              className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
+                currentDash === CurrentDash.LEADS
+                  ? "bg-gray-100 border-l-2 border-yellow-600"
+                  : "border-none bg-none"
+              }`}
+            >
+              {minimizeSidebar ? (
+                <img src="/attraction.png" className="object-cover w-1/4" />
+              ) : (
+                "Leads"
+              )}
+            </button>
+          </li>
+        </Link>
+
         <Link href="/clients">
           <li className="mb-5">
             <button
@@ -151,11 +174,11 @@ const Sidebar = ({
           </li>
         </Link>
         {/* <Link href="/email"> */}
-        <li
+        {/* <li
           className="mb-5 relative"
           onClick={() => setEmailDropdown(!emailDropdown)}
         >
-          <button
+          {/* <button
             // onClick={() => {
             //   window.localStorage.setItem("currentDash", CurrentDash.Email);
             //   setCurrentDash(CurrentDash.Email);
@@ -188,10 +211,10 @@ const Sidebar = ({
                 </span>
               </p>
             )}
-          </button>
-          {emailDropdown && (
-            <ul className="transition-all duration-500 ease-in-out">
-              <Link href={"/email/inbox"}>
+          </button> */}
+        {/* {emailDropdown && ( */}
+        {/* // <ul className="transition-all duration-500 ease-in-out"> */}
+        {/* <Link href={"/email/inbox"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -204,8 +227,8 @@ const Sidebar = ({
                 >
                   Inbox
                 </li>
-              </Link>
-              <Link href={"/email/sent"}>
+              </Link> */}
+        {/* <Link href={"/email/sent"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -218,8 +241,8 @@ const Sidebar = ({
                 >
                   Sent
                 </li>
-              </Link>
-              {/* <Link href={"/email/drafts"}>
+              </Link> */}
+        {/* <Link href={"/email/drafts"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -247,7 +270,7 @@ const Sidebar = ({
                   Scheduled
                 </li>
               </Link> */}
-              <Link href={"/email/create"}>
+        {/* <Link href={"/email/create"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -260,10 +283,10 @@ const Sidebar = ({
                 >
                   Create
                 </li>
-              </Link>
-            </ul>
-          )}
-        </li>
+              </Link> */}
+        {/* </ul> */}
+        {/* )} */}
+        {/* </li>  */}
         {/* </Link> */}
         <li
           className="mb-5 relative"
@@ -352,27 +375,6 @@ const Sidebar = ({
           )}
         </li>
 
-        <Link href="/leads">
-          <li className="mb-5">
-            <button
-              onClick={() => {
-                window.localStorage.setItem("currentDash", CurrentDash.LEADS);
-                setCurrentDash(CurrentDash.LEADS);
-              }}
-              className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
-                currentDash === CurrentDash.LEADS
-                  ? "bg-gray-100 border-l-2 border-yellow-600"
-                  : "border-none bg-none"
-              }`}
-            >
-              {minimizeSidebar ? (
-                <img src="/attraction.png" className="object-cover w-1/4" />
-              ) : (
-                "Leads"
-              )}
-            </button>
-          </li>
-        </Link>
         {/* <Link href="/galleries">
           <li className="mb-5">
             <button
