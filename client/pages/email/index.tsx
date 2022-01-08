@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
@@ -12,6 +12,7 @@ const Email = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
   const { code } = router.query;
+  const [response, setResponse] = useState<any>();
   // console.log("code", code);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
 
@@ -20,7 +21,25 @@ const Email = () => {
       router.push("/sign-in");
     }
   }, [loading, authUser]);
-
+  const signInWithGmailAccount2 = async () => {
+    try {
+      // console.log("clicked");
+      if (!authUser?.token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser.token,
+        },
+      };
+      const { data } = await axios.get("/api/google-auth/get-auth-url", config);
+      if (data) {
+        console.log("triggered in backend", data);
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const signInWithGmailAccount = async () => {
     try {
       if (!authUser?.token) return;
@@ -31,6 +50,7 @@ const Email = () => {
         },
       };
       const { data } = await axios.get("/api/emails/integrate-gmail", config);
+      console.log(data);
       if (data.success) {
         return data.data;
       }
@@ -48,9 +68,10 @@ const Email = () => {
         },
       };
       const { data } = await axios.get(
-        "/api/emails/check-integration-status",
+        "/api/google-auth/check-integration-status",
         config
       );
+      console.log(data);
       return data.success;
     } catch (error) {
       console.log(error);
@@ -58,7 +79,6 @@ const Email = () => {
   };
   const finishIntegrateGmail = async () => {
     if (!authUser?.token) return;
-    // console.log("intgreating function 2");
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +87,7 @@ const Email = () => {
     };
     if (code) {
       const { data } = await axios.post(
-        `/api/emails/integrate-gmail-2/`,
+        `/api/google-auth/integrate-gmail-final`,
         {
           code,
         },
@@ -76,28 +96,47 @@ const Email = () => {
       if (data.success) {
         await refireCheckIntegration();
       }
-      return data;
+      return data.success;
     }
   };
 
   const { data: integrationStatus, refetch: refireCheckIntegration } =
     useQuery<boolean>(
       `gmail-integration-status-${authUser?.uid}`,
-      checkIfYouIntegratedGmail
+      checkIfYouIntegratedGmail,
+      { retry: 1 }
     );
+  const { refetch: triggerFetchUrl } = useQuery<string>(
+    `gmail-redirect-url-${authUser?.uid}`,
+    signInWithGmailAccount2,
+    {
+      refetchOnWindowFocus: false,
+      enabled: false,
+      onSuccess: async (data) => {
+        console.log(code);
+        if (data && code) {
+          const x = await signInWithGmailAccount2();
+          setResponse(x);
+        }
+      },
+    }
+  );
   const { data: finshGmailIntegration, refetch: fireFinishGmailIntegration } =
     useQuery<boolean>(
       `gmail-second-query-${authUser?.uid}`,
-      finishIntegrateGmail
+      finishIntegrateGmail,
+      {
+        retry: true,
+      }
     );
 
-  const { data: redirectUrl, refetch } = useQuery<Url>(
-    `redirectUrl-${authUser?.uid}`,
-    signInWithGmailAccount,
-    { refetchOnWindowFocus: false, enabled: false }
-  );
+  // const { data: redirectUrl, refetch } = useQuery<Url>(
+  //   `redirectUrl-${authUser?.uid}`,
+  //   signInWithGmailAccount,
+  //   { refetchOnWindowFocus: false, enabled: false }
+  // );
   const handleFetchUrl = async () => {
-    const url = await refetch();
+    const url = await triggerFetchUrl();
     console.log(url);
     if (url?.data) {
       router.push(url.data);
@@ -105,18 +144,21 @@ const Email = () => {
   };
 
   useEffect(() => {
+    if (code) {
+      console.log("code", code);
+      const data = fireFinishGmailIntegration();
+      setResponse(data);
+
+      // refireCheckIntegration();
+    }
+  }, [code]);
+  useEffect(() => {
     if (integrationStatus) {
       router.push("/email/inbox");
     }
   }, [integrationStatus]);
-  useEffect(() => {
-    if (code) {
-      // console.log("code", code);
-      fireFinishGmailIntegration();
-      refireCheckIntegration();
-    }
-  }, [code, router.query, redirectUrl]);
-  // console.log("integrationStatus", integrationStatus);
+
+  console.log("finshGmailIntegration", finshGmailIntegration);
   console.log("integrationStatus", integrationStatus);
   return !integrationStatus ? (
     <AppLayout>
@@ -151,10 +193,7 @@ const Email = () => {
   //   <AppLayout>
   //     <div>
   //       <h1>Email</h1>
-  //       <button
-  //         className="flex flex-col items-center"
-  //         onClick={handleFetchUrl}
-  //       >
+  //       <button className="flex flex-col items-center" onClick={handleFetchUrl}>
   //         <img src="/gmail_logo.png" className="w-24" />
   //         Integrate Gmail
   //       </button>

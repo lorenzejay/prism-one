@@ -14,7 +14,6 @@ const formatAuthUser = async (user: User) => {
 };
 
 export default function useFirebaseAuth() {
-  const [username, setUsername] = useState("");
   const [authError, setAuthError] = useState<null | string>();
   const [authUser, setAuthUser] = useState<{
     uid: string | null;
@@ -22,10 +21,11 @@ export default function useFirebaseAuth() {
     token: string | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  // console.log(authUser?.token);
+  // console.log(authUser);
   const authStateChanged = async (authState: User) => {
     if (!authState) {
       setLoading(false);
+      setAuthUser(null);
       return;
     }
 
@@ -41,7 +41,7 @@ export default function useFirebaseAuth() {
 
   const clear = () => {
     setAuthUser(null);
-    setLoading(true);
+    setLoading(false);
     setAuthError(null);
   };
 
@@ -145,7 +145,6 @@ export default function useFirebaseAuth() {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    username,
     authError,
   };
 }

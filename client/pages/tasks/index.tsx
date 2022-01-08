@@ -93,13 +93,15 @@ const Tasks = () => {
         {loadingTasks && <Loader />}
         {/* {loadingSearchedTask && <Loader />} */}
         {!loadingSearchedTask && !loadingTasks && (
-          <table>
+          <table className="w-full border border-collapse p-3 ">
             <tr className="p-2 text-left  ">
-              <th className="w-1/6 font-normal"></th>
-              <th className="w-1/2 font-normal">Task</th>
-              <th className="w-1/5 font-normal">Due Date</th>
-              <th className="w-1/5 font-normal">Project</th>
-              <th className="w-1/6 font-normal"></th>
+              <th className="w-1/6 font-normal border bg-white p-3">Status</th>
+              <th className="w-1/2 font-normal border bg-white p-3">Task</th>
+              <th className="w-1/5 font-normal border bg-white p-3">
+                Due Date
+              </th>
+              <th className="w-1/5 font-normal border bg-white p-3">Project</th>
+              {/* <th className="w-1/6 font-normal border bg-white p-3"></th> */}
             </tr>
             {tasks &&
               taskSearched === "" &&
@@ -111,24 +113,31 @@ const Tasks = () => {
                     }`}
                   >
                     <td
-                      className={`p-3 rounded-tl-md rounded-bl-md  ${
+                      className={`border p-3 rounded-tl-md rounded-bl-md  ${
                         task.status === FormType.completed
                           ? " opacity-50 task-line-through "
                           : ""
                       }`}
                     >
-                      <input
+                      {/* <input
                         type="checkbox"
-                        checked={
-                          task.status === FormType.completed ? true : false
-                        }
-                      />
+                        checked=
+                      /> */}
+                      {task.status === FormType.completed ? (
+                        <p className="bg-green-500 rounded-md p-1 text-white text-center text-xs">
+                          Complete
+                        </p>
+                      ) : (
+                        <p className="bg-red-500 rounded-md p-1 text-white text-center text-xs">
+                          Incomplete
+                        </p>
+                      )}
                     </td>
-                    <td className="p-3 ">
+                    <td className="border p-3 ">
                       <p className={` `}>{task.description}</p>
                     </td>
-                    <td className="p-3">{task.due_date}</td>
-                    <td className="p-3 rounded-tr-md rounded-br-md">
+                    <td className="border p-3">{task.due_date}</td>
+                    <td className="border p-3 rounded-tr-md rounded-br-md">
                       {task.project_associated}
                     </td>
                   </tr>
@@ -139,7 +148,7 @@ const Tasks = () => {
               searchedTasks.map((task, i) => (
                 <Link href={`/tasks/${task.id}`} key={i}>
                   <tr className="bg-white rounded-md cursor-pointer">
-                    <td className="p-3 rounded-tl-md rounded-bl-md">
+                    <td className="border p-3 rounded-tl-md rounded-bl-md">
                       <input
                         type="checkbox"
                         checked={
@@ -147,7 +156,7 @@ const Tasks = () => {
                         }
                       />
                     </td>
-                    <td className="p-3 ">
+                    <td className="border p-3 ">
                       <p
                         className={`${
                           task.status === FormType.completed
@@ -158,8 +167,8 @@ const Tasks = () => {
                         {task.description}
                       </p>
                     </td>
-                    <td className="p-3">{task.due_date}</td>
-                    <td className="p-3 rounded-tr-md rounded-br-md">
+                    <td className="border p-3">{task.due_date}</td>
+                    <td className="border p-3 rounded-tr-md rounded-br-md">
                       {task.project_associated}
                     </td>
                   </tr>

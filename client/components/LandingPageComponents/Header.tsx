@@ -31,10 +31,9 @@ const Header = ({ toggle }: { toggle: () => void }) => {
     >
       <Link href="/">
         <h3 className="text-2xl lg:text-3xl font-bold mr-5 tracking-widest cursor-pointer">
-          PRISM ONE
+          PRISM ONE CRM
         </h3>
       </Link>
-
       {/* <ul className="text-white w-48 items-center hidden md:flex md:justify-between">
         <li>
           <Dropdown title="Features">
@@ -75,18 +74,13 @@ const Header = ({ toggle }: { toggle: () => void }) => {
           </Link>
         </li>
       </ul> */}
-
       <div
         onClick={toggle}
         className="block text-white text-2xl cursor-pointer md:hidden "
       >
         <FontAwesomeIcon icon={faBars} size="sm" />
       </div>
-      {process.env.NEXT_PUBLIC_NODE_ENV === "development" ? (
-        <ul className="hidden md:block justify-between relative right-5 lg:right-12 xl:right-32 text-white text-lg lg:text-2xl p-3 ">
-          In Development
-        </ul>
-      ) : !authUser?.uid ? (
+      {!authUser?.uid ? (
         <ul className="hidden md:flex items-center justify-between absolute right-5 lg:right-12 xl:right-32 text-black  p-3">
           <li style={{ background: "#F7FAFC" }} className="p-3 mr-1 rounded-md">
             <Link href="/sign-in">Sign In</Link>

@@ -11,7 +11,7 @@ const Index = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
   useEffect(() => {
-    if (!loading && !authUser) {
+    if (!loading && authUser === null) {
       router.push("/sign-in");
     }
   }, [loading, authUser]);

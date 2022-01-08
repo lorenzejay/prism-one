@@ -58,7 +58,17 @@ const Create = () => {
 
   const checkIfYouIntegratedGmail = async () => {
     try {
-      const { data } = await axios.get("/api/emails/check-integration-status");
+      if (!authUser?.token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser?.token,
+        },
+      };
+      const { data } = await axios.get(
+        "/api/google-auth/check-integration-status",
+        config
+      );
 
       return data.data;
     } catch (error) {
@@ -67,7 +77,8 @@ const Create = () => {
   };
   const { data: integrationStatus } = useQuery(
     `gmail-integration-status-${authUser?.uid}`,
-    checkIfYouIntegratedGmail
+    checkIfYouIntegratedGmail,
+    { retry: 1 }
   );
 
   useEffect(() => {
@@ -79,15 +90,26 @@ const Create = () => {
   //santize message out
   const sendEmail = async (e: FormEvent) => {
     e.preventDefault();
+    if (!authUser?.token) return;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: authUser?.token,
+      },
+    };
     const sanitizeHtml = sanitize(message);
     if (sanitizeHtml === "" || sanitizeHtml === "")
       return window.alert("Body cannot be empty");
-    const { data } = await axios.post("/api/emails/send-email", {
-      subject,
-      from: emailFrom,
-      to: emailTo,
-      body: sanitizeHtml,
-    });
+    const { data } = await axios.post(
+      "/api/google-auth/send-email",
+      {
+        subject,
+        from: emailFrom,
+        to: emailTo,
+        body: sanitizeHtml,
+      },
+      config
+    );
     setEmailTo("");
     setMessage("");
     if (data.success) {

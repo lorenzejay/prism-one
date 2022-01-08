@@ -13,7 +13,7 @@ const Inbox = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !authUser) {
+    if (!loading && authUser === null) {
       router.push("/sign-in");
     }
   }, [loading, authUser]);
@@ -28,7 +28,7 @@ const Inbox = () => {
         },
       };
       const { data } = await axios.get(
-        "/api/emails/check-integration-status",
+        "/api/google-auth/check-integration-status",
         config
       );
       //make them integrate their account if they are not authorized
@@ -50,14 +50,15 @@ const Inbox = () => {
       },
     };
 
-    const { data } = await axios.get("/api/emails/fetch-messages", config);
+    const { data } = await axios.get("/api/google-auth/fetch-messages", config);
     if (data.success) {
       return data.data;
     }
   };
   const { data: integrationStatus, isLoading } = useQuery<boolean>(
     `gmail-integration-status-${authUser?.uid}`,
-    checkIfYouIntegratedGmail
+    checkIfYouIntegratedGmail,
+    { retry: 1 }
   );
   const {
     data: emails,

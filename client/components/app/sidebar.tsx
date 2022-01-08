@@ -174,11 +174,11 @@ const Sidebar = ({
           </li>
         </Link>
         {/* <Link href="/email"> */}
-        {/* <li
+        <li
           className="mb-5 relative"
           onClick={() => setEmailDropdown(!emailDropdown)}
         >
-          {/* <button
+          <button
             // onClick={() => {
             //   window.localStorage.setItem("currentDash", CurrentDash.Email);
             //   setCurrentDash(CurrentDash.Email);
@@ -211,10 +211,10 @@ const Sidebar = ({
                 </span>
               </p>
             )}
-          </button> */}
-        {/* {emailDropdown && ( */}
-        {/* // <ul className="transition-all duration-500 ease-in-out"> */}
-        {/* <Link href={"/email/inbox"}>
+          </button>
+          {emailDropdown && (
+            <ul className="transition-all duration-500 ease-in-out">
+              <Link href={"/email/inbox"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -227,8 +227,8 @@ const Sidebar = ({
                 >
                   Inbox
                 </li>
-              </Link> */}
-        {/* <Link href={"/email/sent"}>
+              </Link>
+              <Link href={"/email/sent"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -241,36 +241,9 @@ const Sidebar = ({
                 >
                   Sent
                 </li>
-              </Link> */}
-        {/* <Link href={"/email/drafts"}>
-                <li
-                  className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
-                  onClick={() => {
-                    window.localStorage.setItem(
-                      "currentDash",
-                      CurrentDash.Email
-                    );
-                    setEmailDropdown(!emailDropdown);
-                  }}
-                >
-                  Drafts
-                </li>
               </Link>
-              <Link href={"/email/scheduled"}>
-                <li
-                  className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
-                  onClick={() => {
-                    window.localStorage.setItem(
-                      "currentDash",
-                      CurrentDash.Email
-                    );
-                    setEmailDropdown(!emailDropdown);
-                  }}
-                >
-                  Scheduled
-                </li>
-              </Link> */}
-        {/* <Link href={"/email/create"}>
+
+              <Link href={"/email/create"}>
                 <li
                   className="mb-5 pl-5 cursor-pointer p-2 relative hover:bg-gray-100"
                   onClick={() => {
@@ -283,10 +256,10 @@ const Sidebar = ({
                 >
                   Create
                 </li>
-              </Link> */}
-        {/* </ul> */}
-        {/* )} */}
-        {/* </li>  */}
+              </Link>
+            </ul>
+          )}
+        </li>
         {/* </Link> */}
         <li
           className="mb-5 relative"

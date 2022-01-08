@@ -94,13 +94,17 @@ const Projects = () => {
         {/* </div> */}
         {/* </div> */}
 
-        <table className=" table-fixed  w-full text-black">
+        <table className="w-full border border-collapse p-3">
           <thead>
             <tr className="p-2 text-left  ">
-              <th className="w-1/6 font-normal">Project Date</th>
-              <th className="w-1/3 font-normal">Name</th>
-              <th className="w-1/6 font-normal">Created On</th>
-              <th className="w-1/4 font-normal">Tags</th>
+              <th className="w-1/6 font-normal border p-3 bg-white ">
+                Project Date
+              </th>
+              <th className="w-1/3 font-normal border p-3 bg-white ">Name</th>
+              <th className="w-1/6 font-normal border p-3 bg-white ">
+                Created On
+              </th>
+              <th className="w-1/4 font-normal border p-3 bg-white ">Tags</th>
             </tr>
           </thead>
           <tbody>
@@ -109,13 +113,15 @@ const Projects = () => {
               projects.map((project: ProjectDetails, i) => (
                 <Link href={`/projects/${project.id}`} key={i}>
                   <tr className="w-full cursor-pointer bg-white border rounded-md mt-3">
-                    <td className="p-3">
+                    <td className="p-3 border">
                       {project.project_date &&
                         project.project_date.slice(0, 10)}
                     </td>
-                    <td className="p-3">{project.title}</td>
-                    <td className="p-3">{project.created_at.slice(0, 10)}</td>
-                    <td className="p-3">{project.tags}</td>
+                    <td className="p-3 border">{project.title}</td>
+                    <td className="p-3 border">
+                      {project.created_at.slice(0, 10)}
+                    </td>
+                    <td className="p-3 border">{project.tags}</td>
                   </tr>
                 </Link>
               ))}

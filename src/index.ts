@@ -9,6 +9,7 @@ import emailRouter from "./routes/email";
 import galleryRouter from "./routes/gallery";
 import path from "path";
 import leadRouter from "./routes/leads";
+import googleAuthRouter from "./routes/googleAuthentication";
 
 require("dotenv").config();
 
@@ -29,6 +30,7 @@ app.use("/api/tasks", taskRouter);
 app.use("/api/emails", emailRouter);
 app.use("/api/galleries", galleryRouter);
 app.use("/api/leads", leadRouter);
+app.use("/api/google-auth", googleAuthRouter);
 
 if (process.env.NODE_ENV === "production") {
   //list out all the routes specifically

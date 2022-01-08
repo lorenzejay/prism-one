@@ -124,12 +124,14 @@ const Clients = () => {
             <p className="shadow-2xl text-red bg-white">{error as String}</p>
           )}
 
-          <table className="w-full table-fixed  text-black">
+          <table className="w-full border border-collapse p-3">
             <thead>
-              <tr className="p-2 text-left  ">
-                <th className="w-1/3 font-normal">Name</th>
-                <th className="w-1/3 font-normal">Email</th>
-                <th className="w-1/3 font-normal">Phone Number</th>
+              <tr className="text-left  ">
+                <th className="w-1/3 border p-3 bg-white font-normal">Name</th>
+                <th className="w-1/3 border p-3 bg-white font-normal">Email</th>
+                <th className="w-1/3 border p-3 bg-white font-normal">
+                  Phone Number
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -138,9 +140,9 @@ const Clients = () => {
                 clients.map((client, i) => (
                   <Link href={`/clients/${client.id}`} key={i}>
                     <tr className="cursor-pointer bg-white border rounded-md mt-3">
-                      <td className="p-3">{client.client_name}</td>
-                      <td className="p-3">{client.client_email}</td>
-                      <td className="p-3">{client.phone_number}</td>
+                      <td className="p-3 border ">{client.client_name}</td>
+                      <td className="p-3 border ">{client.client_email}</td>
+                      <td className="p-3 border ">{client.phone_number}</td>
                     </tr>
                   </Link>
                 ))}

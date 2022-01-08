@@ -10,10 +10,9 @@ const Home = () => {
   const router = useRouter();
   const { authUser, loading } = useFirebaseAuth();
   useEffect(() => {
-    if (!loading && !authUser) {
+    if (!loading && authUser === null) {
       router.push("/sign-in");
     }
-    window.localStorage.setItem("currentDash", "Home");
   }, [loading, authUser]);
 
   return (

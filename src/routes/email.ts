@@ -32,7 +32,52 @@ const oAuth2Client = new google.auth.OAuth2(
   CLIENT_SECRET,
   REDIRECT_URI
 );
+const auth = new google.auth.GoogleAuth({
+  scopes,
+});
+// console.log(auth);
 google.options({ auth: oAuth2Client });
+
+const getGmailProfile = async () => {
+  // Acquire an auth client, and bind it to all future calls
+  const authClient = await auth.getClient();
+  google.options({ auth: authClient });
+  const res = await gmail.users.getProfile({
+    // The user's email address. The special value `me` can be used to indicate the authenticated user.
+    userId: `me`,
+  });
+};
+// getGmailProfile();
+const authorizeGmailApi = async (scopes: any) => {
+  return new Promise((resolve, reject) => {
+    // grab the url that will be used for authorization
+    const authorizeUrl = oAuth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: scopes.join(" "),
+    });
+    const server = http
+      .createServer(async (req: any, res) => {
+        try {
+          // if (req.url.indexOf('/oauth2callback') > -1) {
+          const qs = new URL(req.url, "http://localhost:3000").searchParams;
+          res.end("Authentication successful! Please return to the console.");
+          server.destroy();
+          const { tokens } = await oAuth2Client.getToken(qs.get("code") as any);
+          oAuth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
+          resolve(oAuth2Client);
+          // }
+        } catch (e) {
+          reject(e);
+        }
+      })
+      .listen(5555, () => {
+        // open the browser to the authorize url to start the workflow
+        opn(authorizeUrl, { wait: false }).then((cp) => cp.unref());
+      });
+    destroyer(server);
+  });
+};
+
 // oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 // const sendMail = async (
@@ -76,6 +121,32 @@ const getGoogleAuthUrl = async () => {
     scope: scopes, // If you only need one scope you can pass it as string
   });
 };
+// emailRouter.get("/integrate-gmail-new", authorization, async (req, res) => {
+//   try {
+//     const userId = req.user.toString();
+//     // redirect url send to frontend or open from backend updates to redirect uri are in package.json
+//     const x = await authorizeGmailApi(scopes);
+//     const authClient = await auth.getClient();
+//     google.options({ auth: authClient });
+//     const response = await gmail.users.getProfile({
+//       // The user's email address. The special value `me` can be used to indicate the authenticated user.
+//       userId: `me`,
+//     });
+
+//     console.log(response);
+//     await prisma.gmailIntegrationDetails.create({
+//       data: {
+//         email: response.data.emailAddress as string,
+//         integrated_user: userId,
+//       },
+//     });
+//     res.send({ success: true, message: null, data: null });
+//   } catch (error) {
+//     throw new Error("something went wriong ");
+//     console.log(error);
+//     // res.send(error);
+//   }
+// });
 
 emailRouter.get("/integrate-gmail", authorization, async (req, res) => {
   try {
@@ -90,42 +161,42 @@ emailRouter.get("/integrate-gmail", authorization, async (req, res) => {
   }
 });
 
-emailRouter.post("/integrate-gmail-2", authorization, async (req, res) => {
-  try {
-    google.options({ auth: oAuth2Client });
+// emailRouter.post("/integrate-gmail-2", authorization, async (req, res) => {
+//   try {
+//     google.options({ auth: oAuth2Client });
 
-    const userId = req.user.toString();
-    const { code } = req.body;
-    console.log("code", code);
-    if (code) {
-      const { tokens } = await oAuth2Client.getToken(code);
-      oAuth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
-      oAuth2Client.refreshAccessToken(function (err, tokens) {
-        oAuth2Client.credentials = { access_token: tokens?.access_token };
-      });
-      console.log(oAuth2Client);
+//     const userId = req.user.toString();
+//     const { code } = req.body;
+//     console.log("code", code);
+//     if (code) {
+//       const { tokens } = await oAuth2Client.getToken(code);
+//       oAuth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
+//       oAuth2Client.refreshAccessToken(function (err, tokens) {
+//         oAuth2Client.credentials = { access_token: tokens?.access_token };
+//       });
+//       console.log(oAuth2Client);
 
-      const result = await google
-        .gmail({ version: "v1", auth: oAuth2Client })
-        .users.getProfile({ userId: `me` });
+//       const result = await google
+//         .gmail({ version: "v1", auth: oAuth2Client })
+//         .users.getProfile({ userId: `me` });
 
-      await prisma.gmailIntegrationDetails.create({
-        data: {
-          email: result.data.emailAddress as string,
-          integrated_user: userId,
-        },
-      });
-      if (result) {
-        res.send({ success: true, message: null, data: null });
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
+//       await prisma.gmailIntegrationRefreshTokens.create({
+//         data: {
+//           email: result.data.emailAddress as string,
+//           integrated_user: userId,
+//         },
+//       });
+//       if (result) {
+//         res.send({ success: true, message: null, data: null });
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 const getUserEmailFromGmailIntegration = async (userId: string) => {
-  const data = await prisma.gmailIntegrationDetails.findFirst({
+  const data = await prisma.gmailIntegrationRefreshTokens.findFirst({
     where: { integrated_user: userId },
   });
   return data?.email;
@@ -140,9 +211,13 @@ emailRouter.get(
       // console.log("userGmail", userGmail);
       google.options({ auth: oAuth2Client });
 
-      const result = await google
-        .gmail({ version: "v1", auth: oAuth2Client })
-        .users.getProfile({ userId: userGmail });
+      // const result = await google
+      //   .gmail({ version: "v1", auth: oAuth2Client })
+      //   .users.getProfile({ userId: userGmail });
+      const result = await gmail.users.getProfile({
+        // The user's email address. The special value `me` can be used to indicate the authenticated user.
+        userId: userGmail,
+      });
       console.log("result", result);
       if (result) {
         return res.send({
@@ -461,11 +536,11 @@ emailRouter.get("/fetch-specific-message/:messageId", async (req, res) => {
   }
 });
 
-const listMessageIds = async (userId: string) => {
-  google.options({ auth: oAuth2Client });
+const listMessageIds = async () => {
+  // google.options({ auth: aut });
 
   const { data } = await gmail.users.messages.list({
-    userId,
+    userId: `me`,
     maxResults: 25,
     labelIds: ["INBOX"],
   });
@@ -486,7 +561,7 @@ emailRouter.get("/fetch-messages", authorization, async (req, res) => {
         data: null,
       });
     google.options({ auth: oAuth2Client });
-    const messageIdList = await listMessageIds(email);
+    const messageIdList = await listMessageIds();
     const list: gmail_v1.Schema$Message[] = [];
     if (!messageIdList) return;
     for (const message of messageIdList) {
@@ -504,19 +579,34 @@ emailRouter.get("/fetch-messages", authorization, async (req, res) => {
     console.log(error);
   }
 });
-emailRouter.get("/fetch-sent-messages", async (req, res) => {
+emailRouter.get("/fetch-sent-messages", authorization, async (req, res) => {
   try {
-    // const userId = req.user;
-    // if (!userId)
-    //   return res.send({
-    //     success: false,
-    //     message: "You are not authorized",
-    //     data: null,
-    //   });
+    const userId = req.user;
+    if (!userId)
+      return res.send({
+        success: false,
+        message: "You are not authorized",
+        data: null,
+      });
+
+    const integratedGmail =
+      await prisma.gmailIntegrationRefreshTokens.findFirst({
+        where: { integrated_user: userId },
+        select: {
+          email: true,
+        },
+      });
+    console.log("integratedGmail", integratedGmail);
+    if (!integratedGmail)
+      return res.send({
+        success: false,
+        message: "You are not authorized",
+        data: null,
+      });
     google.options({ auth: oAuth2Client });
     const { data } = await gmail.users.messages.list({
-      userId: `me`,
-      maxResults: 100,
+      userId: integratedGmail.email,
+      maxResults: 25,
       labelIds: ["SENT"],
     });
 
@@ -525,7 +615,7 @@ emailRouter.get("/fetch-sent-messages", async (req, res) => {
     for (const message of data.messages) {
       if (message.id) {
         const { data } = await gmail.users.messages.get({
-          userId: `me`,
+          userId: integratedGmail.email,
           id: message.id,
         });
         list.push(data);

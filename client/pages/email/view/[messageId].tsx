@@ -29,16 +29,27 @@ const SpecificEmail = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (!loading && !authUser) {
+    if (!authUser?.token) {
       router.push("/sign-in");
     }
-  }, [loading, authUser]);
+  }, [loading, authUser?.token]);
 
   const checkIfYouIntegratedGmail = async () => {
     try {
-      const { data } = await axios.get("/api/emails/check-integration-status");
-
-      return data.data;
+      if (!authUser?.token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser.token,
+        },
+      };
+      const { data } = await axios.get(
+        "/api/google-auth/check-integration-status",
+        config
+      );
+      if (data.success) {
+        return data.success;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -46,13 +57,21 @@ const SpecificEmail = () => {
 
   const getSpecificEmail = async () => {
     if (!messageId) return;
+    if (!authUser?.token) return;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: authUser.token,
+      },
+    };
     const { data } = await axios.get(
-      `/api/emails/fetch-specific-message/${messageId}`
+      `/api/google-auth/fetch-specific-message/${messageId}`,
+      config
     );
     return data;
   };
 
-  const { data: integrationStatus, isLoading } = useQuery(
+  const { data: integrationStatus, isLoading } = useQuery<boolean>(
     `gmail-integration-status-${authUser?.uid}`,
     checkIfYouIntegratedGmail
   );
@@ -72,7 +91,7 @@ const SpecificEmail = () => {
       },
     };
     await axios.post(
-      "/api/emails/reply-to-message",
+      "/api/google-auth/reply-to-message",
       {
         subject: specificEmailData.emailSubject.value,
         from: specificEmailData.emailTo.value,
@@ -93,11 +112,11 @@ const SpecificEmail = () => {
       queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
 
-  useEffect(() => {
-    if (!integrationStatus && !isLoading) {
-      router.push("/email/inbox");
-    }
-  }, [integrationStatus, isLoading]);
+  // useEffect(() => {
+  //   if (!integrationStatus) {
+  //     router.push("/email/inbox");
+  //   }
+  // }, [integrationStatus, isLoading]);
 
   //show - email from , email to, subject, body - content, date
   //payload.headers: Delivered-to, Date, Subject,
@@ -114,7 +133,7 @@ const SpecificEmail = () => {
     }
   };
 
-  // console.log("emaildetails", specificEmailData);
+  console.log("integrationStatus", integrationStatus);
   return (
     <AppLayout>
       <>

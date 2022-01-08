@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import EmailTable from "../../components/app/Email/EmailTable";
+import ErrorMessage from "../../components/app/ErrorMessage";
 import AppLayout from "../../components/app/Layout";
 import Loader from "../../components/app/Loader";
 import useFirebaseAuth from "../../hooks/useAuth3";
@@ -19,7 +20,18 @@ const Sent = () => {
 
   const checkIfYouIntegratedGmail = async () => {
     try {
-      const { data } = await axios.get("/api/emails/check-integration-status");
+      if (!authUser?.token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          token: authUser?.token,
+        },
+      };
+
+      const { data } = await axios.get(
+        "/api/google-auth/check-integration-status",
+        config
+      );
       return data.success;
     } catch (error) {
       console.log(error);
@@ -30,23 +42,32 @@ const Sent = () => {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: authUser?.token,
+        token: authUser.token,
       },
     };
 
-    const { data } = await axios.get("/api/emails/fetch-sent-messages", config);
-    // console.log(data.data);
+    const { data } = await axios.get(
+      "/api/google-auth/fetch-sent-messages",
+      config
+    );
+    console.log(data);
     return data.data;
   };
   const { data: integrationStatus, isLoading } = useQuery<boolean>(
     `gmail-integration-status-${authUser?.uid}`,
     checkIfYouIntegratedGmail
   );
+
   const {
     data: emails,
     isLoading: loadingSentEmails,
     error,
+    isError,
   } = useQuery<any[]>(`sent-emails-${authUser?.uid}`, fetchSentMail);
+
+  console.log("integrationStatus", integrationStatus);
+  // console.log("isLoading", isLoading);
+  // console.log("error", error);
   if (!isLoading && integrationStatus) {
     return (
       <AppLayout>
@@ -57,6 +78,12 @@ const Sent = () => {
             fetchingEmailError={error as any}
           />
         </>
+      </AppLayout>
+    );
+  } else if (!isLoading && isError) {
+    return (
+      <AppLayout>
+        <ErrorMessage error="Something went wrong." />
       </AppLayout>
     );
   } else {
