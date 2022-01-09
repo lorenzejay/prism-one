@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
-import { InputData, LeadFormType } from "../../types/leadsTypes";
+import { LeadFormType } from "../../types/leadsTypes";
 
 const Index = () => {
   const { authUser, loading } = useFirebaseAuth();

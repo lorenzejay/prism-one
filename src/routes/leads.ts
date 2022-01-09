@@ -73,7 +73,16 @@ leadRouter.get("/list-lead/:leadId", authorization, async (req, res) => {
 leadRouter.post("/upload-form-response/:leadId", async (req, res) => {
   try {
     const leadId = parseInt(req.params.leadId);
-    const { response } = req.body;
+    const response = req.body.response as { key: string; value: string }[];
+    const formOwner = req.body.formOwner as string;
+
+    //response index 0-2 will always be Full Name, Email and Phone Number
+    if (!response) return;
+    const responseCopy = JSON.parse(response as any);
+    const client_name = responseCopy[0].value;
+    const client_email = responseCopy[1].value;
+    const phone_number = responseCopy[2].value;
+
     if (!leadId) return;
     const leads = await prisma.leadResponses.create({
       data: {
@@ -82,6 +91,15 @@ leadRouter.post("/upload-form-response/:leadId", async (req, res) => {
       },
       select: {
         id: true,
+      },
+    });
+
+    await prisma.client.create({
+      data: {
+        client_name,
+        client_email,
+        phone_number,
+        created_by: formOwner,
       },
     });
     res.send({ success: true, message: undefined, data: leads.id });

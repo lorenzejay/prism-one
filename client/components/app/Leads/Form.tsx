@@ -10,8 +10,9 @@ interface LeadFormProps {
   formElements: InputData[];
   mode: LeadFormMode;
   leadId?: number;
+  formOwner?: string;
 }
-const LeadForm = ({ formElements, mode, leadId }: LeadFormProps) => {
+const LeadForm = ({ formElements, mode, leadId, formOwner }: LeadFormProps) => {
   // const [successMessage, setSuccessMessage] = useState()
   const uploadLeadForm = async (e: FormEvent) => {
     try {
@@ -29,10 +30,11 @@ const LeadForm = ({ formElements, mode, leadId }: LeadFormProps) => {
         };
         inputValues.push(data);
       });
-      console.log("inputValues", inputValues);
+      // console.log("inputValues", inputValues);
 
       await axios.post(`/api/leads/upload-form-response/${leadId}`, {
         response: JSON.stringify(inputValues),
+        formOwner,
       });
     } catch (error) {
       return error;

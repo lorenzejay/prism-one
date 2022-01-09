@@ -50,6 +50,7 @@ const InvLead = () => {
           formElements={leadDetails.formElements}
           mode={LeadFormMode.CLIENT}
           leadId={parseInt(leadId as string)}
+          formOwner={leadDetails.created_by}
         />
       )}
     </>

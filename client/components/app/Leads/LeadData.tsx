@@ -54,11 +54,12 @@ const LeadData = ({ leadId }: LeadDataProps) => {
         <table className="w-full overflow-x-auto border border-collapse h-auto ">
           <thead>
             <tr className="text-left ">
-              {leadData[0].response.map((res, i) => (
-                <th key={i} className="border p-2 rounded-l-md">
-                  {res.key}
-                </th>
-              ))}
+              {leadData[0] &&
+                leadData[0].response.map((res, i) => (
+                  <th key={i} className="border p-2 rounded-l-md">
+                    {res.key}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody className="">

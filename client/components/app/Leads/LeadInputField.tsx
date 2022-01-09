@@ -16,6 +16,7 @@ const LeadInputField = ({
   index,
   mode,
 }: LeadInputFieldProps) => {
+  console.log("formElemetns", formElements);
   const [title, setTitle] = useState("");
 
   const ref = useRef<any>();
@@ -106,17 +107,22 @@ const LeadInputField = ({
             }}
           />
         </div>
-        <p
-          className="w-12 h-6  hover:border-b hover:border-red-600 transition-all duration-500 ease-in-out cursor-pointer"
-          onClick={() =>
-            setFormElements((prevElements) => {
-              prevElements.pop();
-              return [...prevElements];
-            })
-          }
-        >
-          Delete
-        </p>
+        {!(
+          formElements[index].name === "Full Name" ||
+          formElements[index].name === "Email" ||
+          formElements[index].name === "Phone Number"
+        ) && (
+          <p
+            className="w-12 h-6  hover:border-b hover:border-red-600 transition-all duration-500 ease-in-out cursor-pointer"
+            onClick={() => {
+              const formElementsCopy = [...formElements];
+              formElementsCopy.splice(index, 1);
+              setFormElements(formElementsCopy);
+            }}
+          >
+            Delete
+          </p>
+        )}
       </div>
     );
   }

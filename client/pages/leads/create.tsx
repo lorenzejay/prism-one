@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import ErrorMessage from "../../components/app/ErrorMessage";
 import AppLayout from "../../components/app/Layout";
 import LeadForm from "../../components/app/Leads/Form";
 import LeadInputField from "../../components/app/Leads/LeadInputField";
@@ -38,6 +39,12 @@ const Create = () => {
     {
       name: "Email",
       inputType: InputType.EMAIL,
+      required: true,
+      value: "",
+    },
+    {
+      name: "Phone Number",
+      inputType: InputType.TEXT,
       required: true,
       value: "",
     },
@@ -83,6 +90,7 @@ const Create = () => {
     <AppLayout>
       <div>
         {/* <FormBuilder /> */}
+        {uploadError && <ErrorMessage error={uploadError} />}
         <h2 className="flex-grow text-3xl tracking-wide font-medium ">
           Lead Form
         </h2>
