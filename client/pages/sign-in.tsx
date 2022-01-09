@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/LandingPageComponents/Layout";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Link from "next/link";
 import ErrorMessage from "../components/app/ErrorMessage";
 import useFirebaseAuth from "../hooks/useAuth3";
@@ -49,7 +48,7 @@ const SignIn = () => {
     <Layout>
       <>
         <form
-          className="px-5 py-4 pt-24 lg:py-10  lg:px-12 xl:px-32 flex justify-center flex-col"
+          className="px-5 pb-4 pt-24 lg:py-10  lg:px-12 xl:px-32 flex justify-center flex-col"
           onSubmit={handleLogin}
         >
           <h1 className="text-center text-3xl ">Sign In</h1>
@@ -79,14 +78,14 @@ const SignIn = () => {
           >
             Log in
           </button>
-          <div className="flex items-center mt-5 w-3/4 lg:w-1/2  mx-auto">
+          {/* <div className="flex items-center mt-5 w-3/4 lg:w-1/2  mx-auto">
             <label className="mr-2">Remember Me</label>
             <input
               type="checkbox"
               checked={rememberUserSignIn}
               onChange={rememberLoginSignedState}
             />
-          </div>
+          </div> */}
           <p className="mx-auto mt-10 text-sm ">
             If you don&apos;t have an account yet,{" "}
             <Link href="/register">

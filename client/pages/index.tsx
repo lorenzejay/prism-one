@@ -3,16 +3,22 @@ import HeroTwo from "../components/LandingPageComponents/HeroTwo";
 import Layout from "../components/LandingPageComponents/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import Features from "../components/LandingPageComponents/Features";
 import { Footer } from "../components/LandingPageComponents/Footer";
+import FeaturesSimplified from "../components/LandingPageComponents/FeaturesSimplified";
+import Head from "next/head";
+import { config, dom } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 const Home: NextPage = () => {
   // const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
   return (
     <Layout>
       <>
+        <Head>
+          <style>{dom.css()}</style>
+        </Head>
         <HeroTwo />
-        {/* <ThreeFeatures /> */}
-        <Features />
+        <FeaturesSimplified />
+        {/* <Features /> */}
         <section className="flex flex-col items-center lg:flex-row w-full px-5  py-12 lg:py-24 lg:px-12 xl:px-32 justify-between">
           <div className="flex flex-col  lg:w-1/2 mb-10 lg:mb-0 lg:mr-24">
             <FontAwesomeIcon
@@ -31,7 +37,7 @@ const Home: NextPage = () => {
             </p>
           </div>
 
-          <img src="/featureset_1.png" className="lg:w-1/2" />
+          <img src="/workflow-example.png" className="lg:w-1/2" />
         </section>
         <Footer />
       </>

@@ -43,7 +43,7 @@ const Register = () => {
     <Layout>
       <>
         <form
-          className="px-5 py-4 lg:py-10  lg:px-12 xl:px-32 flex flex-col justify-center "
+          className="px-5 pt-24 pb-4 lg:py-10  lg:px-12 xl:px-32 flex flex-col justify-center "
           onSubmit={(e) => handleRegister(e)}
         >
           <h1 className="text-center text-3xl ">Sign Up </h1>
@@ -52,26 +52,26 @@ const Register = () => {
           <input
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
-            className="lg:w-1/2 mx-auto border p-2 my-3"
+            className="w-3/4 lg:w-1/2 mx-auto border p-2 my-3"
             type="email"
           />
           <input
             placeholder="Username"
             onChange={(e) => setUsername(e.target.value)}
-            className="lg:w-1/2 mx-auto border p-2 my-3"
+            className="w-3/4 lg:w-1/2 mx-auto border p-2 my-3"
             type="text"
           />
-          <div className="flex w-1/2 mx-auto ">
+          <div className="w-3/4 flex flex-col lg:flex-row lg:w-1/2 mx-auto ">
             <input
               placeholder="First Name"
               onChange={(e) => setFirstName(e.target.value)}
-              className="lg:w-1/2 mx-auto border p-2 my-3 mr-1"
+              className="w-full lg:w-1/2 mx-auto border p-2 my-3 mr-1"
               type="text"
             />
             <input
               placeholder="Last Name"
               onChange={(e) => setLastName(e.target.value)}
-              className="lg:w-1/2 mx-auto border p-2 my-3"
+              className="w-full lg:w-1/2 mx-auto border p-2 my-3"
               type="text"
             />
           </div>
@@ -79,19 +79,19 @@ const Register = () => {
           <input
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
-            className="lg:w-1/2 mx-auto border p-2 my-3"
+            className="w-3/4 lg:w-1/2 mx-auto border p-2 my-3"
             type="password"
           />
 
           <input
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="lg:w-1/2 mx-auto border p-2 my-3"
+            className="w-3/4 lg:w-1/2 mx-auto border p-2 my-3"
             type="password"
           />
           <button
             type="submit"
-            className="border lg:w-1/2 mx-auto p-2 hover:bg-blue-500 transition duration-500 ease-in-out"
+            className="border w-3/4 lg:w-1/2 mx-auto p-2 hover:bg-blue-500 transition duration-500 ease-in-out"
           >
             Create Account
           </button>
