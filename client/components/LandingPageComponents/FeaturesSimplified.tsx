@@ -3,7 +3,7 @@ import React from "react";
 const FeaturesSimplified = () => {
   return (
     <section
-      className="pt-36 lg:pt-72 xl:pt-96 2xl:pt-64 lg:pb-36 px-10  pb-10 flex flex-col items-center lg:grid lg:grid-cols-3 lg:justify-center w-full mx-auto"
+      className="pt-36 md:pt-24  xl:pt-64 2xl:pt-64 lg:pb-36 px-10  pb-10 flex flex-col items-center lg:grid lg:grid-cols-3 lg:justify-center w-full mx-auto"
       style={{ background: "#F7FAFC" }}
     >
       <div className=" flex flex-col justify-center items-center mb-10 mx-5 lg:mb-0">
