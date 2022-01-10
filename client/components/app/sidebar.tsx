@@ -5,10 +5,11 @@ import { CurrentDash } from "../../types/UITypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { config, dom } from "@fortawesome/fontawesome-svg-core";
+import { useRouter } from "next/router";
 config.autoAddCss = false;
 interface SidebarProps {
-  currentDash: CurrentDash;
-  setCurrentDash: (x: CurrentDash) => void;
+  currentDash: string;
+  setCurrentDash: (x: string) => void;
   minimizeSidebar: boolean;
   setMinimizeSidebar: (x: boolean) => void;
 }
@@ -18,6 +19,7 @@ const Sidebar = ({
   minimizeSidebar,
   setMinimizeSidebar,
 }: SidebarProps) => {
+  const router = useRouter();
   const [revealMinimizeSbButton, setRevealMinimizeSbButton] = useState(false);
 
   const [emailDropdown, setEmailDropdown] = useState(false);
@@ -36,6 +38,18 @@ const Sidebar = ({
     setCurrentDash(currentDashFromLocalStorage as CurrentDash);
     // }
   }, []);
+  useEffect(() => {
+    if (router.asPath.startsWith("/email")) {
+      return localStorage.setItem("currentDash", CurrentDash.Email);
+    } else if (router.asPath.startsWith("/contracts")) {
+      return localStorage.setItem("currentDash", CurrentDash.Contracts);
+    }
+    localStorage.setItem(
+      "currentDash",
+      router.asPath.slice(1, router.asPath.length)
+    );
+    // console.log("currentDash", router.asPath.slice(1, router.asPath.length));
+  }, [router]);
   return (
     <div
       className={`flex transition-width duration-500 ease-in-out flex-col  relative ${
@@ -90,11 +104,11 @@ const Sidebar = ({
           <li className="mb-5">
             <button
               onClick={() => {
-                window.localStorage.setItem("currentDash", CurrentDash.LEADS);
-                setCurrentDash(CurrentDash.LEADS);
+                window.localStorage.setItem("currentDash", CurrentDash.leads);
+                setCurrentDash(CurrentDash.leads);
               }}
               className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
-                currentDash === CurrentDash.LEADS
+                currentDash === CurrentDash.leads
                   ? "bg-gray-100 border-l-2 border-yellow-600"
                   : "border-none bg-none"
               }`}
@@ -133,13 +147,13 @@ const Sidebar = ({
           <li
             className="mb-5"
             onClick={() => {
-              window.localStorage.setItem("currentDash", CurrentDash.Jobs);
-              setCurrentDash(CurrentDash.Jobs);
+              window.localStorage.setItem("currentDash", CurrentDash.projects);
+              setCurrentDash(CurrentDash.projects);
             }}
           >
             <button
               className={`cursor-pointer  text-left w-full p-2 focus:border-l-2 ${
-                currentDash === CurrentDash.Jobs
+                currentDash === CurrentDash.projects
                   ? "bg-gray-100 border-l-2 border-yellow-600"
                   : "border-none bg-none"
               }`}
@@ -309,7 +323,7 @@ const Sidebar = ({
                       "currentDash",
                       CurrentDash.Contracts
                     );
-                    setEmailDropdown(!contractDropdown);
+                    setContractDropdown(!contractDropdown);
                   }}
                 >
                   Contracts
@@ -323,7 +337,7 @@ const Sidebar = ({
                       "currentDash",
                       CurrentDash.Contracts
                     );
-                    setEmailDropdown(!contractDropdown);
+                    setContractDropdown(!contractDropdown);
                   }}
                 >
                   Upload

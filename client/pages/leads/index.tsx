@@ -10,11 +10,18 @@ import { LeadFormType } from "../../types/leadsTypes";
 const Index = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
+  // console.log("routerpath", router.asPath.slice(1, router.asPath.length));
   useEffect(() => {
     if (!loading && authUser === null) {
       router.push("/sign-in");
     }
   }, [loading, authUser]);
+  useEffect(() => {
+    window.localStorage.setItem(
+      "currentDash",
+      router.asPath.slice(1, router.asPath.length)
+    );
+  }, [router]);
   const getLeads = async () => {
     if (!authUser?.token) return;
     const config = {

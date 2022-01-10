@@ -5,7 +5,7 @@ import AppHeader from "./header";
 import Sidebar from "./sidebar";
 
 const AppLayout = ({ children }: { children: ReactChild }) => {
-  const [currentDash, setCurrentDash] = useState<CurrentDash>(CurrentDash.Home);
+  const [currentDash, setCurrentDash] = useState<string>(CurrentDash.Home);
   const [minimizeSidebar, setMinimizeSidebar] = useState(false);
 
   const router = useRouter();
