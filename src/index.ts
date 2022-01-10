@@ -63,6 +63,9 @@ if (process.env.NODE_ENV === "production") {
       path.resolve(__dirname, "../client/out/contracts/[contractId].html")
     );
   });
+  app.get("/email?code=**", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/out/email.html"));
+  });
   app.get("/email/create", (_, res) => {
     res.sendFile(path.resolve(__dirname, "../client/out/email/create.html"));
   });
