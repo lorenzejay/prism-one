@@ -58,7 +58,7 @@ googleAuthRouter.post(
         userId: `me`,
       });
       if (!response) return;
-
+      console.log("tokens", tokens);
       if (tokens.refresh_token) {
         await prisma.gmailIntegrationRefreshTokens.create({
           data: {
