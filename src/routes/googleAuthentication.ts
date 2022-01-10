@@ -30,7 +30,7 @@ const url = oAuth2Client.generateAuthUrl({
 
   // If you only need one scope you can pass it as a string
   scope: scopes,
-  // prompt: "consent",
+  prompt: "consent",
 });
 
 googleAuthRouter.get("/get-auth-url", async (req, res) => {

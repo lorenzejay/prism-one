@@ -138,6 +138,7 @@ const Email = () => {
   }, [integrationStatus]);
 
   console.log("finshGmailIntegration", finshGmailIntegration);
+  console.log("integrationStatus", integrationStatus);
   console.log("isIntegratonSucess", isSuccess);
   console.log("integrationError", isError);
   return !integrationStatus ? (
