@@ -3,18 +3,13 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import AppLayout from "../../components/app/Layout";
-import sanitize from "sanitize-html";
 import useFirebaseAuth from "../../hooks/useAuth3";
-import { Url } from "url";
 
 const Email = () => {
   // const { userId, userToken } = useAuth();
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
   const { code } = router.query;
-  const [response, setResponse] = useState<any>();
-  // console.log("code", code);
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_KEY;
 
   useEffect(() => {
     if (!loading && !authUser) {
@@ -40,24 +35,7 @@ const Email = () => {
       console.log(error);
     }
   };
-  const signInWithGmailAccount = async () => {
-    try {
-      if (!authUser?.token) return;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          token: authUser.token,
-        },
-      };
-      const { data } = await axios.get("/api/emails/integrate-gmail", config);
-      console.log(data);
-      if (data.success) {
-        return data.data;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const checkIfYouIntegratedGmail = async () => {
     try {
       if (!authUser?.token) return;
@@ -71,7 +49,7 @@ const Email = () => {
         "/api/google-auth/check-integration-status",
         config
       );
-      console.log(data);
+
       return data.success;
     } catch (error) {
       console.log(error);
@@ -95,6 +73,8 @@ const Email = () => {
       );
       if (data.success) {
         await refireCheckIntegration();
+      } else {
+        throw Error("Unsuccessfully integrated gmail :(");
       }
       return data.success;
     }
@@ -103,8 +83,7 @@ const Email = () => {
   const { data: integrationStatus, refetch: refireCheckIntegration } =
     useQuery<boolean>(
       `gmail-integration-status-${authUser?.uid}`,
-      checkIfYouIntegratedGmail,
-      { retry: 1 }
+      checkIfYouIntegratedGmail
     );
   const { refetch: triggerFetchUrl } = useQuery<string>(
     `gmail-redirect-url-${authUser?.uid}`,
@@ -113,21 +92,18 @@ const Email = () => {
       refetchOnWindowFocus: false,
       enabled: false,
       onSuccess: async (data) => {
-        console.log(code);
+        // console.log(code);
         if (data && code) {
           const x = await signInWithGmailAccount2();
-          setResponse(x);
         }
       },
     }
   );
+
   const { data: finshGmailIntegration, refetch: fireFinishGmailIntegration } =
     useQuery<boolean>(
       `gmail-second-query-${authUser?.uid}`,
-      finishIntegrateGmail,
-      {
-        retry: true,
-      }
+      finishIntegrateGmail
     );
 
   // const { data: redirectUrl, refetch } = useQuery<Url>(
@@ -137,7 +113,7 @@ const Email = () => {
   // );
   const handleFetchUrl = async () => {
     const url = await triggerFetchUrl();
-    console.log(url);
+
     if (url?.data) {
       router.push(url.data);
     }
@@ -145,9 +121,8 @@ const Email = () => {
 
   useEffect(() => {
     if (code) {
-      console.log("code", code);
-      const data = fireFinishGmailIntegration();
-      setResponse(data);
+      const response = fireFinishGmailIntegration();
+      console.log("mutation response", response);
 
       // refireCheckIntegration();
     }
@@ -158,8 +133,9 @@ const Email = () => {
     }
   }, [integrationStatus]);
 
-  console.log("finshGmailIntegration", finshGmailIntegration);
-  console.log("integrationStatus", integrationStatus);
+  // console.log("finshGmailIntegration", finshGmailIntegration);
+  // console.log("isIntegratonSucess", isSuccess);
+  // console.log("integrationError", isError);
   return !integrationStatus ? (
     <AppLayout>
       <>

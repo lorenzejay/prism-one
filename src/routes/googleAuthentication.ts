@@ -52,11 +52,13 @@ googleAuthRouter.post(
       if (!code || !userId) return;
       const { tokens } = await oAuth2Client.getToken(code);
       await oAuth2Client.setCredentials(tokens);
+      google.options({ auth: oAuth2Client });
       const response = await gmail.users.getProfile({
         // The user's email address. The special value `me` can be used to indicate the authenticated user.
         userId: `me`,
       });
       if (!response) return;
+
       if (tokens.refresh_token) {
         await prisma.gmailIntegrationRefreshTokens.create({
           data: {
@@ -67,14 +69,13 @@ googleAuthRouter.post(
         });
       }
 
-      if (code) {
-        res.send({ sucess: true, message: "", data: response });
-      }
+      res.send({ success: true, message: "", data: response });
     } catch (error) {
       // throw new Error(
       //   "Error: No access, refresh token, API key or refresh handler callback is set."
-      // );
-      console.log(error);
+      // ); if (response) {
+      res.send({ success: false, message: "", data: error });
+      // console.log(error);
     }
   }
 );
@@ -95,7 +96,7 @@ googleAuthRouter.get(
             id: true,
           },
         });
-
+      console.log("integratedUser", integratedUser);
       if (integratedUser) {
         oAuth2Client.credentials = {
           refresh_token: integratedUser.refresh_token,
