@@ -27,7 +27,7 @@ app.use("/api/projects", projectRouter);
 app.use("/api/clients", clientRouter);
 app.use("/api/contracts", contractRouter);
 app.use("/api/tasks", taskRouter);
-app.use("/api/emails", emailRouter);
+// app.use("/api/emails", emailRouter);
 app.use("/api/galleries", galleryRouter);
 app.use("/api/leads", leadRouter);
 app.use("/api/google-auth", googleAuthRouter);

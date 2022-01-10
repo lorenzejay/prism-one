@@ -100,11 +100,15 @@ const Email = () => {
     }
   );
 
-  const { data: finshGmailIntegration, refetch: fireFinishGmailIntegration } =
-    useQuery<boolean>(
-      `gmail-second-query-${authUser?.uid}`,
-      finishIntegrateGmail
-    );
+  const {
+    data: finshGmailIntegration,
+    refetch: fireFinishGmailIntegration,
+    isError,
+    isSuccess,
+  } = useQuery<boolean>(
+    `gmail-second-query-${authUser?.uid}`,
+    finishIntegrateGmail
+  );
 
   // const { data: redirectUrl, refetch } = useQuery<Url>(
   //   `redirectUrl-${authUser?.uid}`,
@@ -133,9 +137,9 @@ const Email = () => {
     }
   }, [integrationStatus]);
 
-  // console.log("finshGmailIntegration", finshGmailIntegration);
-  // console.log("isIntegratonSucess", isSuccess);
-  // console.log("integrationError", isError);
+  console.log("finshGmailIntegration", finshGmailIntegration);
+  console.log("isIntegratonSucess", isSuccess);
+  console.log("integrationError", isError);
   return !integrationStatus ? (
     <AppLayout>
       <>
