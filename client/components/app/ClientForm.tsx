@@ -140,13 +140,13 @@ const ClientForm = ({ formType, clientDetails, clientId }: ClientFormTypes) => {
   });
   return (
     <form
-      className="w-full px-5 py-3 lg:w-1/2 mx-auto font-light flex flex-col text-black bg-white "
+      className="px-5  py-12  lg:px-12 xl:px-32 bg-gray-100 w-full  font-light flex flex-col text-black "
       onSubmit={
         formType === FormType.create ? handleAddNewClient : handleUpdateClients
       }
     >
       {isLoading && <div className="loader mx-auto"></div>}
-      <h3 className="text-3xl font-semibold my-3">Contacts</h3>
+      <h3 className="text-3xl font-semibold ">Contacts</h3>
       <div className="flex flex-col my-2">
         <label htmlFor="FirstAndLastName">First and Last Name</label>
         <input

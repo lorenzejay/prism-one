@@ -114,7 +114,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/attraction.png" className="object-cover w-1/4" />
+                <img src="/attraction.png" className="object-cover w-7" />
               ) : (
                 "Leads"
               )}
@@ -136,7 +136,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/customer.png" className="object-cover w-1/4" />
+                <img src="/customer.png" className="object-cover w-7" />
               ) : (
                 "Clients"
               )}
@@ -159,7 +159,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/briefing.png" className="object-cover w-1/4" />
+                <img src="/briefing.png" className="object-cover w-7" />
               ) : (
                 "Projects"
               )}
@@ -180,7 +180,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/checklist.png" className="object-cover w-1/4" />
+                <img src="/checklist.png" className="object-cover w-7" />
               ) : (
                 "Tasks"
               )}
@@ -204,7 +204,7 @@ const Sidebar = ({
             }`}
           >
             {minimizeSidebar ? (
-              <img src="/email.png" className="object-cover w-1/4" />
+              <img src="/email.png" className="object-cover w-7" />
             ) : (
               <p>
                 Email
@@ -291,7 +291,7 @@ const Sidebar = ({
             }`}
           >
             {minimizeSidebar ? (
-              <img src="/handshake.png" className="object-cover w-1/4" />
+              <img src="/handshake.png" className="object-cover w-7" />
             ) : (
               <p className="w-24">
                 Contracts
@@ -379,7 +379,7 @@ const Sidebar = ({
               }`}
             >
               {minimizeSidebar ? (
-                <img src="/image.png" className="object-cover w-1/4" />
+                <img src="/image.png" className="object-cover w-7" />
               ) : (
                 "Galleries"
               )}

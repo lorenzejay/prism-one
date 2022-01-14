@@ -85,16 +85,15 @@ export default function useFirebaseAuth() {
   interface SignUpProperty {
     email: string;
     password: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
+
     username: string;
   }
 
   const createUserWithEmailAndPassword = async ({
     email,
     password,
-    first_name,
-    last_name,
+    full_name,
     username,
   }: SignUpProperty) => {
     try {
@@ -112,8 +111,7 @@ export default function useFirebaseAuth() {
         "/api/users/register",
         {
           email,
-          first_name,
-          last_name,
+          full_name,
           password,
           username,
         },

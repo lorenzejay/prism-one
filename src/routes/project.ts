@@ -29,12 +29,19 @@ projectRouter.post("/create-project", authorization, async (req, res) => {
   try {
     const userId = req.user;
     // console.log("userId", userId);
-    const { title, client_email, client_name, project_date, goals, tags } =
-      req.body;
+    const {
+      title,
+      client_email,
+      clientId,
+      client_name,
+      project_date,
+      goals,
+      tags,
+    } = req.body;
 
     if (!userId) return;
     //optional inputs are goals and project date
-    await prisma.project.create({
+    const newProject = await prisma.project.create({
       data: {
         title,
         client_email,
@@ -44,7 +51,31 @@ projectRouter.post("/create-project", authorization, async (req, res) => {
         goals,
         tags,
       },
+      select: {
+        id: true,
+      },
     });
+
+    //if there is a client check
+    const clientExists = await prisma.client.findFirst({
+      where: {
+        id: clientId,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (clientExists && newProject) {
+      await prisma.client.update({
+        where: {
+          id: clientId,
+        },
+        data: {
+          associatedProjectId: newProject.id,
+        },
+      });
+    }
+
     res.send({ success: true, message: "Project successfully created." });
   } catch (error) {
     console.log(error);
@@ -72,7 +103,6 @@ projectRouter.post(
         expected_revenue,
         project_status,
         tags,
-        tasks,
         goals,
       } = req.body;
       //verify that project details owner is the userId

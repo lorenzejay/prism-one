@@ -52,6 +52,7 @@ const ProjectDetailsForm = ({
       setProjectDate(projectDetails.project_date);
     }
   }, [projectDetails]);
+
   useEffect(() => {
     if (!authUser && !loading) {
       router.push("/home");
@@ -126,18 +127,19 @@ const ProjectDetailsForm = ({
 
   return (
     <form
-      className="w-full px-5 py-3 lg:w-1/2 mx-auto font-light flex flex-col text-black bg-white "
+      className="w-full px-5 pb-3  mx-auto font-light flex flex-col text-black  "
       onSubmit={handleUpdateProject}
     >
       {isLoading && <div className="loader mx-auto"></div>}
       {isSuccess && <SuccessMessage success="Updated" />}
-      <h3 className="text-3xl font-semibold my-3">Project Details</h3>
+      <h3 className="text-3xl font-semibold mb-3">Project Details</h3>
       <div className="flex flex-col my-2">
-        <label htmlFor="FirstAndLastName">First and Last Name</label>
+        <label htmlFor="ClientName">Client Name</label>
         <input
+          id="ClientName"
           onChange={(e) => setClientName(e.target.value)}
           value={clientName}
-          name="FirstAndLastName"
+          name="ClientName"
           className="rounded-md p-2 border outline-none"
         />
       </div>
@@ -151,16 +153,16 @@ const ProjectDetailsForm = ({
           type="text"
         />
       </div>
-      <div className="flex flex-col my-2">
+      {/* <div className="flex flex-col my-2">
         <label htmlFor="phoneNumber">Phone Number</label>
         <input
           onChange={(e) => setClientName(e.target.value)}
-          value={clientName}
+          value={phonenu}
           name="phoneNumber"
           className="rounded-md p-2 border outline-none"
           type="text"
         />
-      </div>
+      </div> */}
 
       <div className="flex flex-col my-2">
         <label htmlFor="address">Amount Due</label>

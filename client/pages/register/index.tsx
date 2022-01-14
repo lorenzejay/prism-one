@@ -26,8 +26,7 @@ const Register = () => {
 
       await createUserWithEmailAndPassword({
         email,
-        first_name: firstName,
-        last_name: lastName,
+        full_name: `${firstName} ${lastName}`,
         password,
         username,
       });

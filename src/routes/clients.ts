@@ -20,6 +20,7 @@ clientRouter.post("/create-client", authorization, async (req, res) => {
       state,
       city,
       zip_code,
+      associatedProjectId,
     } = req.body;
 
     //check for any blanks on required
@@ -35,6 +36,7 @@ clientRouter.post("/create-client", authorization, async (req, res) => {
         city,
         state,
         zip_code,
+        associatedProjectId: parseInt(associatedProjectId),
       },
     });
     res.send({

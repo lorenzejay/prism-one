@@ -77,8 +77,7 @@ const Create = () => {
   };
   const { data: integrationStatus } = useQuery(
     `gmail-integration-status-${authUser?.uid}`,
-    checkIfYouIntegratedGmail,
-    { retry: 1 }
+    checkIfYouIntegratedGmail
   );
 
   useEffect(() => {
@@ -124,7 +123,11 @@ const Create = () => {
   } = useMutation(sendEmail, {
     onSuccess: () => queryClient.invalidateQueries(`emails-${authUser?.uid}`),
   });
-
+  // useEffect(() => {
+  //   if (!integrationStatus) {
+  //     router.push("/email");
+  //   }
+  // }, [integrationStatus]);
   useEffect(() => {
     if (isSuccess && !isLoading) {
       router.push("/email/inbox");

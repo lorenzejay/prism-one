@@ -8,10 +8,15 @@ import Loader from "../../components/app/Loader";
 import { useRouter } from "next/router";
 import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
+import Modal from "../../components/LandingPageComponents/Modal";
+import ProjectDetailsForm from "../../components/app/Projects/projectDetails";
+import CreateProjectForm from "../../components/app/Projects/CreateProjectForm";
 const Clients = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
+  const [openModal, setOpenModal] = useState(false);
   const [clientSearched, setClientSearched] = useState<string>("");
+  const [showCreateProject, setShowCreateProject] = useState(false);
 
   useEffect(() => {
     if (!loading && !authUser) {
@@ -78,10 +83,6 @@ const Clients = () => {
     handleSearchClient
   );
 
-  //create a handle search and use that on the onchange
-  // console.log("clients", clients);
-  // console.log("searched", searchedClients);
-  // console.log("clientSearched", clientSearched);
   return (
     <AppLayout>
       <>
@@ -92,10 +93,24 @@ const Clients = () => {
           />
         </Head>
         <div
-          className="px-10 py-5 lg:px-32 min-h-full"
-          style={{ background: "#F9F9F9" }}
+          className={`relative px-10 py-5 lg:px-32 min-h-full `}
+          style={{
+            background: "#F9F9F9",
+          }}
         >
-          <section className="my-7 flex items-center justify-start font-light   ">
+          <section className="z-1 relative my-7 flex items-center justify-start font-light   ">
+            {/* {showCreateProject && (
+              <div className="w-full z-10 pt-7  bg-black flex items-center justify-center h-full fixed top-0 left-0 overflow-auto">
+                <div
+                  className={`z-20 bg-white opacity-100 p-4 w-1/2 h-96 mx-auto  rounded-md ${
+                    showCreateProject && "opacity-100"
+                  }`}
+                >
+                  <button onClick={() => setShowCreateProject(false)}>X</button>
+                  <h2>Create</h2>
+                </div>
+              </div>
+            )} */}
             <h2 className="flex-grow text-3xl font-medium">Clients</h2>
             <div className="mr-3 flex items-center justify-start  ">
               <input
@@ -127,10 +142,13 @@ const Clients = () => {
           <table className="w-full border border-collapse p-3">
             <thead>
               <tr className="text-left  ">
-                <th className="w-1/3 border p-3 bg-white font-normal">Name</th>
-                <th className="w-1/3 border p-3 bg-white font-normal">Email</th>
-                <th className="w-1/3 border p-3 bg-white font-normal">
+                <th className="w-1/4 border p-3 bg-white font-normal">Name</th>
+                <th className="w-1/4 border p-3 bg-white font-normal">Email</th>
+                <th className="w-1/4 border p-3 bg-white font-normal">
                   Phone Number
+                </th>
+                <th className="w-1/4 border p-3 bg-white font-normal">
+                  Project
                 </th>
               </tr>
             </thead>
@@ -138,13 +156,42 @@ const Clients = () => {
               {clientSearched === "" &&
                 clients &&
                 clients.map((client, i) => (
-                  <Link href={`/clients/${client.id}`} key={i}>
-                    <tr className="cursor-pointer bg-white border rounded-md mt-3">
-                      <td className="p-3 border ">{client.client_name}</td>
-                      <td className="p-3 border ">{client.client_email}</td>
-                      <td className="p-3 border ">{client.phone_number}</td>
-                    </tr>
-                  </Link>
+                  // <Link href={`/clients/${client.id}`} key={i}>
+                  <tr className=" bg-white border rounded-md mt-3" key={i}>
+                    <td className="p-3 border ">{client.client_name}</td>
+                    <td className="p-3 border ">{client.client_email}</td>
+                    <td className="p-3 border ">{client.phone_number}</td>
+                    <td className="p-3 border ">
+                      {client.associatedProjectId !== null ? (
+                        <Link href={`/projects/${client.associatedProjectId}`}>
+                          <p>{client.associatedProjectId}</p>
+                        </Link>
+                      ) : (
+                        <Modal
+                          modalName={"New Project"}
+                          openModal={openModal}
+                          setOpenModal={setOpenModal}
+                          contentWidth="lg:w-1/2"
+                          contentHeight="h-3/4"
+                        >
+                          <div className="bg-white p-10    overflow-y-auto rounded-md">
+                            <CreateProjectForm
+                              defaultClientEmail={client.client_email}
+                              defaultClientName={client.client_name}
+                            />
+                          </div>
+                        </Modal>
+                        // <button
+                        //   onClick={() =>
+                        //     setShowCreateProject(!showCreateProject)
+                        //   }
+                        // >
+                        //   New Project
+                        // </button>
+                      )}
+                    </td>
+                  </tr>
+                  // </Link>
                 ))}
               {clientSearched !== "" &&
                 clientSearched &&

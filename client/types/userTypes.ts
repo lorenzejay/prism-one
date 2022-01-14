@@ -20,6 +20,7 @@ export interface ClientDetails {
   phone_number: string;
   state: string;
   zip_code: string;
+  associatedProjectId: number;
 }
 //client form
 export enum FormType {
@@ -31,4 +32,21 @@ export interface ApiCallReturn {
   data: any | null | undefined;
   success: boolean;
   message: string;
+}
+export interface CompanyDetails {
+  id: number;
+  owner_id: string;
+  company_email: string;
+  company_name: string;
+  industry: string;
+}
+export interface UserDetails {
+  id: string;
+  email: string;
+  profile_pic: string;
+  address: string;
+  phone_number: string;
+  full_name: string;
+  companyDetails: CompanyDetails[];
+  profile_color: string | null;
 }

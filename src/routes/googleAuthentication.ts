@@ -96,7 +96,7 @@ googleAuthRouter.get(
             id: true,
           },
         });
-      console.log("integratedUser", integratedUser);
+      // console.log("integratedUser", integratedUser);
       if (integratedUser) {
         oAuth2Client.credentials = {
           refresh_token: integratedUser.refresh_token,

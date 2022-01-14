@@ -90,7 +90,7 @@ taskRouter.get(
       const userId = req.user;
       if (!userId)
         return res.send({
-          success: true,
+          success: false,
           message: "Something went wrong",
           data: null,
         });

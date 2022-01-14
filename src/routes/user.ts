@@ -1,5 +1,5 @@
 import { Industry, PrismaClient } from ".prisma/client";
-import { Router } from "express";
+import { response, Router } from "express";
 import fetch from "node-fetch";
 import authorization from "../middlewares/auth";
 import { auth } from "../utils/firebaseInit";
@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 userRouter.post("/register", async (req, res, next) => {
   try {
-    const { email, username, first_name, last_name, password } = req.body;
+    const { email, username, full_name, password } = req.body;
     // return res.send(JSON.stringify(phone_number));
     const createdUser = await auth.createUser({
       email,
@@ -22,8 +22,7 @@ userRouter.post("/register", async (req, res, next) => {
       data: {
         email,
         id: uid,
-        first_name,
-        last_name,
+        full_name,
       },
     });
     //create a return object for new user
@@ -108,15 +107,23 @@ userRouter.get("/get-user-id/:userToken", async (req, res) => {
   }
 });
 
-userRouter.get("/get-username", authorization, async (req, res) => {
+userRouter.get("/get-fullname", authorization, async (req, res) => {
   try {
     const userId = req.user;
     if (!userId) return;
-    const userRecord = await auth.getUser(userId.toString());
-    if (!userRecord) return;
-    const username = userRecord.displayName;
+    // const userRecord = await auth.getUser(userId.toString());
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        full_name: true,
+      },
+    });
+    if (user === null) return;
+    const userFullName = user.full_name;
 
-    res.send(username);
+    res.send({ success: true, message: null, data: userFullName });
   } catch (error) {
     console.log(error);
     res.send(error);
@@ -139,9 +146,29 @@ userRouter.get("/get-firstname", authorization, async (req, res) => {
         data: undefined,
       });
 
-    res.send({ success: true, message: undefined, data: user.first_name });
+    res.send({ success: true, message: undefined, data: user.full_name });
   } catch (error) {
     console.log(error);
+  }
+});
+
+userRouter.get("/user-details", authorization, async (req, res) => {
+  try {
+    //email and name, and phone number dispa
+    const userId = req.user;
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        companyDetails: true,
+      },
+    });
+    // console.log(userDetails);
+    res.send({ success: true, message: null, data: userDetails });
+  } catch (error) {
+    console.log(error);
+    res.send({ success: false, message: error, data: null });
   }
 });
 
