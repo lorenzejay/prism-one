@@ -36,7 +36,7 @@ const Account = () => {
   );
   useEffect(() => {
     if (userDetails) {
-      setFname(`${userDetails.first_name} ${userDetails.last_name}`);
+      setFname(`${userDetails.full_name}`);
       setEmail(userDetails.email);
       setIndustry(userDetails.companyDetails[0].industry);
     }
@@ -50,7 +50,13 @@ const Account = () => {
         <div className="flex justify-between">
           {userDetails && (
             <div className="rounded-full bg-gray-500 text-white text-4xl mr-4 w-36 h-36 flex items-center justify-center">
-              <p> {userDetails.first_name.slice(0, 1)}</p>
+              <p>
+                {" "}
+                {userDetails.full_name &&
+                  userDetails?.full_name
+                    .split(" ")
+                    .map((name) => name.slice(0, 1).toUpperCase())}
+              </p>
             </div>
           )}
           <div className="rounded-md bg-white p-3 w-3/4">

@@ -42,7 +42,9 @@ const ProjectTask = ({ projectId }: { projectId: number }) => {
       <div className="">
         {tasks &&
           !tasksLoading &&
-          tasks.map((task, i) => <ProjectTaskInput taskId={task.id} key={i} />)}
+          tasks.map((task, i) => (
+            <ProjectTaskInput task={task} projectId={projectId} key={i} />
+          ))}
       </div>
     </section>
   );
