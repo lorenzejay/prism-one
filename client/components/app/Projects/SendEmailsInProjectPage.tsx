@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import ReactMde, { Suggestion } from "react-mde";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -11,12 +10,13 @@ import Dropdown from "../../LandingPageComponents/Dropdown";
 
 const SendEmailsInProjectPage = ({
   projectDetails,
+  projectId,
 }: {
   projectDetails: ProjectDetails;
+  projectId: string;
 }) => {
   const queryClient = useQueryClient();
 
-  const router = useRouter();
   const { authUser } = useFirebaseAuth();
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
@@ -102,11 +102,27 @@ const SendEmailsInProjectPage = ({
       config
     );
     setEmailTo("");
+    setSubject("");
     setMessage("");
     if (data.success) {
-      router.push("/email/sent");
+      //save thread id
+      //thread id is inside data.data
+      await axios.post(
+        `/api/google-auth/save-threadId/${projectId}`,
+        { threadId: data.data },
+        config
+      );
     }
   };
+  // const saveThreadId = async (threadId: string) => {
+  //   if (!threadId) return;
+  //   const { data } = await axios.get(
+  //     `/api/google-auth/get-threadId/${threadId}`
+  //   );
+  //   if (data.success) {
+  //     return data.data;
+  //   }
+  // };
   const {
     mutateAsync: handleSendEmail,
     isLoading,

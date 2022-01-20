@@ -99,7 +99,6 @@ const Email = () => {
       },
     }
   );
-
   const {
     data: finshGmailIntegration,
     refetch: fireFinishGmailIntegration,

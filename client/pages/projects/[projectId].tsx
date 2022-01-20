@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { ProjectDetails } from "../../types/projectTypes";
-import Link from "next/link";
+import { ProjectDetails, ThreadDataResult } from "../../types/projectTypes";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import { TaskDetails } from "../../types/tasksTypes";
 import AppLayout from "../../components/app/Layout";
@@ -12,7 +11,8 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import SendEmailsInProjectPage from "../../components/app/Projects/SendEmailsInProjectPage";
 import ProjectDetailsForm from "../../components/app/Projects/projectDetails";
 import ProjectTaskInput from "../../components/app/Projects/ProjectTaskInput";
-import Modal from "../../components/LandingPageComponents/Modal";
+import CheckThreadExists from "../../components/app/Projects/CheckThreadExists";
+import Modal from "../../components/app/Modal";
 
 const Project = () => {
   const queryClient = useQueryClient();
@@ -28,6 +28,10 @@ const Project = () => {
   const [state, setState] = useState<string>("");
   const [zipCode, setZipCode] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
+
+  const [thread, setThread] = useState<ThreadDataResult[]>();
+  const [isThread, setIsThread] = useState<boolean>(false);
+
   useEffect(() => {
     if (!authUser && !loading) {
       router.push("/home");
@@ -84,7 +88,7 @@ const Project = () => {
   const { data: tasks, isLoading: tasksLoading } = useQuery<
     TaskDetails[] | null
   >(`project-tasks-${authUser?.uid}`, fetchAssociatedTasks);
-  //specs
+  //check if there was a thread
 
   // add new clients
   const createClient = async () => {
@@ -115,15 +119,20 @@ const Project = () => {
       },
       config
     );
-    if (data.success === true) {
-      return router.push("/clients");
+    if (data.success) {
+      return;
     }
     window.alert("Something went wrong");
   };
-  const { mutateAsync: handleAddNewClient } = useMutation(createClient, {
+  const {
+    mutateAsync: handleAddNewClient,
+    isSuccess: isCreateNewClientSuccess,
+    isError: isCreateNewClientError,
+  } = useMutation(createClient, {
     onSuccess: () =>
       queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
+
   return (
     <AppLayout>
       <section className="p-5">
@@ -154,8 +163,8 @@ const Project = () => {
                       <p className="text-xs">Add participants</p>
                     </div>
                   }
-                  setOpenModal={setOpenModal}
-                  openModal={openModal}
+                  // setOpenModal={setOpenModal}
+                  // openModal={openModal}
                   contentWidth="w-1/2"
                   contentHeight="h-full"
                 >
@@ -233,17 +242,36 @@ const Project = () => {
             <div className="flex">
               {/* left side */}
               <div className="left-side lg:w-1/2 mr-10">
-                <SendEmailsInProjectPage projectDetails={projectDetails} />
-
+                {projectId && (
+                  <CheckThreadExists
+                    projectId={projectId as string}
+                    isThread={isThread}
+                    setIsThread={setIsThread}
+                  />
+                )}
+                {projectId && !isThread && (
+                  <SendEmailsInProjectPage
+                    projectDetails={projectDetails}
+                    projectId={projectId as string}
+                  />
+                )}
                 {/* task section */}
                 <section className="pt-10  h-1/2 border-b-2">
                   <div className="flex items-center justify-between">
                     <h2 className="text-3xl">Tasks List</h2>
-                    <Link href="/tasks/create">
-                      <button className="rounded-full w-10 h-10 bg-blue-theme text-white p-2 ">
-                        +
-                      </button>
-                    </Link>
+                    {/* <Link href="/tasks/create"> */}
+                    <button
+                      className="rounded-full w-10 h-10 bg-blue-theme text-white p-2 "
+                      onClick={() =>
+                        router.push({
+                          pathname: "/tasks/create",
+                          query: { project_associated: projectId },
+                        })
+                      }
+                    >
+                      +
+                    </button>
+                    {/* </Link> */}
                   </div>
                   <div className="lg:w-full">
                     {tasks &&

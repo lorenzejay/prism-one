@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import useFirebaseAuth from "../../../hooks/useAuth3";
 interface SelectAssociatedProjectProps {
   createMode: boolean;
-  defaultProject?: number;
+  defaultProject?: number | undefined;
   defaultProjects?: { title: string; id: number }[];
   projectAssociated: number | undefined;
   setProjectAssociated: (x: number) => void;
@@ -50,12 +50,15 @@ const SelectAssociatedProject = ({
       </label>
       <select
         name="ProjectAssociated"
+        disabled={defaultProject ? true : false}
         className="rounded-md p-2 mb-4"
         // defaultValue={defaultProject || ""}
-        onChange={(e) => setProjectAssociated(parseInt(e.target.value))}
-        value={projectAssociated}
+        onChange={(e) => {
+          setProjectAssociated(parseInt(e.target.value));
+        }}
+        defaultValue={defaultProject}
       >
-        <option value={""}></option>
+        {/* <option defaultValue={defaultProject}></option> */}
         {projects &&
           createMode &&
           projects.map((sub, i) => (

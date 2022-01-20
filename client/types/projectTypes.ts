@@ -27,3 +27,19 @@ export interface ProjectDetails {
   tasks: TaskDetails[];
   job_type: string;
 }
+export interface ThreadDataResult {
+  id: string;
+  historyId: string;
+  messages: [
+    {
+      id: string;
+      historyId: string;
+      internalDate: string;
+      labelIds: string[];
+      payload: any;
+      sizeEstinate: number;
+      snippet: string;
+      threadId: string;
+    }
+  ];
+}
