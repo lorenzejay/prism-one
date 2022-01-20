@@ -1,10 +1,7 @@
-import React, { useState } from "react";
 import { useForm, ValidationError } from "@formspree/react";
-import Modal from "./Modal";
 
 const WaitlistForm = () => {
   const [state, handleSubmit] = useForm("myylvbga");
-  const [openModal, setOpenModal] = useState(false);
   if (state.succeeded) {
     return <p>Thanks for signing up!</p>;
   }
