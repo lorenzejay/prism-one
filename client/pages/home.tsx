@@ -22,7 +22,9 @@ const Home = () => {
 
         <section className="flex flex-col md:flex-row md:justify-between w-full">
           <div className="flex flex-col w-full md:w-3/5 flex-wrap md:mr-2 2xl:mr-10">
-            <h2 className="tracking-wide text-xl font-semibold">Job List</h2>
+            <h2 className="tracking-wide text-2xl mb-5 font-medium">
+              Job List
+            </h2>
             <ProjectsTable />
             <ProjectStatusCharts />
           </div>

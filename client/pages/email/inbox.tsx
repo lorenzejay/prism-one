@@ -70,7 +70,7 @@ const Inbox = () => {
   if (!isLoading && integrationStatus) {
     return (
       <AppLayout>
-        <>
+        <section className="px-10 py-5 bg-gray-theme">
           {/* <h2 className="tracking-wide flex-grow text-3xl font-medium ">
             Emails
           </h2> */}
@@ -86,18 +86,18 @@ const Inbox = () => {
               fetchingEmailError={fetchingEmailError as any}
             />
           )}
-        </>
+        </section>
       </AppLayout>
     );
   } else {
     return (
       <AppLayout>
-        <>
+        <section className="py-5 px-10 bg-gray-theme">
           <h2 className="tracking-wide flex-grow text-3xl font-medium ">
             Emails
           </h2>
           <Loader />
-        </>
+        </section>
       </AppLayout>
     );
   }

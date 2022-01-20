@@ -73,6 +73,7 @@ const Create = () => {
         config
       );
       if (data.success) {
+        router.push("/leads");
         return data.data as number;
       }
     } catch (error) {
@@ -110,7 +111,7 @@ const Create = () => {
 
         <div className="flex items-center w-full border-none">
           <div
-            className={`w-1/3 text-center p-3 cursor-pointer border-t ${
+            className={`w-1/2 text-center p-3 cursor-pointer border-t ${
               displayMode === DisplayMode.Create
                 ? "bg-white border-b-0"
                 : "bg-gray-200 border-b-2"
@@ -120,7 +121,7 @@ const Create = () => {
             Create
           </div>
           <div
-            className={`w-1/3 text-center  p-3 cursor-pointer border-t ${
+            className={`w-1/2 text-center  p-3 cursor-pointer border-t ${
               displayMode === DisplayMode.Preview
                 ? "bg-white border-none"
                 : "bg-gray-200 border-b-2"
@@ -129,7 +130,7 @@ const Create = () => {
           >
             Preview
           </div>
-          <div
+          {/* <div
             className={`w-1/3 text-center  p-3 cursor-pointer border-t ${
               displayMode === DisplayMode.EmbededCode
                 ? "bg-white border-none"
@@ -138,7 +139,7 @@ const Create = () => {
             onClick={() => setDisplayMode(DisplayMode.EmbededCode)}
           >
             Embed Code
-          </div>
+          </div> */}
         </div>
         {displayMode === DisplayMode.Create && (
           <form
@@ -255,11 +256,11 @@ const Create = () => {
             </p>
           </div>
         )}
-        {displayMode === DisplayMode.EmbededCode && data && (
+        {/* {displayMode === DisplayMode.EmbededCode && data && (
           <div className={`-mt-1 bg-white`}>
             <h3>Embed Link</h3>
           </div>
-        )}
+        )} */}
       </div>
     </AppLayout>
   );

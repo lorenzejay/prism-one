@@ -40,7 +40,7 @@ const ProjectStatusCharts = () => {
   // console.log("statusCounters", statusCounters);
   return (
     <section className="mb-20 ">
-      <h2 className="tracking-wide text-xl font-semibold">Stats</h2>
+      <h2 className="tracking-wide text-2xl mb-5 font-medium">Stats</h2>
       <section
         className="w-full md:grid md:grid-cols-2 md:gap-4 p-3 rounded-md"
         style={{ background: "#f0f0f0" }}

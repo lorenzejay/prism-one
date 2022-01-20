@@ -8,13 +8,12 @@ import Loader from "../../components/app/Loader";
 import { useRouter } from "next/router";
 import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
-import Modal from "../../components/LandingPageComponents/Modal";
-import ProjectDetailsForm from "../../components/app/Projects/projectDetails";
+import Modal from "../../components/app/Modal";
 import CreateProjectForm from "../../components/app/Projects/CreateProjectForm";
 const Clients = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();
-  const [openModal, setOpenModal] = useState(false);
+
   const [clientSearched, setClientSearched] = useState<string>("");
   const [showCreateProject, setShowCreateProject] = useState(false);
 
@@ -93,7 +92,7 @@ const Clients = () => {
           />
         </Head>
         <div
-          className={`relative px-10 py-5 lg:px-32 min-h-full `}
+          className={`relative px-10 py-5 min-h-full `}
           style={{
             background: "#F9F9F9",
           }}
@@ -161,6 +160,7 @@ const Clients = () => {
                     <td className="p-3 border ">{client.client_name}</td>
                     <td className="p-3 border ">{client.client_email}</td>
                     <td className="p-3 border ">{client.phone_number}</td>
+
                     <td className="p-3 border ">
                       {client.associatedProjectId !== null ? (
                         <Link href={`/projects/${client.associatedProjectId}`}>
@@ -169,25 +169,16 @@ const Clients = () => {
                       ) : (
                         <Modal
                           modalName={"New Project"}
-                          openModal={openModal}
-                          setOpenModal={setOpenModal}
                           contentWidth="lg:w-1/2"
-                          contentHeight="h-3/4"
+                          contentHeight="h-auto"
                         >
-                          <div className="bg-white p-10    overflow-y-auto rounded-md">
+                          <div className="bg-white p-10  overflow-y-auto rounded-md">
                             <CreateProjectForm
                               defaultClientEmail={client.client_email}
                               defaultClientName={client.client_name}
                             />
                           </div>
                         </Modal>
-                        // <button
-                        //   onClick={() =>
-                        //     setShowCreateProject(!showCreateProject)
-                        //   }
-                        // >
-                        //   New Project
-                        // </button>
                       )}
                     </td>
                   </tr>

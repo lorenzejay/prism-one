@@ -38,7 +38,7 @@ const LeadStats = () => {
   );
   return (
     <>
-      <h2 className="tracking-wide text-xl font-semibold mb-3">Leads</h2>
+      <h2 className="tracking-wide text-2xl mb-5 font-medium">Leads</h2>
       {isLoading && <Loader />}
       {leadStats && !isLoading && (
         <div

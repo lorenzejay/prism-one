@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import AppLayout from "../../components/app/Layout";
-import ReactMde, { Suggestion, SaveImageHandler } from "react-mde";
+import ReactMde, { Suggestion } from "react-mde";
 import * as Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import Head from "next/head";
@@ -135,13 +135,13 @@ const Create = () => {
   }, [isSuccess, isLoading, router]);
   return (
     <AppLayout>
-      <>
+      <section className="px-10 py-5 bg-gray-theme">
         <Head>
           <Script src="/path/to/showdown/src/showdown.js"></Script>
           <Script src="/path/to/xss/dist/xss.min.js"></Script>
           <Script src="/path/to/showdown-xss-filter.js"></Script>
         </Head>
-        <h3 className="font-bold text-2xl mb-3 ">Create Email</h3>
+        <h3 className="font-medium text-3xl mb-7 ">Create Email</h3>
         <form
           className="flex flex-col justify-start"
           onSubmit={handleSendEmail}
@@ -204,7 +204,7 @@ const Create = () => {
             </button>
           </div>
         </form>
-      </>
+      </section>
     </AppLayout>
   );
 };

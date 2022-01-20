@@ -109,7 +109,7 @@ const ProjectTaskInput = ({ task, projectId }: ProjectTaskInputProps) => {
           <input
             type="checkbox"
             className="mr-3"
-            onClick={(e) => {
+            onChange={() => {
               handleUpdateTaskStatus({
                 taskId: task.id,
                 currentStatus: checked,

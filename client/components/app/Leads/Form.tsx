@@ -46,9 +46,7 @@ const LeadForm = ({ formElements, mode, leadId, formOwner }: LeadFormProps) => {
     isLoading,
     isSuccess,
     isError,
-  } = useMutation(uploadLeadForm, {
-    onSuccess: (data) => console.log(data),
-  });
+  } = useMutation(uploadLeadForm);
 
   //   useEffect(() => {
 

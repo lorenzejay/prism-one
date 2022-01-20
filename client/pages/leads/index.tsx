@@ -43,8 +43,8 @@ const Index = () => {
   } = useQuery<LeadFormType[]>(`leads-${authUser?.uid}`, getLeads);
   return (
     <AppLayout>
-      <>
-        <div className="flex mb-5">
+      <section className={`relative px-10 py-5 min-h-full bg-gray-theme`}>
+        <div className="flex my-7">
           <h2 className="flex-grow text-3xl font-medium ">Leads</h2>
 
           <button
@@ -77,7 +77,7 @@ const Index = () => {
               ))}
           </tbody>
         </table>
-      </>
+      </section>
     </AppLayout>
   );
 };

@@ -93,7 +93,6 @@ leadRouter.post("/upload-form-response/:leadId", async (req, res) => {
         id: true,
       },
     });
-
     await prisma.client.create({
       data: {
         client_name,

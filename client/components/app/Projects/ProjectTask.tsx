@@ -1,8 +1,8 @@
 import axios from "axios";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import useFirebaseAuth from "../../../hooks/useAuth3";
-import { FormType, TaskDetails } from "../../../types/tasksTypes";
+import { TaskDetails } from "../../../types/tasksTypes";
 import Loader from "../Loader";
 import ProjectTaskInput from "./ProjectTaskInput";
 

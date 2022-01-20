@@ -18,19 +18,25 @@ const EmailTable = ({
   // emails && console.log("emails", emails);
   return (
     <>
-      <h2 className="tracking-wide flex-grow text-3xl font-medium ">Emails</h2>
+      <h2 className="tracking-wide flex-grow text-3xl my-7 font-medium ">
+        Emails
+      </h2>
       {fetchingEmailError && (
         <ErrorMessage error={fetchingEmailError as string} />
       )}
       {loadingEmails ? (
         <Loader />
       ) : (
-        <table className="border-collapse table-fixed  w-full text-black">
+        <table className="w-full border border-collapse p-3">
           <thead>
-            <th className="w-1/6 font-semibold text-left">Recieved</th>
-            <th className="w-2/6 font-semibold text-left">From</th>
-            <th className="w-1/2 font-semibold text-left">Message</th>
-            {/* <th className="w-1/6 font-semibold text-left">Etc</th> */}
+            <tr className="text-left  ">
+              <th className="w-1/6 border p-3 bg-white font-normal">
+                Recieved
+              </th>
+              <th className="w-2/6 border p-3 bg-white font-normal">From</th>
+              <th className="w-1/2 border p-3 bg-white font-normal">Message</th>
+              {/* <th className="w-1/6 font-semibold text-left">Etc</th> */}
+            </tr>
           </thead>
           <tbody className="text-sm">
             {emails &&
@@ -43,7 +49,7 @@ const EmailTable = ({
 
                 return (
                   <Link href={`/email/view/${e.id}`} key={i}>
-                    <tr className="border h-10 cursor-pointer">
+                    <tr className="bg-white border rounded-md mt-3">
                       {e.payload.headers && dateObj && (
                         <td className="border p-3">
                           {dateObj.value.slice(0, 16)}

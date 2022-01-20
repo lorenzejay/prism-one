@@ -3,6 +3,7 @@ import { gmail_v1, google } from "googleapis";
 import authorization from "../middlewares/auth";
 import { PrismaClient } from "@prisma/client";
 require("dotenv").config();
+
 const gmail = google.gmail("v1");
 const googleAuthRouter = Router();
 const prisma = new PrismaClient();
@@ -120,7 +121,6 @@ googleAuthRouter.get(
         // The user's email address. The special value `me` can be used to indicate the authenticated user.
         userId: integratedUser?.email,
       });
-
       if (result) {
         return res.send({
           success: true,
@@ -300,10 +300,11 @@ googleAuthRouter.post("/send-email", authorization, async (req, res) => {
       },
     });
 
+    //return the thread id so it can be followed
     res.send({
       success: true,
       message: "Successfully sent the email",
-      data: response,
+      data: response.data.threadId,
     });
   } catch (error) {
     console.log(error);
@@ -472,6 +473,108 @@ googleAuthRouter.get(
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+//set threadId to database
+googleAuthRouter.post(
+  "/save-threadId/:projectId",
+  authorization,
+  async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      const { threadId } = req.body;
+      const userId = req.user;
+      const integratedGmail =
+        await prisma.gmailIntegrationRefreshTokens.findFirst({
+          where: { integrated_user: userId },
+          select: {
+            email: true,
+          },
+        });
+      if (!integratedGmail)
+        return res.send({
+          success: false,
+          message: "You are not authorized",
+          data: null,
+        });
+      google.options({ auth: oAuth2Client });
+      await prisma.threadIds.create({
+        data: {
+          threadId,
+          project_associated: projectId,
+        },
+      });
+      res.send({
+        success: true,
+        message: "Successfully fetched thread",
+        data: null,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+//fetch thread
+//check to enable authorization (maybe not needed for now)
+googleAuthRouter.get(
+  "/get-threadId/:projectId",
+  authorization,
+  async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      const userId = req.user.toString();
+      //fetch the threadId
+
+      const threadData = await prisma.threadIds.findFirst({
+        where: {
+          project_associated: projectId,
+        },
+        select: {
+          threadId: true,
+        },
+      });
+      // console.log("threadData", threadData);
+      if (threadData) {
+        const integratedGmail =
+          await prisma.gmailIntegrationRefreshTokens.findFirst({
+            where: { integrated_user: userId },
+            select: {
+              email: true,
+            },
+          });
+        if (!integratedGmail)
+          return res.send({
+            success: false,
+            message: "You are not authorized",
+            data: null,
+          });
+        google.options({ auth: oAuth2Client });
+        const threads = await gmail.users.threads.get({
+          id: threadData.threadId,
+          userId: integratedGmail.email,
+        });
+
+        return res.send({
+          success: true,
+          message: "Successfully fetched thread",
+          data: threads.data,
+        });
+      } else {
+        return res.send({
+          success: false,
+          message: "No Thread",
+          data: null,
+        });
+      }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: "No Thread",
+        data: null,
+      });
     }
   }
 );

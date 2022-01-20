@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useRef } from "react";
 
 type ModalProps = {
@@ -8,8 +7,8 @@ type ModalProps = {
   bgColor?: string;
   contentWidth?: string;
   contentHeight?: string;
-  openModal: boolean;
-  setOpenModal: (x: boolean) => void;
+  // openModal: boolean;
+  // setOpenModal: (x: boolean) => void;
 };
 const Modal = ({
   modalName,
@@ -17,9 +16,10 @@ const Modal = ({
   bgColor,
   contentWidth,
   contentHeight,
-  openModal,
-  setOpenModal,
-}: ModalProps) => {
+}: // openModal,
+// setOpenModal,
+ModalProps) => {
+  const [openModal, setOpenModal] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const closeModal = (e: any) => {

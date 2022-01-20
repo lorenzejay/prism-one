@@ -69,8 +69,8 @@ const Tasks = () => {
   );
   return (
     <AppLayout>
-      <div className="flex flex-col">
-        <section className="my-7 flex items-center justify-start font-light">
+      <section className={`relative px-10 py-5 min-h-full bg-gray-theme`}>
+        <div className="my-7 flex items-center justify-start font-light">
           <h2 className="flex-grow text-3xl font-medium">Tasks</h2>
           <div className="mr-3 flex items-center justify-start  ">
             <input
@@ -89,7 +89,7 @@ const Tasks = () => {
               New Tasks <span className="rounded-full">+</span>
             </button>
           </Link>
-        </section>
+        </div>
         {loadingTasks && <Loader />}
         {/* {loadingSearchedTask && <Loader />} */}
         {!loadingSearchedTask && !loadingTasks && (
@@ -176,7 +176,7 @@ const Tasks = () => {
               ))}
           </table>
         )}
-      </div>
+      </section>
     </AppLayout>
   );
 };

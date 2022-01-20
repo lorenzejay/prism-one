@@ -3,14 +3,14 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import AppLayout from "../../components/app/Layout";
 import "react-mde/lib/styles/css/react-mde-all.css";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import Link from "next/link";
 import SelectAssociatedProject from "../../components/app/Task/SelectAssociatedProject";
-import Script from "next/script";
 
 const Create = () => {
+  const router = useRouter();
+  const { project_associated } = router.query;
   const queryClient = useQueryClient();
   const { authUser } = useFirebaseAuth();
   const [description, setDescription] = useState("");
@@ -24,14 +24,12 @@ const Create = () => {
       year = d.getFullYear(),
       time = d.toLocaleTimeString();
 
-    console.log;
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;
 
     return [year, month, day].join("-") + `T${time.slice(0, 8)}`;
   };
   // console.log("date", getTodaysDate());
-  const router = useRouter();
 
   //santize message out
   const createTask = async (e: FormEvent) => {
@@ -52,8 +50,11 @@ const Create = () => {
       },
       config
     );
-    if (data.success) {
-      router.push("/tasks");
+    if (data.success && !project_associated) {
+      return router.push("/tasks");
+    }
+    if (data.success && project_associated) {
+      return router.push(`/projects/${project_associated}`);
     }
   };
 
@@ -75,11 +76,11 @@ const Create = () => {
   return (
     <AppLayout>
       <>
-        <Head>
+        {/* <Head>
           <Script src="/path/to/showdown/src/showdown.js"></Script>
           <Script src="/path/to/xss/dist/xss.min.js"></Script>
           <Script src="/path/to/showdown-xss-filter.js"></Script>
-        </Head>
+        </Head> */}
         <h3 className="font-bold text-2xl mb-3 ">Create Tasks</h3>
         <form
           className="flex flex-col justify-start"
@@ -95,11 +96,15 @@ const Create = () => {
             type="text"
             onChange={(e) => setDescription(e.target.value)}
           />
-
           <SelectAssociatedProject
             createMode={true}
             projectAssociated={projectAssociated}
             setProjectAssociated={setProjectAssociated}
+            defaultProject={
+              project_associated
+                ? parseInt(project_associated as string)
+                : undefined
+            }
           />
           <div className="flex flex-col my-2">
             <label htmlFor="ProjectDate">Project Date</label>

@@ -9,7 +9,7 @@ import { ApiCallReturn } from "../../../types/userTypes";
 import SuccessMessage from "../SuccessMessage";
 
 interface ProjectFormTypes {
-  projectDetails?: ProjectDetails | null;
+  projectDetails?: ProjectDetails;
   projectId?: string;
 }
 const ProjectDetailsForm = ({
@@ -198,7 +198,7 @@ const ProjectDetailsForm = ({
         <label htmlFor="state">Project Status</label>
         <select
           onChange={(e) => setProjectStatus(e.target.value as ProjectStatus)}
-          value={projectStatus}
+          defaultValue={projectStatus}
           name="state"
           className="rounded-md p-2 border outline-none"
         >
