@@ -29,11 +29,10 @@ const Home: NextPage = () => {
               Simplify your business workflow into one application
             </h3>
             <p className="text-lg ">
-              On average freelance photographers and videographers use 3 to 4
-              programs in order to accomplish their business tasks. These
-              programs can include communication, contracts, payments and
-              sending the final deliverables. Why can&apos;t there be an app
-              that simplifies everything in one app?
+              On average use 3 applications in order to accomplish their
+              business tasks. These apps handle communication, contracts,
+              payments and sending the final deliverables. Why can&apos;t there
+              be an app that simplifies everything in one app?
             </p>
           </div>
 
