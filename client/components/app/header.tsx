@@ -88,7 +88,7 @@ const AppHeader = () => {
           <p className="p-2 rounded-md text-red-600">Something went wrong</p>
         )}
         {openDropdown && userDetails && (
-          <div className="flex flex-col absolute top-10 right-0 bg-gray-100 p-3 shadow-2xl rounded-md w-80 z-100">
+          <div className="flex flex-col absolute top-10 right-0 bg-gray-100 p-3 shadow-2xl rounded-md w-80 z-10">
             <section className="flex border-b-2 py-5 items-center">
               <p className="w-20 h-20 text-white mr-10 bg-gray-400 text-center flex items-center justify-center text-3xl rounded-full ">
                 {userDetails.full_name &&

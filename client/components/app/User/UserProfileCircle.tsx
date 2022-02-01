@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import useFirebaseAuth from "../../../hooks/useAuth3";
 
-const UserProfileCircle = ({ name }: { name: string }) => {
+const UserProfileCircle = ({ name }: { name: string | string[] }) => {
   const { authUser } = useFirebaseAuth();
   // Queries
   const getUserDetails = async () => {
@@ -30,7 +30,7 @@ const UserProfileCircle = ({ name }: { name: string }) => {
   );
 
   return (
-    <p className="w-10 h-10 text-white mr-10 bg-gray-400 text-center flex items-center justify-center text-xl rounded-full ">
+    <p className="w-10 h-10 text-white mr-1 bg-gray-400 text-center flex items-center justify-center text-xl rounded-full ">
       {name !== "me"
         ? name
         : typeof userFullName === "string"

@@ -14,34 +14,6 @@ const ProjectTaskInput = ({ task, projectId }: ProjectTaskInputProps) => {
   const [due_date, setDueDate] = useState("");
   const [checked, setChecked] = useState<FormType>({} as FormType);
 
-  //   const fetchTask = async () => {
-  //     try {
-  //       if (!authUser?.token) return;
-  //       const config = {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           token: authUser.token,
-  //         },
-  //       };
-  //       if (!taskId) return;
-  //       const { data } = await axios.get(
-  //         `/api/tasks/list-specific-task/${taskId}`,
-  //         config
-  //       );
-
-  //       if (data.success) {
-  //         return data.data;
-  //       }
-  //     } catch (error) {
-  //       return error;
-  //     }
-  //   };
-  //   //fetch the tasks associated with this project
-  //   const { data: task, isLoading: taskLoading } = useQuery<TaskDetails>(
-  //     `task-${taskId}`,
-  //     fetchTask
-  //   );
-
   const updateTaskStatus = async ({
     taskId,
     currentStatus,
@@ -124,10 +96,16 @@ const ProjectTaskInput = ({ task, projectId }: ProjectTaskInputProps) => {
           </label>
           <p
             className={` text-white rounded-md p-2 ${
-              getDueDate(due_date) < 10 ? "bg-orange-500" : "bg-green-500"
+              getDueDate(due_date) < 0
+                ? "bg-red-500"
+                : getDueDate(due_date) < 7
+                ? "bg-orange-500"
+                : "bg-green-500"
             }`}
           >
-            {getDueDate(due_date) <= 0
+            {getDueDate(due_date) < 0
+              ? `${getDueDate(due_date) * -1} days overdue`
+              : getDueDate(due_date) === 0
               ? "Today"
               : `${getDueDate(due_date)} days left`}
           </p>

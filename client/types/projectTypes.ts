@@ -27,19 +27,38 @@ export interface ProjectDetails {
   tasks: TaskDetails[];
   job_type: string;
 }
+// export interface ThreadDataResult {
+//   id: string;
+//   historyId: string;
+//   messages: [
+//     {
+//       id: string;
+//       historyId: string;
+//       internalDate: string;
+//       labelIds: string[];
+//       payload: any;
+//       sizeEstinate: number;
+//       snippet: string;
+//       threadId: string;
+//     }
+//   ];
+// }
+
+export interface ObjectNAndV {
+  name: string;
+  value: string;
+}
 export interface ThreadDataResult {
-  id: string;
-  historyId: string;
-  messages: [
-    {
-      id: string;
-      historyId: string;
-      internalDate: string;
-      labelIds: string[];
-      payload: any;
-      sizeEstinate: number;
-      snippet: string;
-      threadId: string;
-    }
-  ];
+  emailBody: string;
+  emailFrom: ObjectNAndV;
+  emailDate: ObjectNAndV;
+  emailId: ObjectNAndV;
+  emailRecieved: ObjectNAndV;
+  emailSubject: ObjectNAndV;
+  emailThreadId: string;
+  emailTo: ObjectNAndV;
+  labelIds: string[];
+  messageId: ObjectNAndV;
+  contentType: ObjectNAndV;
+  inReplyTo: ObjectNAndV;
 }

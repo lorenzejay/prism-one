@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Head from "next/head";
 import Link from "next/link";
-import { ClientDetails } from "../../types/userTypes";
+import { ClientDetails } from "../../types/ClientTypes";
 import Loader from "../../components/app/Loader";
 import { useRouter } from "next/router";
 import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
 import Modal from "../../components/app/Modal";
 import CreateProjectForm from "../../components/app/Projects/CreateProjectForm";
+
 const Clients = () => {
   const { authUser, loading } = useFirebaseAuth();
   const router = useRouter();

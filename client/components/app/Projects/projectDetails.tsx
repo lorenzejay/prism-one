@@ -133,7 +133,7 @@ const ProjectDetailsForm = ({
       {isLoading && <div className="loader mx-auto"></div>}
       {isSuccess && <SuccessMessage success="Updated" />}
       <h3 className="text-3xl font-medium mb-3">Project Details</h3>
-      <div className="flex flex-col my-2">
+      <div className="flex flex-col mb-2">
         <label htmlFor="ClientName">Client Name</label>
         <input
           id="ClientName"

@@ -22,17 +22,13 @@ const SpecificEmail = () => {
 
   const [revealReply, setRevealReply] = useState(false);
 
-  const [emailSubject, setEmailSubject] = useState("");
-  const [emailFrom, setEmailFrom] = useState("");
-  const [emailTo, setEmailTo] = useState("");
-  const [emailDate, setEmailDate] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (!authUser?.token) {
-      router.push("/sign-in");
+    if (!authUser && !loading) {
+      router.push("/home");
     }
-  }, [loading, authUser?.token]);
+  }, [authUser, loading]);
 
   const checkIfYouIntegratedGmail = async () => {
     try {
@@ -108,8 +104,7 @@ const SpecificEmail = () => {
     isLoading: replyingToEmailLoading,
     isSuccess: replyingToEmailSuccess,
   } = useMutation(replyToEmail, {
-    onSuccess: () =>
-      queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
+    onSuccess: () => queryClient.invalidateQueries(`emails-${authUser?.uid}`),
   });
 
   // useEffect(() => {
