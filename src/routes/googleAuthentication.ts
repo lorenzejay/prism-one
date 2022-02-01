@@ -311,7 +311,7 @@ googleAuthRouter.post("/send-email", authorization, async (req, res) => {
   }
 });
 //send email
-googleAuthRouter.post("/reply-to-message", async (req, res) => {
+googleAuthRouter.post("/reply-to-message", authorization, async (req, res) => {
   try {
     const userId = req.user;
     if (!userId)
@@ -327,7 +327,7 @@ googleAuthRouter.post("/reply-to-message", async (req, res) => {
           email: true,
         },
       });
-    if (!integratedGmail)
+    if (!integratedGmail?.email)
       return res.send({
         success: false,
         message: "You are not authorized",
@@ -525,6 +525,7 @@ googleAuthRouter.get(
   async (req, res) => {
     try {
       const projectId = parseInt(req.params.projectId);
+      // console.log("porjectid", projectId);
       const userId = req.user.toString();
       //fetch the threadId
 
@@ -543,38 +544,157 @@ googleAuthRouter.get(
             where: { integrated_user: userId },
             select: {
               email: true,
+              refresh_token: true,
             },
           });
         if (!integratedGmail)
-          return res.send({
+          return res.status(400).send({
             success: false,
             message: "You are not authorized",
             data: null,
           });
+
+        await oAuth2Client.setCredentials({
+          refresh_token: integratedGmail.refresh_token,
+        });
         google.options({ auth: oAuth2Client });
         const threads = await gmail.users.threads.get({
           id: threadData.threadId,
           userId: integratedGmail.email,
         });
+        // console.log("threads", threads?.data?.messages[0]?.id);
+        if (!threads.data.messages) return;
+        let messages: any[] = [];
 
+        // console.log("threads.data.messages", threads);
+        await threads.data.messages.map((message) => {
+          // console.log("message-type", message.payload?.headers);
+          if (message.payload?.mimeType !== "multipart/alternative") {
+            // if (!message.id) return;
+            // if (!message.payload?.body) return;
+            // if (!message.payload?.body.data) return;
+            const decodedBody = decodeMessage(
+              message.payload?.body?.data as string
+            );
+            const email = {
+              emailId: message.id,
+              emailThreadId: message.threadId,
+              labelIds: message.labelIds,
+              emailFrom: message.payload?.headers?.find(
+                (h) => h.name === "From"
+              ),
+              emailTo: message.payload?.headers?.find((h) => h.name === "To"),
+              emailSubject: message.payload?.headers?.find(
+                (h) => h.name === "Subject"
+              ),
+              emailRecieved: message.payload?.headers?.find(
+                (h) => h.name === "Received"
+              ),
+              emailDate: message.payload?.headers?.find(
+                (h) => h.name === "Date"
+              ),
+              messageId: message.payload?.headers?.find(
+                (h) => h.name === ("Message-ID" || "Message-Id")
+              ),
+              inReplyTo: message.payload?.headers?.find(
+                (h) => h.name === "In-Reply-To"
+              ),
+              emailBody: decodedBody,
+              contentType: message.payload?.headers?.find(
+                (h) => h.name === "Content-Type"
+              ),
+            };
+            // console.log("email1", email);
+            messages.push(email);
+          } else {
+            //find the part to get to text/html so we can output that
+            const emailBody = message.payload.parts?.find(
+              (part) => part.mimeType === "text/html"
+            );
+            if (!emailBody) return;
+            if (!emailBody.body) return;
+            if (!emailBody.body.data) return;
+
+            //emailBody?.body?.data
+            const decodedBody = decodeMessage(emailBody?.body?.data);
+
+            const email = {
+              emailId: message.id,
+              emailThreadId: message.threadId,
+              labelIds: message.labelIds,
+              emailTo: message.payload.headers?.find((h) => h.name === "To"),
+              emailFrom: message.payload.headers?.find(
+                (h) => h.name === "From"
+              ),
+              emailSubject: message.payload.headers?.find(
+                (h) => h.name === "Subject"
+              ),
+              emailRecieved: message.payload.headers?.find(
+                (h) => h.name === "Received"
+              ),
+              emailDate: message.payload.headers?.find(
+                (h) => h.name === "Date"
+              ),
+              messageId: message.payload.headers?.find(
+                (h) => h.name === ("Message-ID" || "Message-Id")
+              ),
+              emailBody: decodedBody,
+              inReplyTo: message.payload?.headers?.find(
+                (h) => h.name === "In-Reply-To"
+              ),
+              contentType: message.payload?.headers?.find(
+                (h) => h.name === "Content-Type"
+              ),
+            };
+            // console.log("email2", email);
+            messages.push(email);
+          }
+          // console.log("messages", messages);
+        });
+        // console.log("messages", messages);
         return res.send({
           success: true,
           message: "Successfully fetched thread",
-          data: threads.data,
+          data: messages,
         });
       } else {
-        return res.send({
+        res.send({
           success: false,
           message: "No Thread",
           data: null,
         });
       }
     } catch (error) {
-      res.send({
-        success: false,
-        message: "No Thread",
-        data: null,
+      console.log(error);
+      // res.send({
+      //   success: false,
+      //   message: "No Thread",
+      //   data: null,
+      // });
+    }
+  }
+);
+
+//fetch my gmail
+googleAuthRouter.get(
+  "/fetch-my-email-string",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user;
+      const data = await prisma.gmailIntegrationRefreshTokens.findFirst({
+        where: {
+          integrated_user: userId,
+        },
+        select: {
+          email: true,
+        },
       });
+      if (data?.email) {
+        res.send({ success: true, message: null, data: data.email });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );

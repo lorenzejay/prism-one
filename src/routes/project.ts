@@ -247,6 +247,42 @@ projectRouter.get(
   }
 );
 
+//get associated clients in the project
+projectRouter.get(
+  "/list-project-clients/:projectId",
+  authorization,
+  async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      const userId = req.user;
+      if (!userId) return;
+      const projectClients = await prisma.project.findMany({
+        where: {
+          id: projectId,
+        },
+        select: {
+          clients: true,
+        },
+      });
+      if (projectClients.length === 0 || !projectClients) {
+        return res.send({
+          success: true,
+          message: "There are no clients in this project.",
+          data: null,
+        });
+      }
+      res.send({
+        success: true,
+        message: null,
+        data: projectClients[0].clients,
+      });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+);
+
 //update title
 projectRouter.put(
   "/update-title/:projectId",
@@ -323,7 +359,7 @@ projectRouter.delete(
       if (!didCreateClient) {
         return res.send({
           success: false,
-          message: "You are not authorized to modify this client.",
+          message: "You are not authorized to modify this project.",
           data: null,
         });
       }
@@ -334,7 +370,7 @@ projectRouter.delete(
       });
       return res.send({
         success: true,
-        message: "Successfully delete the client.",
+        message: "Successfully delete the project.",
         data: null,
       });
     } catch (error) {
@@ -686,9 +722,9 @@ projectRouter.put(
     }
   }
 );
-//update client name
+//update project name
 projectRouter.put(
-  "/update-client-name/:projectId",
+  "/update-project-name/:projectId",
   authorization,
   async (req, res) => {
     try {

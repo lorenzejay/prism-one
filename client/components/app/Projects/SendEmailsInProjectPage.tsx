@@ -11,9 +11,11 @@ import Dropdown from "../../LandingPageComponents/Dropdown";
 const SendEmailsInProjectPage = ({
   projectDetails,
   projectId,
+  setIsThread,
 }: {
   projectDetails: ProjectDetails;
   projectId: string;
+  setIsThread: (x: boolean) => void;
 }) => {
   const queryClient = useQueryClient();
 
@@ -107,6 +109,7 @@ const SendEmailsInProjectPage = ({
     if (data.success) {
       //save thread id
       //thread id is inside data.data
+      setIsThread(true);
       await axios.post(
         `/api/google-auth/save-threadId/${projectId}`,
         { threadId: data.data },
@@ -128,11 +131,14 @@ const SendEmailsInProjectPage = ({
     isLoading,
     isSuccess,
   } = useMutation(sendEmail, {
-    onSuccess: () => queryClient.invalidateQueries(`emails-${authUser?.uid}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries(
+        `project-threadId-${authUser?.token}-${projectId}`
+      ),
   });
 
   return (
-    <form className="mt-10" onSubmit={handleSendEmail}>
+    <form className="" onSubmit={handleSendEmail}>
       {projectDetails && (
         <input
           placeholder="email to"

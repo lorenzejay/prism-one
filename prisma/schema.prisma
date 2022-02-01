@@ -179,7 +179,9 @@ model GmailIntegrationRefreshTokens{
   email String @db.VarChar(255)
   refresh_token String 
   owner User @relation(fields: [integrated_user], references: [id]) 
-  integrated_user String 
+  integrated_user String
+
+  @@unique([email, integrated_user])
 }
 
 model ThreadIds{

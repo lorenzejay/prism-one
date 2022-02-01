@@ -49,6 +49,55 @@ clientRouter.post("/create-client", authorization, async (req, res) => {
   }
 });
 
+//update-client-project ass
+clientRouter.post(
+  "/update-client-project/:clientId",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user.toString();
+      const clientId = parseInt(req.params.clientId);
+      if (!clientId) return;
+      //initial creation will not have address, => this can be included when user updates clients details
+      const { associatedProjectId } = req.body;
+
+      //check for any blanks on required
+      //check if the client is created by the authorized user
+      const clientOwner = await prisma.client.findFirst({
+        where: {
+          created_by: userId,
+          id: clientId,
+        },
+        select: {
+          created_by: true,
+        },
+      });
+      if (userId === clientOwner?.created_by) {
+        await prisma.client.update({
+          where: {
+            id: clientId,
+          },
+          data: {
+            associatedProjectId: parseInt(associatedProjectId),
+          },
+        });
+        return res.send({
+          success: true,
+          message: "Successfully updated a client project.",
+          data: undefined,
+        });
+      }
+      res.send({
+        success: false,
+        message: "Did not update.",
+        data: undefined,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 //list-user-clients
 clientRouter.get("/list-clients", authorization, async (req, res) => {
   try {
@@ -137,6 +186,30 @@ clientRouter.get(
     }
   }
 );
+
+//list all the clients
+clientRouter.get("/list-all-clients", authorization, async (req, res) => {
+  try {
+    const userId = req.user.toString();
+
+    if (!userId) return;
+    const clients = await prisma.client.findMany({
+      where: {
+        created_by: userId,
+      },
+    });
+    if (!clients || clients.length <= 0) {
+      return res.send({
+        success: false,
+        message: "You have no clients yet.",
+        data: null,
+      });
+    }
+    return res.send({ success: true, message: null, data: clients });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 //update client details
 clientRouter.post(
