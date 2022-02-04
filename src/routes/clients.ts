@@ -1,4 +1,4 @@
-import { PrismaClient, ProjectStatus } from ".prisma/client";
+import { PrismaClient } from ".prisma/client";
 import { Router } from "express";
 import authorization from "../middlewares/auth";
 
@@ -22,7 +22,6 @@ clientRouter.post("/create-client", authorization, async (req, res) => {
       zip_code,
       associatedProjectId,
     } = req.body;
-
     //check for any blanks on required
 
     await prisma.client.create({
@@ -36,7 +35,9 @@ clientRouter.post("/create-client", authorization, async (req, res) => {
         city,
         state,
         zip_code,
-        associatedProjectId: parseInt(associatedProjectId),
+        associatedProjectId: associatedProjectId
+          ? parseInt(associatedProjectId)
+          : null,
       },
     });
     res.send({
@@ -196,6 +197,9 @@ clientRouter.get("/list-all-clients", authorization, async (req, res) => {
     const clients = await prisma.client.findMany({
       where: {
         created_by: userId,
+      },
+      orderBy: {
+        created_by: "desc",
       },
     });
     if (!clients || clients.length <= 0) {

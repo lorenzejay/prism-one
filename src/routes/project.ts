@@ -56,22 +56,22 @@ projectRouter.post("/create-project", authorization, async (req, res) => {
       },
     });
 
-    //if there is a client check
-    const clientExists = await prisma.client.findFirst({
-      where: {
-        id: clientId,
-      },
-      select: {
-        id: true,
-      },
-    });
-    if (clientExists && newProject) {
+    if (clientId && newProject) {
       await prisma.client.update({
         where: {
           id: clientId,
         },
         data: {
           associatedProjectId: newProject.id,
+        },
+      });
+    } else {
+      //create a new client
+      await prisma.client.create({
+        data: {
+          client_email,
+          client_name,
+          created_by: userId.toString(),
         },
       });
     }

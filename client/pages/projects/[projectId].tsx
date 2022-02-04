@@ -170,7 +170,6 @@ const Project = () => {
       queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
   });
 
-  console.log("isThread", isThread);
   return (
     <AppLayout>
       <section className="p-5">

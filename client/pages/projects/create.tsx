@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import ClientSelectInputs from "../../components/app/Clients/ClientSelectInputs";
 import AppLayout from "../../components/app/Layout";
 import useFirebaseAuth from "../../hooks/useAuth3";
 
@@ -13,6 +14,7 @@ const Create = () => {
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [projectDate, setProjectDate] = useState<Date>();
+  const [existingClient, setExistingClient] = useState<number>(-1);
 
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
@@ -71,6 +73,7 @@ const Create = () => {
           project_date: projectDate,
           client_email: clientEmail,
           tags,
+          clientId: existingClient ? existingClient : null,
         },
         config
       );
@@ -82,10 +85,13 @@ const Create = () => {
     }
   };
   const { mutateAsync: handleCreateProject } = useMutation(createProject, {
-    onSuccess: () =>
-      queryClient.invalidateQueries(`users_clients-${authUser?.uid}`),
+    onSuccess: () => queryClient.invalidateQueries(`projects-${authUser?.uid}`),
   });
 
+  //todos:
+  //1. have a checker for new or existing client association for the project
+  //2. add new or existing to body of http call in order for backend to know if its an update or create new user
+  console.log("exisitng Client", existingClient);
   return (
     <AppLayout>
       <>
@@ -105,12 +111,27 @@ const Create = () => {
             />
           </div>
           <div className="flex flex-col my-2">
-            <label htmlFor="clientName">Client Full Name</label>
-            <input
+            <label htmlFor="clientName">Choose from your Client List</label>
+            <ClientSelectInputs
+              newClient={clientName}
+              setClient={setExistingClient}
+            />
+            {/* <input
               type="text"
               className="p-2 rounded-md "
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
+            /> */}
+          </div>
+          <hr />
+          <div className="flex flex-col my-2">
+            <label htmlFor="clientName">Client Full Name</label>
+            <input
+              type="text"
+              className="rounded-md p-2 border outline-none disabled:opacity-700"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              disabled={existingClient > 0 ? true : false}
             />
           </div>
           <div className="flex flex-col my-2">
@@ -118,9 +139,10 @@ const Create = () => {
             <input
               type="text"
               id="clientEmail"
-              className="p-2 rounded-md "
+              className="rounded-md p-2 border outline-none disabled:opacity-700"
               value={clientEmail}
               onChange={(e) => setClientEmail(e.target.value)}
+              disabled={existingClient > 0 ? true : false}
             />
           </div>
           <div className="flex flex-col my-2">
@@ -175,7 +197,7 @@ const Create = () => {
           </div>
           <button
             type="submit"
-            className="w-1/3 ml-auto bg-green-600 p-3 rounded-md mt-3"
+            className="w-1/3 ml-auto bg-blue-theme text-white p-3 rounded-md mt-3"
             id="projectDate"
           >
             Create

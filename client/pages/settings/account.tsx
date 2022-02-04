@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "next/router";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import AppLayout from "../../components/app/Layout";
@@ -6,13 +7,18 @@ import useFirebaseAuth from "../../hooks/useAuth3";
 import { UserDetails } from "../../types/userTypes";
 
 const Account = () => {
+  const { loading, authUser } = useFirebaseAuth();
   const [fName, setFname] = useState("");
   const [email, setEmail] = useState("");
   const [industry, setIndustry] = useState("");
   //   const [phoneNumber, setPhoneNumber] = useState("");
   //   const [address, setAddress] = useState("");
+  useEffect(() => {
+    if (!loading && !authUser) {
+      router.push("/sign-in");
+    }
+  }, [loading, authUser]);
 
-  const { authUser } = useFirebaseAuth();
   const getUserDetails = async () => {
     try {
       if (!authUser?.token) return;
