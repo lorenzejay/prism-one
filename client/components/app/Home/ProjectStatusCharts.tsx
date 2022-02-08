@@ -39,7 +39,7 @@ const ProjectStatusCharts = () => {
     );
   // console.log("statusCounters", statusCounters);
   return (
-    <section className="mb-20 ">
+    <div className="">
       <h2 className="tracking-wide text-2xl mb-5 font-medium">Stats</h2>
       <section
         className="w-full md:grid md:grid-cols-2 md:gap-4 p-3 rounded-md"
@@ -95,7 +95,7 @@ const ProjectStatusCharts = () => {
           />
         </div>
       </section>
-    </section>
+    </div>
   );
 };
 

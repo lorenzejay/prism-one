@@ -37,7 +37,7 @@ const LeadStats = () => {
     getLeadStats
   );
   return (
-    <>
+    <section>
       <h2 className="tracking-wide text-2xl mb-5 font-medium">Leads</h2>
       {isLoading && <Loader />}
       {leadStats && !isLoading && (
@@ -67,7 +67,7 @@ const LeadStats = () => {
           </AreaChart>
         </div>
       )}
-    </>
+    </section>
   );
 };
 

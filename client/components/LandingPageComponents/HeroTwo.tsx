@@ -7,15 +7,15 @@ const HeroTwo = () => {
       style={{ background: "#1E1E1E", color: "#F7FAFC" }}
     >
       <section className="flex text-left md:text-center flex-col w-full h-full  mx-auto pt-10 md:pt-20 lg:pt-16  justify-start ">
-        <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold ">
-          Organize Your Business Workflow In One Place.
+        <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold ">
+          Organize Your Business <br /> Workflow In One Place.
         </h1>
-        <h3
+        {/* <h3
           className="text-xl   lg:text-3xl xl:text-4xl text-gray-700 font-semibold mt-4 mb-2 "
           style={{ color: "#FEC828" }}
         >
           For Photographers, Videographers, and Artists.
-        </h3>
+        </h3> */}
         <label className="i5:text-base my-3 text-xl text-white w-full">
           Want to be notified when we launch? Enter your email below.
         </label>
@@ -25,7 +25,7 @@ const HeroTwo = () => {
           <section className="relative w-full ">
             <img
               src="/colored_dash.png"
-              className="lg:w-3/6 xl:w-4/6 2xl:w-3/5 3xl:w-1/2  lg:mx-auto shadow-2xl rounded-b-xl"
+              className="lg:w-3/6 xl:w-3/5 2xl:w-3/5 3xl:w-1/2  lg:mx-auto shadow-2xl rounded-b-xl"
             />
           </section>
         </div>
