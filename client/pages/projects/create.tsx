@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import ClientSelectInputs from "../../components/app/Clients/ClientSelectInputs";
+import ErrorMessage from "../../components/app/ErrorMessage";
 import AppLayout from "../../components/app/Layout";
+import Loader from "../../components/app/Loader";
+import SuccessMessage from "../../components/app/SuccessMessage";
 import useFirebaseAuth from "../../hooks/useAuth3";
 
 const Create = () => {
@@ -48,7 +51,7 @@ const Create = () => {
     setNewTag("");
   };
 
-  const removetagFromTagList = (toBeRemovedTag: number) => {
+  const removeTagFromTagList = (toBeRemovedTag: number) => {
     const updatedTags = [...tags];
 
     updatedTags.splice(toBeRemovedTag, 1);
@@ -73,7 +76,7 @@ const Create = () => {
           project_date: projectDate,
           client_email: clientEmail,
           tags,
-          clientId: existingClient ? existingClient : null,
+          clientId: existingClient >= 0 ? existingClient : null,
         },
         config
       );
@@ -84,9 +87,19 @@ const Create = () => {
       console.log(error);
     }
   };
-  const { mutateAsync: handleCreateProject } = useMutation(createProject, {
+  const {
+    mutateAsync: handleCreateProject,
+    isLoading: loadingCreateProject,
+    isSuccess: createProjectSuccess,
+    isError: createProjectError,
+  } = useMutation(createProject, {
     onSuccess: () => queryClient.invalidateQueries(`projects-${authUser?.uid}`),
   });
+  useEffect(() => {
+    if (createProjectSuccess) {
+      router.push("/projects");
+    }
+  }, [createProjectSuccess]);
 
   //todos:
   //1. have a checker for new or existing client association for the project
@@ -96,6 +109,10 @@ const Create = () => {
     <AppLayout>
       <>
         <h1 className="text-3xl font-semibold">Create a project</h1>
+        {loadingCreateProject && <Loader />}
+
+        {createProjectError && <ErrorMessage error="Something went wrong" />}
+        {createProjectSuccess && <SuccessMessage success="Project Made" />}
         <form
           className="flex flex-col"
           onSubmit={(e) => handleCreateProject(e)}
@@ -187,7 +204,7 @@ const Create = () => {
                     <button
                       type="button"
                       className="absolute text-sm top-0 -right-1"
-                      onClick={() => removetagFromTagList(i)}
+                      onClick={() => removeTagFromTagList(i)}
                     >
                       x
                     </button>

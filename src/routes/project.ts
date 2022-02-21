@@ -217,6 +217,32 @@ projectRouter.get("/list-projects", authorization, async (req, res) => {
   }
 });
 
+//for home screen, for now only need to show 5, later is pagination
+projectRouter.get(
+  "/list-recent-5-projects",
+  authorization,
+  async (req, res) => {
+    try {
+      const userId = req.user;
+      const projects = await prisma.project.findMany({
+        orderBy: [
+          {
+            created_at: "desc",
+          },
+        ],
+        take: 5,
+        where: {
+          owner_id: userId,
+        },
+      });
+
+      res.send({ success: true, message: undefined, data: projects });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 projectRouter.get(
   "/list-project-tasks/:projectId",
   authorization,
