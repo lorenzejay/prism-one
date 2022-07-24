@@ -3,6 +3,7 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -14,7 +15,6 @@ enum Currency {
   Canadian_Dollar
   Polish_zloty
   Norwegian_Krone
-
 }
 
 enum Industry {
@@ -34,159 +34,155 @@ enum TaskStatus {
 
 //delete username
 model User {
-  id String @unique
-  email String @unique
-  full_name String
-  profile_pic String?
-  phone_number String?
-  address String?
-  projects Project[]
-  companyDetails CompanyDetails[]
-  clients Client[]
-  contracts Contract[]
-  tasks Task[]
-  leadForms LeadForms[]
+  id                      String                          @unique
+  email                   String                          @unique
+  full_name               String
+  profile_pic             String?
+  phone_number            String?
+  address                 String?
+  projects                Project[]
+  companyDetails          CompanyDetails[]
+  clients                 Client[]
+  contracts               Contract[]
+  tasks                   Task[]
+  leadForms               LeadForms[]
   gmailIntegrationDetails GmailIntegrationRefreshTokens[]
- 
 }
 
 model CompanyDetails {
-  id Int @id @default(autoincrement())
-  owner User @relation(fields: [owner_id], references: [id])
-  owner_id String
-  company_name String
+  id            Int      @id @default(autoincrement())
+  owner         User     @relation(fields: [owner_id], references: [id])
+  owner_id      String
+  company_name  String
   company_email String
-  industry Industry
+  industry      Industry
 }
 
 enum ProjectStatus {
- Lead
- Booked
- Fulfillment
- Completed
-
+  Lead
+  Booked
+  Fulfillment
+  Completed
 }
 
 model Project {
-  id Int @id @default(autoincrement())
-  title String
-  owner User @relation(fields: [owner_id], references: [id])
-  owner_id String
-  is_private Boolean @default(false)
-  header_img String?
-  created_at DateTime @default(now())
-  project_date String?
-  galleries Gallery[]
-  tags String[]
-  client_name String
-  client_email String
-  project_status ProjectStatus @default(Lead)
+  id               Int           @id @default(autoincrement())
+  title            String
+  owner            User          @relation(fields: [owner_id], references: [id])
+  owner_id         String
+  is_private       Boolean       @default(false)
+  header_img       String?
+  created_at       DateTime      @default(now())
+  project_date     String?
+  galleries        Gallery[]
+  tags             String[]
+  client_name      String
+  client_email     String
+  project_status   ProjectStatus @default(Lead)
   expected_revenue Int?
-  amount_paid Int?
-  amount_due Int?
-  goals String?
-  tasks Task[]
-  job_type String @default("")
-  clients Client[]
-  threadIds ThreadIds[]
+  amount_paid      Int?
+  amount_due       Int?
+  goals            String?
+  tasks            Task[]
+  job_type         String        @default("")
+  clients          Client[]
+  threadIds        ThreadIds[]
 }
 
 model Contact {
-  id Int @id @default(autoincrement())
-  name String
-  email String
+  id           Int     @id @default(autoincrement())
+  name         String
+  email        String
   phone_number String?
-  address String?
-  postal_code String?
-  city String?
-  State String?
+  address      String?
+  postal_code  String?
+  city         String?
+  State        String?
   company_name String?
-
 }
 
-
 model Gallery {
-  id Int @id @default(autoincrement()) 
-  title String
-  createdAt String 
-  updatedAt String? 
-  quote String
-  associatedProject Project @relation(fields: [associatedProjectId], references:[id])
+  id                  Int     @id @default(autoincrement())
+  title               String
+  createdAt           String
+  updatedAt           String?
+  quote               String
+  associatedProject   Project @relation(fields: [associatedProjectId], references: [id])
   associatedProjectId Int
 }
 
 model Client {
-  id Int @id @default(autoincrement())
-  client_name String
-  client_email String
-  phone_number String?
-  address String?
-  city String?
-  state String?
-  notes String?
-  owner User @relation(fields: [created_by], references: [id])
-  created_by String
-  zip_code String?
-  createdAt DateTime @default(now())
-  associatedProject Project? @relation(fields: [associatedProjectId], references:[id])
+  id                  Int      @id @default(autoincrement())
+  client_name         String
+  client_email        String
+  phone_number        String?
+  address             String?
+  city                String?
+  state               String?
+  notes               String?
+  owner               User     @relation(fields: [created_by], references: [id])
+  created_by          String
+  zip_code            String?
+  createdAt           DateTime @default(now())
+  associatedProject   Project? @relation(fields: [associatedProjectId], references: [id])
   associatedProjectId Int?
 }
 
 model Contract {
-  id Int @id @default(autoincrement())
-  contract_name String
-  custom_contract Boolean @default(false)
+  id                  Int      @id @default(autoincrement())
+  contract_name       String
+  custom_contract     Boolean  @default(false)
   text_field_response String?
-  firebase_path String
-  location_bucket String
-  owner User @relation(fields: [created_by], references: [id])
-  created_by String
-  created_at DateTime @default(now())
+  firebase_path       String
+  location_bucket     String
+  owner               User     @relation(fields: [created_by], references: [id])
+  created_by          String
+  created_at          DateTime @default(now())
 }
 
 model Task {
-  id Int @id @default(autoincrement())
-  description String @db.VarChar(150)
-  due_date String? 
-  created_by String
-  created_at DateTime @default(now())
-  owner User @relation(fields: [created_by], references: [id])
-  project Project? @relation(fields: [project_associated], references: [id])
+  id                 Int        @id @default(autoincrement())
+  description        String     @db.VarChar(150)
+  due_date           String?
+  created_by         String
+  created_at         DateTime   @default(now())
+  owner              User       @relation(fields: [created_by], references: [id])
+  project            Project?   @relation(fields: [project_associated], references: [id])
   project_associated Int?
-  status TaskStatus @default(Incomplete)
+  status             TaskStatus @default(Incomplete)
 }
 
 model LeadForms {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(100)
-  formElements Json[]
-  owner User @relation(fields: [created_by], references: [id])
-  created_by String
+  id            Int             @id @default(autoincrement())
+  title         String          @db.VarChar(100)
+  formElements  Json[]
+  owner         User            @relation(fields: [created_by], references: [id])
+  created_by    String
   leadResponses LeadResponses[]
-  created_at DateTime @default(now())
+  created_at    DateTime        @default(now())
 }
 
-model LeadResponses{
-  id Int @id @default(autoincrement())
-  lead LeadForms @relation(fields: [lead_associated], references: [id])
+model LeadResponses {
+  id              Int       @id @default(autoincrement())
+  lead            LeadForms @relation(fields: [lead_associated], references: [id])
   lead_associated Int
-  created_at DateTime @default(now())
-  response Json[]
+  created_at      DateTime  @default(now())
+  response        Json[]
 }
 
-model GmailIntegrationRefreshTokens{
-  id Int @id @default(autoincrement())
-  email String @db.VarChar(255)
-  refresh_token String 
-  owner User @relation(fields: [integrated_user], references: [id]) 
+model GmailIntegrationRefreshTokens {
+  id              Int    @id @default(autoincrement())
+  email           String @db.VarChar(255)
+  refresh_token   String
+  owner           User   @relation(fields: [integrated_user], references: [id])
   integrated_user String
 
   @@unique([email, integrated_user])
 }
 
-model ThreadIds{
-  id Int @id @default(autoincrement())
-  threadId String
-  project Project? @relation(fields: [project_associated], references: [id])
+model ThreadIds {
+  id                 Int      @id @default(autoincrement())
+  threadId           String
+  project            Project? @relation(fields: [project_associated], references: [id])
   project_associated Int?
 }
