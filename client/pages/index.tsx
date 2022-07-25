@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Image from 'next/image'
 import HeroTwo from "../components/LandingPageComponents/HeroTwo";
 import Layout from "../components/LandingPageComponents/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,13 +20,13 @@ const Home: NextPage = () => {
         <HeroTwo />
         <FeaturesSimplified />
         {/* <Features /> */}
-        <section className="flex flex-col items-center lg:flex-row w-full px-5  py-12 lg:py-24 lg:px-12 xl:px-32 justify-between">
-          <div className="flex flex-col  lg:w-1/2 mb-10 lg:mb-0 lg:mr-24">
+        <section className="flex flex-col items-center lg:flex-row w-full px-5 py-12 lg:py-24 lg:px-12 xl:px-32 justify-between">
+          <div className="flex flex-col lg:w-1/2 mb-10 lg:mb-0 lg:mr-24">
             <FontAwesomeIcon
               icon={faCheckCircle}
               className="text-7xl text-blue-600 mx-auto lg:m-0"
             />
-            <h3 className="font-extrabold w-full  tracking-normal text-4xl my-3 ">
+            <h3 className="font-extrabold w-full tracking-[0.03em] text-3xl xs:text-4xl my-3 ">
               Simplify your business workflow into one application
             </h3>
             <p className="text-lg ">
@@ -35,8 +36,9 @@ const Home: NextPage = () => {
               be an app that simplifies everything in one app?
             </p>
           </div>
-
-          <img src="/workflow-example.png" className="lg:w-1/2" />
+          <div className="lg:w-1/2 max-w-md">
+            <Image src="/workflow-example.png" alt="Workflow showing client signups to getting booked" width={1057} height={1193} />
+          </div>
         </section>
         <Footer />
       </>

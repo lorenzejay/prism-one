@@ -3,8 +3,19 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: false, // or 'media' or 'class'
   theme: {
+    screens: {
+      i5: "320px",
+      i6: "375px",
+      xs: "500px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+      "3xl": "1770px",
+      "4xl": "2000px",
+    },
     fontFamily: {
       sans: ["Rubik", "system-ui"],
       serif: ["ui-serif", "Georgia"],
@@ -40,11 +51,6 @@ module.exports = {
           theme: "#FEC828",
         },
       },
-      screens: {
-        i5: "320px",
-        i6: "375px",
-        "3xl": "1800px",
-      },
       minHeight: {
         "1/2": "50vh",
       },
@@ -59,12 +65,6 @@ module.exports = {
         width: "width",
         spacing: "margin, padding",
       },
-    },
-  },
-  variants: {
-    extend: {
-      borderWidth: ["focus", "hover"],
-      padding: ["focus", "hover"],
     },
   },
   plugins: [],

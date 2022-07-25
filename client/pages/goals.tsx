@@ -6,7 +6,7 @@ const Goals = () => {
   return (
     <Layout>
       <div className="flex flex-col py-10 px-5 ">
-        <h1 className="mx-auto font-bold text-5xl lg:text-4xl lg:w-1/2 text-center">
+        <h1 className="mx-auto font-bold text-3xl xs:text-5xl lg:text-4xl lg:w-1/2 text-center">
           Traditional CRM&apos;s can be overwhelming. Let Prism One help you
           focus on creating by simplify your business side.
         </h1>
