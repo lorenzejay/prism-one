@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
+const baseUrl =
+  process.env.NEXT_PUBLIC_NODE_ENV === "production"
+    ? process.env.BACKEND_URL_PROD
+    : process.env.BACKEND_URL_DEV;
+console.log("baseUrl", baseUrl);
 module.exports = {
   async rewrites() {
-    const baseUrl = "https://prism-one-crm-backend.herokuapp.com";
     if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
       return [
         {
@@ -10,7 +14,6 @@ module.exports = {
         },
       ];
     } else {
-      const baseUrl = "http://localhost:5000";
       return [
         {
           source: "/api/:slug*",
