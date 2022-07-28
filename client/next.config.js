@@ -2,7 +2,6 @@
 module.exports = {
   experimental: {
     async rewrites() {
-      // const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL_PROD;
       if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         return [
           {
@@ -11,7 +10,6 @@ module.exports = {
           },
         ];
       } else {
-        // const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL_DEV;
         return [
           {
             source: "/api/:slug*",
